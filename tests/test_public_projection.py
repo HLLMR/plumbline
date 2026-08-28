@@ -68,6 +68,15 @@ class PublicProjectionProcessTests(unittest.TestCase):
         path = self.source / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
+        self.allow_path(relative)
+
+    def allow_bytes(self, relative: str, content: bytes) -> None:
+        path = self.source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+        self.allow_path(relative)
+
+    def allow_path(self, relative: str) -> None:
         allowlist = self.source / "projection" / "public-files.txt"
         entries = [line for line in allowlist.read_text(encoding="utf-8").splitlines()
                    if line]
@@ -100,6 +109,19 @@ class PublicProjectionProcessTests(unittest.TestCase):
             "README.md",
             "projection/public-files.txt",
         ])
+
+    def test_binary_readme_asset_is_projected_byte_identically(self) -> None:
+        relative = "docs/assets/plumbline-og.png"
+        payload = b"\x89PNG\r\n\x1a\nplumbline"
+        self.allow_bytes(relative, payload)
+
+        result = self.run_builder()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual((self.output / relative).read_bytes(), payload)
+        manifest = (self.output / "PROJECTION-MANIFEST.sha256").read_text(
+            encoding="utf-8")
+        self.assertIn(f"{hashlib.sha256(payload).hexdigest()}  {relative}", manifest)
 
     def test_projected_decision_references_state_the_private_boundary(self) -> None:
         """Public records must not imply that omitted project decisions ship."""

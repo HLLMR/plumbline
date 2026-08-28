@@ -11,6 +11,7 @@ path = [
   "PROJECTION-MANIFEST.sha256",
   "archive/**",
   "decisions/**",
+  "docs/assets/**",
   "examples/**",
   "governance/**",
   "migration-guides/**",

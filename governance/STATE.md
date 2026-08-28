@@ -3,20 +3,21 @@
 # STATE — Plumbline
 
 As-is, not should-be. Ratified intent lives in `governance/PLAN.md`; this file
-records the repository state observed after accepted WO-PL-033 public-front-
-door and release-hygiene closeout.
+records the repository state observed after the Plumbline 0.8 public release
+and accepted WO-PL-034 public-front-door polish.
 
 **Derived:** 2026-08-28 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
-accepted WO-PL-017 through WO-PL-023 and WO-PL-025 through WO-PL-033 records, together with
-the WO-PL-024 sequencing recovery.
+accepted WO-PL-017 through WO-PL-023 and WO-PL-025 through WO-PL-033 records,
+the WO-PL-024 sequencing recovery, and the verified public-release event.
 **Boundary:** post-adoption, all 10 counted pilot work orders and their
 evaluation complete; WO-PL-017 remediation complete; DR-003 ratified;
 WO-PL-018 through WO-PL-023 complete; WO-PL-024 void before implementation;
 WO-PL-025 complete and the project operatively bound to Doctrine 0.8;
-WO-PL-026 complete and RFI-22 closed; WO-PL-027 through WO-PL-033 complete; the
-Owner publication decision remains separate and unmade. The hash of the commit containing this file is
-intentionally recorded only externally.
+WO-PL-026 complete and RFI-22 closed; WO-PL-027 through WO-PL-033 complete;
+Plumbline 0.8 publicly released from a one-commit clean-history projection;
+WO-PL-034 complete. The hash of the commit containing this file is intentionally
+recorded only externally.
 
 ---
 
@@ -61,8 +62,9 @@ intentionally recorded only externally.
 | WO-PL-031 | **COMPLETE**, accepted 2026-08-27; post-pilot final public-source hardening, not counted. Projection command context, conservative traversal grammar, portable control-plane aliases, malformed pointed-work-order read lockout, explicit project-root authority, and boundary-aware private-path checks are implemented. Final governed source and two independent 92-file public candidates passed Windows and native Ubuntu; final fresh re-review returned ACCEPT. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; the installed private hook remains on the prior accepted digest pending a separately governed installation/birth test, and publication remains a separate unmade Owner decision |
 | WO-PL-032 | **COMPLETE**, accepted 2026-08-27; post-pilot installed-hook refresh and publication gate, not counted. Installed, canonical, and bundled hook bytes match the accepted digest; native Windows and Ubuntu Sonnet sessions each produced four exact birth-test denials with zero mutation; full and focused regression gates passed; fresh read-only review returned ACCEPT/HIGH. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; publication remains a separate unmade Owner decision after the authorized post-closeout dual rebuild and review |
 | WO-PL-033 | **COMPLETE**, accepted 2026-08-28; post-pilot public front door and release hygiene, not counted. README now leads with the authority-and-enforcement layer, honest first-value route, pilot economics, and provider boundary; official CC legal text and executable license guards are present; methodology/project decision references are truthful. Final governed source and two independent 92-file candidates passed Windows and native Ubuntu; candidates and archives were byte-identical. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; publication remains a separate Owner decision using a new clean-history repository |
+| WO-PL-034 | **COMPLETE**, accepted 2026-08-28; post-publication public-front-door polish, not counted. The Owner rejected the first generated illustration and accepted the launch kit's exact regenerated type-only README/social assets plus the evidence-first tonal revision. Active minutes **NOT REPORTED**; records retained in `governance/history/` |
 | Pilot progress | **10 of 10 counted work orders complete; fresh-agent evaluation accepted with calibrations and disposed by DR-002** |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-033 **COMPLETE**; Owner publication decision remains separate and unmade pending the clean-history publication build/review |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-034 **COMPLETE**; Plumbline 0.8 published and front-door polish accepted; no successor queued |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout
@@ -820,6 +822,41 @@ active minutes **NOT REPORTED**.
 | Cleanup | Ignored reviewer ZIP, private screening input, both candidates, archives, WSL mount/keeper, and temporary logs absent |
 | Publication state | Private governed source remains separate. The new virgin public repository is available for a fresh clean-history projection and separate publication decision |
 
+### Public release observation — Plumbline 0.8
+
+After accepted WO-PL-033 closeout, the Owner authorized and the coordinator
+performed the separate publication lifecycle. The private governed source was
+pushed to the renamed private `HLLMR/plumbline-archive` repository at
+`e270fd3235d170a28a21fd198b88857740b74acd`. Two independent clean projections
+were byte-identical at complete-tree ledger SHA-256
+`FD04037812CF729DA180BA4B2D0BE2822E6E6985F8D78D508B712BB0C0E6F4DC`.
+
+The public repository `HLLMR/plumbline` was created from the single root commit
+`ba3c0754e5019f1fa93779d110843562cfa07307`, made public, and released as
+`v0.8`. Its 15-job Windows, Ubuntu, and macOS CI matrix passed across Python
+3.10 through 3.14. The attached 1,747,435-byte source archive has SHA-256
+`143afef18a6e0781e6896019321a2473ec8f40d7faa159c0187fd243c842cbc8`.
+Temporary projection trees, private screening input, release logs, and keeper
+files were deleted after remote verification. This observation records the
+completed publication; it does not enlarge the release claims.
+
+### Post-pilot verification — WO-PL-034
+
+WO-PL-034 delivered the bounded post-publication front-door polish. The Owner
+accepted the final launch-kit visual and tonal revision on 2026-08-28 and
+reported active minutes **NOT REPORTED**.
+
+| Gate | Accepted result |
+|---|---|
+| Public front door | Launch-kit type-only banner, truthful CI/release/Doctrine/security chrome, plainer evidence-first opening, and a real 60-second denial example from WO-PL-033 records 306–309 |
+| README assets | Exact regenerated 1280 × 320 SVG/PNG pair; PNG SHA-256 `C028363BE5C227BA84A0A2C3005FD78DF59935AC4933704922F158278A04E79C` |
+| GitHub social assets | Exact regenerated 1280 × 640 SVG/PNG pair; PNG SHA-256 `3F9A20A4FB6E94DAE2053B3B3D0DFB21D6ED72B89BDD99C421F55098C035129A` |
+| Governed-source suite | **557 tests, OK**, two expected skips |
+| Public candidate | Final 96-file candidate: **557 tests, OK**, two expected skips |
+| Reproducibility | Two independent 96-file projections checker-clean and byte-identical; complete-ledger SHA-256 `DAAE5C51FDB7450E61307375BCD8E9336E78CF10CCADF27E9439247D9CB15D77` |
+| Reviewer | Final launch-kit reconciliation **ACCEPT** after two report-only inventory corrections; no remaining blocker |
+| Enforcement status | Codex implementation surface; no live-wall claim; the public example accurately reports separate historical provider-envelope denials |
+
 ### Open decisions and release state
 
 | Item | State |
@@ -833,14 +870,14 @@ active minutes **NOT REPORTED**.
 | RFI-28 | **RESOLVED** at WO-PL-014 closeout under the Owner-approved parser-free design. Frontmatter is sole grant authority; B.4 is generated and unmatched B.3/B.4 paths block dispatch |
 | RFI-25 / 27 / 28 routing | The records remain separate but were implemented and disposed together by WO-PL-014; their bounded residuals remain visible in each record |
 | RFI-03 / licensing | **RESOLVED by DR-003, 2026-08-20.** License map selected; mechanization and publication remain separate gates |
-| Active work order | None; fail-closed between-order lifecycle lockout restored after accepted WO-PL-033 closeout |
-| Queued work | No successor work order is activated. The new virgin `HLLMR/plumbline` repository is available; a fresh clean-history projection, CI/release configuration, verification, and explicit Owner publication decision are next |
+| Active work order | None; between-order lockout after closeout |
+| Queued work | None |
 | WO-PL-010 follow-up | **Complete.** The three adoption-recorder consistency findings from WO-PL-009 are closed |
 | Second-project boundary | Each adopting project maintains its own adoption and product state. No second-project source, private benchmark material, proprietary design detail, or trade-secret material is imported into Plumbline by this closeout |
-| Published / tagged / licensed | No / no / license map selected by DR-003; mechanization complete; release pending |
-| Push | The synchronized WO-PL-033 issue-time baseline was `f48b362`; the accepted WO-PL-033 closeout commit is pushed to the renamed private `plumbline-archive` remote after creation |
-| Repository visibility | Unchanged; last recorded private |
-| Stage | **WO-PL-033 accepted and closed; private governed source archived at `plumbline-archive`; public front door and release hygiene accepted; unpublished and untagged; the new clean-history public repository is available for the final projection, CI/release verification, and separate Owner publication decision** |
+| Published / tagged / licensed | **Yes**: clean-history public repository `HLLMR/plumbline`, release tag `v0.8`; DR-003 path-based license map remains operative |
+| Push | WO-PL-034 private and public updates authorized; remote commit identities are recorded after the push completes |
+| Repository visibility | Private governed source remains private; clean-history `HLLMR/plumbline` is public |
+| Stage | **Plumbline 0.8 publicly released; WO-PL-034 accepted and closing; no successor queued** |
 
 ---
 

@@ -914,6 +914,82 @@ class ProjectionContextTests(unittest.TestCase):
 class PublicFrontDoorTests(unittest.TestCase):
     """The public README must lead with an executable, honest on-ramp."""
 
+    def test_readme_banner_and_repository_chrome_are_release_ready(self):
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        banner_path = (REPO_ROOT / "docs" / "assets" /
+                       "plumbline-readme-banner.png")
+        banner = banner_path.read_bytes()
+        banner_svg = (REPO_ROOT / "docs" / "assets" /
+                      "plumbline-readme-banner.svg").read_text(encoding="utf-8")
+        social = (REPO_ROOT / "docs" / "assets" / "plumbline-og.png").read_bytes()
+        social_svg = (REPO_ROOT / "docs" / "assets" /
+                      "plumbline-og.svg").read_text(encoding="utf-8")
+
+        self.assertLess(len(banner), 500 * 1024)
+        self.assertEqual(banner[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(
+            (int.from_bytes(banner[16:20], "big"),
+             int.from_bytes(banner[20:24], "big")),
+            (1280, 320),
+        )
+        self.assertEqual(social[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(
+            (int.from_bytes(social[16:20], "big"),
+             int.from_bytes(social[20:24], "big")),
+            (1280, 640),
+        )
+        self.assertIn('src="docs/assets/plumbline-readme-banner.png"', readme)
+        self.assertIn('alt="Plumbline: document-governed AI work', readme)
+        self.assertIn('width="720"', readme)
+        self.assertIn('viewBox="0 0 1280 320"', banner_svg)
+        self.assertIn("Document-governed AI work: scoped grants, denial evidence, human acceptance.", banner_svg)
+        self.assertNotIn("A wall nobody has watched", banner_svg)
+        self.assertIn('viewBox="0 0 1280 640"', social_svg)
+        self.assertIn("Governance for AI-assisted", social_svg)
+        self.assertIn("A capability wall,", social_svg)
+        self.assertIn("birth-tested where installed.", social_svg)
+        self.assertNotIn("Capability walls", social_svg)
+        self.assertLess(readme.index("<img"), readme.index(
+            '<h1 align="center">Plumbline</h1>'))
+        for chrome in (
+                "actions/workflows/ci.yml/badge.svg",
+                "img.shields.io/github/v/release/HLLMR/plumbline",
+                "doctrine-0.8",
+                "security-policy",
+                'href="#try-it-in-five-minutes">Five-minute start</a>',
+                'href="#how-plumbline-differs">How it differs</a>',
+                'href="LICENSE-MAP.md">License map</a>'):
+            self.assertIn(chrome, readme)
+
+    def test_readme_uses_real_denial_evidence_for_the_sixty_second_mechanism(self):
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        section = readme[readme.index("## See the mechanism in 60 seconds"):]
+        section = section[:section.index("\n## ", 3)]
+        for truth in (
+                "WO-PL-033",
+                "`.git/config`",
+                "`control_plane_channel_uninspectable`",
+                "`write_target_out_of_grant`",
+                "No denied mutation succeeded",
+                "authorized coordinator"):
+            self.assertIn(truth, section)
+
+    def test_banner_is_public_allowlisted_and_license_mapped(self):
+        relatives = {
+            "docs/assets/plumbline-og.png",
+            "docs/assets/plumbline-og.svg",
+            "docs/assets/plumbline-readme-banner.png",
+            "docs/assets/plumbline-readme-banner.svg",
+        }
+        allowlist = (REPO_ROOT / "projection" / "public-files.txt").read_text(
+            encoding="utf-8").splitlines()
+        reuse = (REPO_ROOT / "REUSE.toml").read_text(encoding="utf-8")
+        license_map = (REPO_ROOT / "LICENSE-MAP.md").read_text(encoding="utf-8")
+
+        self.assertTrue(relatives.issubset(set(allowlist)))
+        self.assertIn('"docs/assets/**"', reuse)
+        self.assertIn("`docs/assets/**`", license_map)
+
     def test_first_value_sections_precede_repository_taxonomy(self):
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         headings = [
@@ -933,7 +1009,8 @@ class PublicFrontDoorTests(unittest.TestCase):
                 "one self-hosting pilot",
                 "Claude Code",
                 "instruction-bounded",
-                "authority-and-enforcement layer",
+                "governs AI-assisted development",
+                "what the installed adapter actually blocked",
                 "Spec-driven tools",
                 "does not install or birth-test",
                 "19 rework cycles",

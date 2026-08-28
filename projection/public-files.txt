@@ -30,6 +30,10 @@ decisions/DR-004.md
 decisions/DR-005.md
 decisions/LICENSING-DIRECTION.md
 decisions/README.md
+docs/assets/plumbline-og.png
+docs/assets/plumbline-og.svg
+docs/assets/plumbline-readme-banner.png
+docs/assets/plumbline-readme-banner.svg
 examples/README.md
 examples/plumbline-self-hosting-pilot.md
 governance/ADOPTION-MAPPING.md

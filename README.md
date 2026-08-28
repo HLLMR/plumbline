@@ -1,19 +1,62 @@
-# Plumbline
+<p align="center">
+  <img src="docs/assets/plumbline-readme-banner.png" alt="Plumbline: document-governed AI work with scoped grants, denial evidence, and human acceptance." width="720">
+</p>
 
-**Plumbline is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit.**
+<h1 align="center">Plumbline</h1>
 
-Specs tell an agent what to build. Plumbline is the
-**authority-and-enforcement layer** around that work: who authorized this
-change, which capabilities the agent may use, whether forbidden calls were
-actually blocked, and what evidence a human accepted afterward.
+<p align="center"><strong>Governance for AI-assisted development.</strong></p>
 
-It turns a plan into small, explicitly bounded work orders, records what
-actually happened, and requires a human Owner to accept the result without
-losing control of intent, scope, or truth.
+<p align="center">
+  <a href="https://github.com/HLLMR/plumbline/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/HLLMR/plumbline/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/HLLMR/plumbline/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/HLLMR/plumbline?display_name=tag&amp;sort=semver"></a>
+  <a href="DOCTRINE.md"><img alt="Doctrine 0.8" src="https://img.shields.io/badge/doctrine-0.8-4f8f8b"></a>
+  <a href="SECURITY.md"><img alt="Security policy" src="https://img.shields.io/badge/security-policy-b77945"></a>
+</p>
 
-It is a methodology and toolkit, not a hosted service or runtime. A governed
-project owns its local records and does not depend on this repository remaining
-available.
+<p align="center">
+  <a href="#try-it-in-five-minutes">Five-minute start</a> ·
+  <a href="ADOPTING.md">Adopt</a> ·
+  <a href="#how-plumbline-differs">How it differs</a> ·
+  <a href="examples/plumbline-self-hosting-pilot.md">Pilot evidence</a> ·
+  <a href="adapters/claude-code/SECURITY.md">Security boundary</a> ·
+  <a href="LICENSE-MAP.md">License map</a>
+</p>
+
+Plumbline governs AI-assisted development with plain files in your repository.
+A human ratifies intent and dispatches one bounded work order at a time with an
+explicit capability grant. An agent performs the task. A separate review checks
+the result against the record, and the human accepts on evidence. Between work
+orders, the project returns to lockout.
+
+Spec tools answer *what should the agent build?* Plumbline records what comes
+next: who authorized the change, what the agent was allowed to touch, what it
+tried, what the installed adapter actually blocked, and what a human accepted.
+
+Plumbline is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit.
+There is no hosted service. It ships one Claude Code adapter; other agents remain
+instruction-bounded unless someone builds and birth-tests an equivalent
+adapter.
+
+## See the mechanism in 60 seconds
+
+A real example happened during WO-PL-033. While that order was active, another
+agent was asked to relink the Git remote. The order did not authorize that work.
+
+1. Its Bash and PowerShell attempts were denied before execution with
+   `control_plane_channel_uninspectable`.
+2. Its direct edit of `.git/config` was denied with
+   `write_target_out_of_grant`.
+3. A broad read traversal was separately denied with `read_traversal_denied`.
+4. The file remained unchanged and four append-only denial records preserved
+   what happened.
+5. After the Owner made the separate decision, an authorized coordinator
+   performed the relink outside the Implementer's grant.
+
+No denied mutation succeeded. The point is not that the requested change was
+bad; it is that the active authority did not permit that agent to make it in
+that session. See
+[records 306–309](governance/LOG-denials-probes.md#wo-pl-033-concurrent-provider-envelope-denials-post-pilot)
+for the retained evidence and limitations.
 
 ## The problem
 

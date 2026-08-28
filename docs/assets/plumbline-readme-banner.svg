@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320"><rect width="1280" height="320" fill="#F6F4EE"/>
+<text x="80.00" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">p</text>
+<text x="120.45" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">l</text>
+<text x="160.90" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">u</text>
+<text x="201.35" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">m</text>
+<text x="241.80" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">b</text>
+<text x="282.26" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">l</text>
+<text x="322.71" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">i</text>
+<text x="363.16" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">n</text>
+<text x="403.61" y="175.00" font-family="DejaVu Sans Mono" font-size="64" font-weight="normal" fill="#14171A" letter-spacing="0">e</text>
+<line x1="144.34" y1="128.92" x2="144.34" y2="204.44" stroke="#2B5AA6" stroke-width="3.52" stroke-linecap="round"/>
+<circle cx="144.34" cy="209.88" r="5.44" fill="#2B5AA6"/>
+<line x1="80" y1="215" x2="1200" y2="215" stroke="#C9C4B8" stroke-width="1.5"/>
+<text x="80" y="250" font-family="DejaVu Sans Mono" font-size="24" fill="#6B7075">Document-governed AI work: scoped grants, denial evidence, human acceptance.</text>
+</svg>

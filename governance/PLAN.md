@@ -306,3 +306,14 @@ WO-PL-025 migration package for Owner ratification. It does not ratify that
 migration package in advance, activate or implement WO-PL-025, implement wall
 hardening, activate WO-PL-026 or WO-PL-027, publish, replace `dist/`, tag, or
 change repository visibility.
+
+## 12. Owner-ratified post-publication polish — 2026-08-28
+
+Plumbline 0.8 is publicly released from the accepted clean-history projection.
+The Owner authorizes one concentrated front-door polish order, WO-PL-034, to
+add an original README banner, concise GitHub status/navigation chrome, and a
+short evidence-backed mechanism demonstration; carry the asset through the
+existing license and projection machinery; and correct the private State's
+observed publication status. This work may improve presentation and access to
+existing evidence, but it may not enlarge enforcement, effectiveness, pilot,
+provider, or operating-cost claims or revise Doctrine 0.8.
