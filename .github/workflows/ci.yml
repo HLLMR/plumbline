@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
+# SPDX-License-Identifier: Apache-2.0
+name: Capability wall and standard-library suite
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Focused capability-wall, dispatch, and init tests
+        run: >-
+          python -B -m unittest
+          tests.test_wo_capability_wall
+          tests.test_check_work_order_dispatch
+          tests.test_init_sh
+      - name: Full standard-library suite
+        if: ${{ matrix.python-version != '3.10' }}
+        run: python -B -m unittest discover -s tests

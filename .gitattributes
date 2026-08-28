@@ -1,0 +1,28 @@
+# Stable repository bytes.
+#
+# Text is stored and checked out as LF regardless of a machine's core.autocrlf
+# setting. Without this, the same commit produces different working-tree bytes
+# on different machines, which silently breaks two things this repository
+# depends on: byte-for-byte equality between a canonical file and its
+# skill-bundle copy, and the SHA-256 release manifest.
+#
+# Scope is deliberately narrow. Add nothing here that is not about byte
+# stability.
+
+* text=auto eol=lf
+
+# Shell scripts must be LF on every platform or they do not execute.
+*.sh text eol=lf
+
+# Binary: never converted, never diffed as text.
+*.zip binary
+*.gz binary
+*.png binary
+*.jpg binary
+*.pyc binary
+
+# Preserve official upstream license bytes while excluding only their
+# upstream-authored whitespace from Git's whitespace-error gate.
+/LICENSE -whitespace
+/LICENSES/CC-BY-4.0.txt -whitespace
+/LICENSES/CC0-1.0.txt -whitespace

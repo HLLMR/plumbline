@@ -1,0 +1,47 @@
+version = 1
+
+# DR-003 licenses project prose and governance evidence under CC-BY-4.0.
+[[annotations]]
+path = [
+  "*.md",
+  ".gitattributes",
+  ".gitignore",
+  ".claude/settings.json",
+  ".claude/active-wo.txt",
+  "PROJECTION-MANIFEST.sha256",
+  "archive/**",
+  "decisions/**",
+  "examples/**",
+  "governance/**",
+  "migration-guides/**",
+  "projection/**",
+  "skills/plumbline-adopt/*.md",
+  "skills/plumbline-adopt/references/**",
+]
+SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# DR-003 deliberately dual-licenses extracted appendix templates under CC0.
+# Their occurrence inside DOCTRINE.md remains CC-BY-4.0; this is not conflict.
+[[annotations]]
+path = ["templates/**", "skills/plumbline-adopt/assets/templates/**"]
+SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
+SPDX-License-Identifier = "CC0-1.0"
+
+# Adapter documentation and executable copies share the canonical MIT-0 scope.
+[[annotations]]
+path = ["adapters/**/*.md", "skills/plumbline-adopt/assets/adapters/**/*.md"]
+SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
+SPDX-License-Identifier = "MIT-0"
+
+# These are canonical third-party legal texts or licensing metadata. They are
+# validated independently and are not assigned an invented project copyright.
+[[exclusions]]
+path = ["LICENSE", "LICENSES/**", "REUSE.toml"]
+reason = "canonical licensing metadata and official legal-code text"
+
+# The checked-in archive is a stale aggregate of files with inherited licenses.
+# Its payload is not inspected by this gate and it is not a publication candidate.
+[[exclusions]]
+path = ["dist/**"]
+reason = "aggregate archive validated separately; payload licenses inherit canonical sources"
