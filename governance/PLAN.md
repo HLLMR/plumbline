@@ -367,14 +367,23 @@ is installed before its bootstrap bundle and local handoff are available.
    rewrite accepted records. Verify generated raster siblings, projection and
    license gates, and finish public issue #2 through the ordinary projection
    and pull-request path after acceptance.
-2. **WO-PL-039 — Day-zero invocation and bootstrap handoff.** Make the
+2. **WO-PL-039 — Cache-safe public identity and repository hardening.**
+   Correct the GitHub delivery failure recorded in public issue #4: publish
+   the accepted README banner under a content-versioned path, prevent future
+   current-use visual replacements from reusing a published URL, refresh the
+   repository social preview, pin CI actions, establish one stable required
+   check, and enable proportionate public-repository protections. This bounded
+   correction precedes rather than expands the coordinator build.
+3. **WO-PL-040 — Day-zero invocation and bootstrap handoff.** Make the
    IDE-first path executable from a clean repository: give the human one exact
    kickoff prompt; make the complete bootstrap bundle and a project-local
    handoff readable before wall registration; distinguish the temporary
    bootstrap coordinator from the post-adoption walled Operator; document the
    external infrastructure-operator boundary; and prove the path with a fresh
    clean-context walkthrough. Public issue #1 remains the durable defect
-   record.
+   record. The coordinator must explain and optionally time Owner active
+   minutes: human reading, deciding, responding, authentication, and
+   unavoidable UI work count; agent execution and waiting do not.
 
 The Owner remains the source of intent and acceptance. The Owner-Agent may
 draft, coordinate, record ratified decisions, and perform authorized lifecycle

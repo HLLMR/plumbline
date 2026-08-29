@@ -8,6 +8,7 @@ rather than assumed. Nothing is written outside the fixture directory.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import importlib.util
 import re
@@ -1007,8 +1008,15 @@ class PublicFrontDoorTests(unittest.TestCase):
 
     def test_readme_banner_and_repository_chrome_are_release_ready(self):
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-        banner_path = (REPO_ROOT / "docs" / "assets" /
-                       "writwall-readme-banner.png")
+        banner_match = re.search(
+            r'src="(docs/assets/writwall-readme-banner-([0-9a-f]{8})\.png)"',
+            readme,
+        )
+        self.assertIsNotNone(
+            banner_match,
+            "README banner must use a content-versioned public URL",
+        )
+        banner_path = REPO_ROOT / banner_match.group(1)
         banner = banner_path.read_bytes()
         banner_svg = (REPO_ROOT / "docs" / "assets" /
                       "writwall-readme-banner.svg").read_text(encoding="utf-8")
@@ -1029,7 +1037,16 @@ class PublicFrontDoorTests(unittest.TestCase):
              int.from_bytes(social[20:24], "big")),
             (1280, 640),
         )
-        self.assertIn('src="docs/assets/writwall-readme-banner.png"', readme)
+        self.assertEqual(
+            banner_match.group(2),
+            hashlib.sha256(banner).hexdigest()[:8],
+            "README banner filename must match its SHA-256 prefix",
+        )
+        self.assertFalse(
+            (REPO_ROOT / "docs" / "assets" /
+             "writwall-readme-banner.png").exists(),
+            "the cache-unsafe unversioned public banner must be absent",
+        )
         self.assertIn('alt="Writwall: document-governed AI work', readme)
         self.assertIn('width="720"', readme)
         self.assertIn('viewBox="0 0 1280 320"', banner_svg)
@@ -1095,7 +1112,7 @@ class PublicFrontDoorTests(unittest.TestCase):
         relatives = {
             "docs/assets/writwall-og.png",
             "docs/assets/writwall-og.svg",
-            "docs/assets/writwall-readme-banner.png",
+            "docs/assets/writwall-readme-banner-0a5259d8.png",
             "docs/assets/writwall-readme-banner.svg",
         }
         allowlist = (REPO_ROOT / "projection" / "public-files.txt").read_text(
@@ -1104,8 +1121,31 @@ class PublicFrontDoorTests(unittest.TestCase):
         license_map = (REPO_ROOT / "LICENSE-MAP.md").read_text(encoding="utf-8")
 
         self.assertTrue(relatives.issubset(set(allowlist)))
+        self.assertNotIn("docs/assets/writwall-readme-banner.png", allowlist)
         self.assertIn('"docs/assets/**"', reuse)
         self.assertIn("`docs/assets/**`", license_map)
+
+    def test_repository_automation_is_pinned_and_maintainable(self):
+        workflow = (REPO_ROOT / ".github" / "workflows" /
+                    "ci.yml").read_text(encoding="utf-8")
+        dependabot = (REPO_ROOT / ".github" /
+                      "dependabot.yml").read_text(encoding="utf-8")
+        security = (REPO_ROOT / "SECURITY.md").read_text(encoding="utf-8")
+
+        self.assertRegex(
+            workflow,
+            r"(?m)uses: actions/checkout@[0-9a-f]{40}  # v4$",
+        )
+        self.assertRegex(
+            workflow,
+            r"(?m)uses: actions/setup-python@[0-9a-f]{40}  # v5$",
+        )
+        self.assertIn("required:", workflow)
+        self.assertIn("name: CI required", workflow)
+        self.assertIn("needs: test", workflow)
+        self.assertIn('package-ecosystem: "github-actions"', dependabot)
+        self.assertIn("interval: weekly", dependabot)
+        self.assertIn("private vulnerability report", security.lower())
 
     def test_first_value_sections_precede_repository_taxonomy(self):
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")

@@ -1,6 +1,7 @@
 .gitattributes
 .github/ISSUE_TEMPLATE/bug_report.yml
 .github/ISSUE_TEMPLATE/feature_request.yml
+.github/dependabot.yml
 .github/pull_request_template.md
 .github/workflows/ci.yml
 .gitignore
@@ -41,7 +42,7 @@ docs/agents/issue-tracker.md
 docs/agents/triage-labels.md
 docs/assets/writwall-og.png
 docs/assets/writwall-og.svg
-docs/assets/writwall-readme-banner.png
+docs/assets/writwall-readme-banner-0a5259d8.png
 docs/assets/writwall-readme-banner.svg
 docs/identity-migration.md
 docs/name-clearance.md

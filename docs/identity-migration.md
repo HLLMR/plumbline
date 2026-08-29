@@ -63,3 +63,15 @@ The current Writwall mark is a two-line wall placed at the `writ|wall`
 boundary. It replaces the line-and-bob device inherited during the emergency
 name migration. The former device remains legitimate historical evidence in
 accepted records and prior-release screenshots; it is not current brand art.
+
+## Cache-safe current-use assets
+
+WO-PL-038 corrected the repository bytes but reused the banner's published
+URL. GitHub consequently continued serving its cached Plumbline-era image
+after public PR #3 merged. Public issue #4 records that delivery failure.
+
+Current README raster filenames include the first eight hexadecimal characters
+of their SHA-256 digest. Tests bind the embedded URL to the actual file bytes,
+so changing a current-use banner requires a new public path. Editable SVG
+sources remain stably named; historical records and prior-release images are
+not renamed.

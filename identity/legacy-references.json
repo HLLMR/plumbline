@@ -16,7 +16,7 @@
     {
       "path": "README.md",
       "context": "migration_provenance",
-      "sha256": "32115aab0a64cedd8e2cb681800a8c35e30c891aadbfc767e153d3f12b67e92c"
+      "sha256": "4b01bc93641761adbaf3b28819abdd347f3a8ea7e557fa3fe61382027451e21c"
     },
     {
       "path": "SELF-HOSTING.md",
@@ -63,7 +63,7 @@
     {
       "path": "docs/identity-migration.md",
       "context": "migration_case_study",
-      "sha256": "f4b7f53ced9cd8c0b0734d0bc1004267a3c330462b8a371780240a59ea4503c9"
+      "sha256": "e1214e3e6018642809339249bb091a6fd754847b4f77c4bc7a39c5c87e6769cc"
     },
     {
       "path": "examples/README.md",
@@ -94,19 +94,19 @@
     {
       "path": "governance/LOG.md",
       "context": "historical_pilot_summary",
-      "sha256": "dd66e67423e9985ce427651dbb970937e6b3cedf43071aa4ab0abbb55a8869d8",
+      "sha256": "37f2db9b6959ca756c57b2f6e66fc7accb33c0323fa2d4be5d5cd94de3f0f80f",
       "projection_transform": "private_evidence_redaction"
     },
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "4c56a149a5479ec1d4062585e4eedd2b929e61443b63e44e6a6323bc1a7f912a"
+      "sha256": "4421b3b6d1ddbfaf028ad8df19b8b27424db51d36278f249975bc76ab849673e"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "1eeb1e16f5538c88eafd7a80c0e07470abc72cd8d796faf08d23a5c1b4ffc4e0",
-      "projection_sha256": "75f259ec0873e4e8343d343d2e91ccb593e3e7e281d1e6c2cc57a3bc524b2eb9"
+      "sha256": "898b1411c7dc6be91d299973a1551792d35adb60cb104244d8686cac8371fb93",
+      "projection_sha256": "8f07eebcfd887ff6ad0900a7111e719ec51ac972565cc88f1bf6f9c1c6c73a30"
     },
     {
       "path": "governance/decisions/DR-001.md",
@@ -122,12 +122,12 @@
     {
       "path": "projection/public-files.txt",
       "context": "historical_path_index",
-      "sha256": "d676bcf6ecafe24e10fa793ed1b762d7046856ad805ce0802d307c9a0388eacd"
+      "sha256": "0b20940fecd22683586c5947b129e0203ed1534692993e40068f6305bfef8106"
     },
     {
       "path": "tests/test_distribution.py",
       "context": "historical_evidence_fixture",
-      "sha256": "7277679312eca66af8210b06e87ea2c3eedb4380139aa003ce018282526dcbe2"
+      "sha256": "05698dd8ad9b22d5b40f8ab3bd733afcfc0302ea31a8769eafc80305c321b1b5"
     },
     {
       "path": "tests/test_identity_migration.py",
