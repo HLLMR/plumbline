@@ -525,6 +525,44 @@ absent. No checked-in `dist/` replacement, tag, visibility change, or public
 history transfer occurred. The new virgin public repository remains the target
 for a fresh clean-history projection and separate Owner publication decision.
 
+### Post-pilot WO-PL-039 completed record
+
+WO-PL-039 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-29 and reported
+active minutes **NOT REPORTED**.
+
+The order corrected the unchanged-public-URL cache failure exposed after PR #3.
+README now names the accepted wall-glyph banner through its SHA-256 prefix;
+tests bind that suffix to the file bytes and require the retired URL to remain
+absent. GitHub's live social-preview object is byte-identical to the accepted
+source at SHA-256
+`5200A1511A781CFE49BAF10177880CFC6E4E18EB8F9A55CA9E17AB4F9B35A312`.
+
+CI action refs are exact-SHA pinned, weekly Dependabot maintenance is present,
+and one stable `CI required` job represents the full matrix. The default branch
+now requires a pull request, linear history, conversation resolution, squash-
+only merge, and that strict status; deletion and non-fast-forward updates are
+blocked. Supported vulnerability, dependency, scanning, push-protection, and
+Actions restrictions are enabled. Plan-limited non-provider patterns and
+validity checks remain disabled and are not represented as enabled.
+
+Windows passed 657 tests with two expected skips. A native Ubuntu public
+candidate passed 657 with three expected skips. Two independent 117-file
+candidates were checker-clean and byte-identical at complete-ledger SHA-256
+`7D215B5B432C3F147B06A175639A3FA234DF4C8B02C492C2ED8592A11D96CCA1`.
+The first fresh review returned two record/process blockers; the private input
+and candidates were immediately deleted and absence-verified, and the record
+was corrected to distinguish static pre-acceptance CI proof from the mandatory
+live-green public-PR gate. Corrected fresh re-review returned **ACCEPT**.
+
+No denial was generated: the Codex implementation surface was outside the
+installed Claude Code hook, and the strict classification remained **8 / 0 /
+8**. No source commit, source push, public PR, release, tag, deployment, Pages,
+domain, collaborator, visibility, secret, or `dist/` change occurred before
+acceptance. The Owner authorized ordinary closeout/private commit and the
+post-closeout issue #4 projection PR, with merge only after live `CI required`
+passes; WO-PL-040 remains inactive.
+
 ---
 
 ## Column definitions

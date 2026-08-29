@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/writwall-readme-banner.png" alt="Writwall: document-governed AI work with scoped grants, denial evidence, and human acceptance." width="720">
+  <img src="docs/assets/writwall-readme-banner-0a5259d8.png" alt="Writwall: document-governed AI work with scoped grants, denial evidence, and human acceptance." width="720">
 </p>
 
 <h1 align="center">Writwall</h1>

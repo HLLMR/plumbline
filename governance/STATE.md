@@ -7,7 +7,8 @@ records the repository state observed after the Plumbline 0.8 public release,
 accepted WO-PL-034 public-front-door polish, accepted WO-PL-035 onboarding
 repair, accepted WO-PL-036 name-clearance and replacement selection, and
 accepted WO-PL-037 controlled migration to the current **Writwall** identity,
-and accepted WO-PL-038 wall-glyph identity correction.
+accepted WO-PL-038 wall-glyph identity correction, and accepted WO-PL-039
+cache-safe public-identity and repository hardening.
 
 **Derived:** 2026-08-28 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
@@ -20,8 +21,8 @@ WO-PL-025 complete and the project operatively bound to Doctrine 0.8;
 WO-PL-026 complete and RFI-22 closed; WO-PL-027 through WO-PL-033 complete;
 Plumbline 0.8 publicly released from a one-commit clean-history projection;
 WO-PL-034 through WO-PL-038 complete; **Writwall** selected and implemented as
-the current identity with the two-line wall glyph; WO-PL-039 queued and
-inactive.
+the current identity with the two-line wall glyph; WO-PL-039 complete and
+accepted; WO-PL-040 queued and inactive for the day-zero coordinator.
 The hash of the commit containing this file is intentionally recorded only
 externally.
 
@@ -72,9 +73,10 @@ externally.
 | WO-PL-035 | **COMPLETE**, accepted 2026-08-28; post-publication human-onboarding and public-contribution repair, not counted. A human-first start page, coordinator prompts, safe bootstrap/recovery rules, issue/PR workflow, and deterministic cross-document checks are complete. The first fresh novice review returned six material findings; all were corrected and a different fresh Reviewer returned ACCEPT. Active minutes **NOT REPORTED**; records retained in `governance/history/` |
 | WO-PL-036 | **COMPLETE**, accepted 2026-08-28; post-publication inception name-clearance evidence and replacement selection, not counted. Public collector/checker, worked incident, four canonical ledgers, and release-disposition pins are complete. Owner rejected Plumbline, Grantcord, and Writcord and accepted **Writwall** after named-human web/common-law and USPTO review. Windows passed 638 tests, native Ubuntu passed 74 focused/integration tests, two 112-file projections reproduced byte-for-byte, and the fifth fresh Reviewer returned ACCEPT. Active minutes **NOT REPORTED**; records retained in `governance/history/`; identity migration remains unstarted |
 | WO-PL-037 | **COMPLETE**, accepted 2026-08-29; controlled identity migration from Plumbline to **Writwall**, not counted. Current product surfaces, adoption skill, code constants, repository coordinates, and visual assets are migrated; historical Plumbline facts remain pinned by `identity/legacy-references.json`. Windows and Ubuntu governed-source/candidate suites passed; two private-pattern candidates were byte-identical; live-wall canary record 310 is valid; fresh Sonnet review returned **ACCEPT WITH NON-BLOCKING POLISH**. Owner active minutes **NOT REPORTED**. The closeout records one unauthorized read-only history traversal with no implementation impact. Records retained in `governance/history/`; no push, public-repository rename, release, tag, `dist/` replacement, website edit, or external launch action occurred |
-| WO-PL-038 | **COMPLETE**, accepted 2026-08-29; post-migration wall-glyph identity correction, not counted. The Owner rejected the inherited plumb-line/bob device and accepted the two-line wall at the `writ|wall` boundary. Focused and complete tests, identity, licensing, dispatch, and whitespace checks passed; fresh review returned **ACCEPT** after one report-only transient-count correction. Active minutes **NOT REPORTED**. Public issue #2 projection/PR update authorized; WO-PL-039 remains queued and inactive |
+| WO-PL-038 | **COMPLETE**, accepted 2026-08-29; post-migration wall-glyph identity correction, not counted. The Owner rejected the inherited plumb-line/bob device and accepted the two-line wall at the `writ|wall` boundary. Focused and complete tests, identity, licensing, dispatch, and whitespace checks passed; fresh review returned **ACCEPT** after one report-only transient-count correction. Active minutes **NOT REPORTED**. Public issue #2 projection/PR update merged as public PR #3; the merged bytes were correct, but GitHub continued serving the retired banner from its unchanged published image URL, now recorded as public issue #4 |
+| WO-PL-039 | **COMPLETE**, accepted 2026-08-29; post-migration cache-safe public identity and repository hardening, not counted. README now uses a digest-bound wall-glyph banner path; the live GitHub social preview is byte-identical to the accepted wall source; CI actions are full-SHA pinned behind one stable required check; supported repository rules, merge hygiene, Actions restrictions, vulnerability reporting, scanning, push protection, and topics are active. Windows passed 657 tests with two skips; the native Ubuntu candidate passed 657 with three skips; two 117-file candidates were checker-clean and byte-identical; corrected fresh re-review returned **ACCEPT**. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; the post-closeout public issue #4 branch/PR is authorized, with merge only after live `CI required` passes |
 | Pilot progress | **10 of 10 counted work orders complete; fresh-agent evaluation accepted with calibrations and disposed by DR-002** |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-038 **COMPLETE**; Plumbline 0.8 is the historical public release; **Writwall migration and wall-glyph correction accepted**; WO-PL-039 queued and inactive |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-039 **COMPLETE**; Plumbline 0.8 is the historical public release; **Writwall migration, wall-glyph correction, and cache-safe repository hardening accepted**; WO-PL-040 queued and inactive |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout
