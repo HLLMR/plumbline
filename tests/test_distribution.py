@@ -1033,13 +1033,39 @@ class PublicFrontDoorTests(unittest.TestCase):
         self.assertIn('alt="Writwall: document-governed AI work', readme)
         self.assertIn('width="720"', readme)
         self.assertIn('viewBox="0 0 1280 320"', banner_svg)
-        self.assertIn("Document-governed AI work: scoped grants, denial evidence, human acceptance.", banner_svg)
+        self.assertIn(
+            "Document-governed AI work: written authority, bounded capability, retained evidence.",
+            banner_svg,
+        )
+        self.assertIn(
+            '<line x1="248.36" y1="126.36" x2="248.36" y2="175.00"',
+            banner_svg,
+        )
+        self.assertIn(
+            '<line x1="254.44" y1="126.36" x2="254.44" y2="175.00"',
+            banner_svg,
+        )
+        self.assertNotIn("<circle", banner_svg)
         self.assertNotIn("A wall nobody has watched", banner_svg)
         self.assertIn('viewBox="0 0 1280 640"', social_svg)
         self.assertIn("Governance for AI-assisted", social_svg)
-        self.assertIn("A capability wall,", social_svg)
-        self.assertIn("birth-tested where installed.", social_svg)
-        self.assertNotIn("Capability walls", social_svg)
+        self.assertIn(
+            "Written authority before action. Bounded capability during it.",
+            social_svg,
+        )
+        self.assertIn(
+            "Retained evidence before acceptance. The pilot log ships, failing rows and all.",
+            social_svg,
+        )
+        self.assertIn(
+            '<line x1="183.63" y1="97.60" x2="183.63" y2="128.00"',
+            social_svg,
+        )
+        self.assertIn(
+            '<line x1="187.43" y1="97.60" x2="187.43" y2="128.00"',
+            social_svg,
+        )
+        self.assertNotIn("<circle", social_svg)
         self.assertLess(readme.index("<img"), readme.index(
             '<h1 align="center">Writwall</h1>'))
         for chrome in (

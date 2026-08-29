@@ -63,7 +63,7 @@
     {
       "path": "docs/identity-migration.md",
       "context": "migration_case_study",
-      "sha256": "1185647d1251e6c34a604698e7ec23609040cbcd40a83fdcd02e1aec0b920e78"
+      "sha256": "f4b7f53ced9cd8c0b0734d0bc1004267a3c330462b8a371780240a59ea4503c9"
     },
     {
       "path": "examples/README.md",
@@ -100,13 +100,13 @@
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "97bf9d0ddbf913667a224250dbdaa6264a8c1584cf78f42fda678fb53b47d7d6"
+      "sha256": "4c56a149a5479ec1d4062585e4eedd2b929e61443b63e44e6a6323bc1a7f912a"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "36b1eac414e3a9e644d9c85c45447379de1ac6552d41ee76ba902c254ed830a5",
-      "projection_sha256": "26f472919a67f9bca73b84067f5ade513e6606be449c34b2324e8c6f596096ac"
+      "sha256": "1eeb1e16f5538c88eafd7a80c0e07470abc72cd8d796faf08d23a5c1b4ffc4e0",
+      "projection_sha256": "75f259ec0873e4e8343d343d2e91ccb593e3e7e281d1e6c2cc57a3bc524b2eb9"
     },
     {
       "path": "governance/decisions/DR-001.md",
@@ -127,7 +127,7 @@
     {
       "path": "tests/test_distribution.py",
       "context": "historical_evidence_fixture",
-      "sha256": "ce9a6dbf6e33767c28e924529dd0e5b8c3f648fc017bee5f6d12ce4aa44e0e23"
+      "sha256": "7277679312eca66af8210b06e87ea2c3eedb4380139aa003ce018282526dcbe2"
     },
     {
       "path": "tests/test_identity_migration.py",

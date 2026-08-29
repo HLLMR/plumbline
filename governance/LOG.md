@@ -517,7 +517,7 @@ that attempted to relink the remote while WO-PL-033 was active. The wall denied
 two shell channels, one broad read traversal, and one out-of-grant Edit before
 mutation. The original 305 records remain a line-for-line exact prefix; no
 denied mutation succeeded. The authorized coordinator later relinked `origin`
-to the renamed private `[private governed-source identifier omitted]` remote.
+to the renamed private `plumbline-archive` remote.
 
 The ignored reviewer ZIP, private screening input, both candidates and
 archives, WSL mount/keeper, and temporary logs were deleted and verified

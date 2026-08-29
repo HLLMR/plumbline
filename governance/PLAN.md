@@ -351,3 +351,36 @@ The current public repository and release remain available as evidence, but no
 new promotion, Show HN submission, replacement release, tag, or mass rebrand is
 authorized before WO-PL-036 produces and the Owner ratifies the replacement
 disposition. Public issue #2 is the durable public defect record.
+
+## 15. Owner-ratified first-use and identity follow-through — 2026-08-29
+
+The Owner accepted **Writwall** as the canonical identity, directed retirement
+of the inherited plumb-line device in favor of the already-developed two-line
+wall glyph, and confirmed that an IDE coding agent is a valid day-zero entry
+point before the wall is registered. The first public adoption showed that the
+role architecture exists but the invocation contract still fails when the wall
+is installed before its bootstrap bundle and local handoff are available.
+
+1. **WO-PL-038 — Wall-glyph identity correction.** Replace the current-use
+   plumb-line device in public README/social assets with the two-line wall at
+   the `writ|wall` boundary. Preserve explicit historical evidence; do not
+   rewrite accepted records. Verify generated raster siblings, projection and
+   license gates, and finish public issue #2 through the ordinary projection
+   and pull-request path after acceptance.
+2. **WO-PL-039 — Day-zero invocation and bootstrap handoff.** Make the
+   IDE-first path executable from a clean repository: give the human one exact
+   kickoff prompt; make the complete bootstrap bundle and a project-local
+   handoff readable before wall registration; distinguish the temporary
+   bootstrap coordinator from the post-adoption walled Operator; document the
+   external infrastructure-operator boundary; and prove the path with a fresh
+   clean-context walkthrough. Public issue #1 remains the durable defect
+   record.
+
+The Owner remains the source of intent and acceptance. The Owner-Agent may
+draft, coordinate, record ratified decisions, and perform authorized lifecycle
+mechanics. An IDE agent may serve as the bootstrap coordinator before
+registration and later as the walled Operator, but those are sequential roles,
+not simultaneous authority. An infrastructure agent that only changes DNS,
+containers, hosts, or proxies is outside the repository's capability wall; it
+receives a bounded external-operations packet and returns evidence. If it edits
+repository bytes, it enters the repository as an Operator under a work order.
