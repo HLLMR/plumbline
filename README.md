@@ -1,41 +1,48 @@
 <p align="center">
-  <img src="docs/assets/plumbline-readme-banner.png" alt="Plumbline: document-governed AI work with scoped grants, denial evidence, and human acceptance." width="720">
+  <img src="docs/assets/writwall-readme-banner.png" alt="Writwall: document-governed AI work with scoped grants, denial evidence, and human acceptance." width="720">
 </p>
 
-<h1 align="center">Plumbline</h1>
+<h1 align="center">Writwall</h1>
 
 <p align="center"><strong>Governance for AI-assisted development.</strong></p>
 
 <p align="center">
-  <a href="https://github.com/HLLMR/plumbline/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/HLLMR/plumbline/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/HLLMR/plumbline/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/HLLMR/plumbline?display_name=tag&amp;sort=semver"></a>
+  <a href="https://github.com/HLLMR/writwall/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/HLLMR/writwall/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/HLLMR/writwall/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/HLLMR/writwall?display_name=tag&amp;sort=semver"></a>
   <a href="DOCTRINE.md"><img alt="Doctrine 0.8" src="https://img.shields.io/badge/doctrine-0.8-4f8f8b"></a>
   <a href="SECURITY.md"><img alt="Security policy" src="https://img.shields.io/badge/security-policy-b77945"></a>
 </p>
 
 <p align="center">
+  <a href="START-HERE.md">Start here</a> ·
   <a href="#try-it-in-five-minutes">Five-minute start</a> ·
   <a href="ADOPTING.md">Adopt</a> ·
-  <a href="#how-plumbline-differs">How it differs</a> ·
+  <a href="#how-writwall-differs">How it differs</a> ·
   <a href="examples/plumbline-self-hosting-pilot.md">Pilot evidence</a> ·
   <a href="adapters/claude-code/SECURITY.md">Security boundary</a> ·
   <a href="LICENSE-MAP.md">License map</a>
 </p>
 
-Plumbline governs AI-assisted development with plain files in your repository.
+Writwall governs AI-assisted development with plain files in your repository.
 A human ratifies intent and dispatches one bounded work order at a time with an
 explicit capability grant. An agent performs the task. A separate review checks
 the result against the record, and the human accepts on evidence. Between work
 orders, the project returns to lockout.
 
-Spec tools answer *what should the agent build?* Plumbline records what comes
+Spec tools answer *what should the agent build?* Writwall records what comes
 next: who authorized the change, what the agent was allowed to touch, what it
 tried, what the installed adapter actually blocked, and what a human accepted.
 
-Plumbline is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit.
+Writwall is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit.
 There is no hosted service. It ships one Claude Code adapter; other agents remain
 instruction-bounded unless someone builds and birth-tests an equivalent
 adapter.
+
+**Formerly Plumbline.** The first public release exposed that the project had
+never run an inception name search. We froze promotion, published the failure,
+built the missing evidence gate, selected Writwall, and preserved the migration
+as a worked case study instead of rewriting history. See
+[the identity-migration record](docs/identity-migration.md).
 
 ## See the mechanism in 60 seconds
 
@@ -67,7 +74,7 @@ the agent tried, what review found, or whether the delivered result still
 matches the Owner's intent. Long-running projects then accumulate plausible
 documents whose authority and current truth are hard to distinguish.
 
-Plumbline gives those facts a chain of custody. In this repository, **Owner**
+Writwall gives those facts a chain of custody. In this repository, **Owner**
 means the human who controls project intent and acceptance; a **work order** is
 one bounded unit of authorized work; **drift** is any difference between the
 recorded plan and the observed project state; and a **birth test** is an
@@ -86,7 +93,10 @@ actually blocks the current session before real work begins.
 
 ## Try it in five minutes
 
-The shortest honest first-value route is the create-only scaffolder:
+If you are new to Writwall, begin with [START-HERE.md](START-HERE.md). It tells
+you which role to engage, whether that agent belongs inside or outside the IDE,
+and gives you the exact first prompt. The create-only scaffolder is useful only
+after you understand that it does not complete adoption:
 
 ```text
 ./init.sh /absolute/path/to/your-project
@@ -94,16 +104,24 @@ python3 /absolute/path/to/your-project/checks/check_work_order_dispatch.py --loc
 ```
 
 This creates the governance directories, copies the templates, and installs
-the pre-dispatch validator. It **does not install or birth-test** a provider
-hook, inventory existing project authority, ratify adoption, or make a commit.
-Read [ADOPTING.md](ADOPTING.md) next for the complete adoption sequence. If you
-want an agent-guided inventory and bootstrap, use the bundled adoption skill
-described under "On-ramps" below.
+the pre-dispatch validator. If the target already has a `.claude/` directory,
+it also copies the adapter file; it **does not register, activate, or birth-test**
+that hook, inventory existing project authority, ratify adoption, or make a commit.
+Read [ADOPTING.md](ADOPTING.md) next for the complete adoption sequence. Make
+the bundled adoption skill local before registering a wall that may deny the
+agent's network access.
+
+If the project does not yet have a settled public identity, stop before naming
+packages, repositories, domains, or launch assets. Run the evidence-producing
+[inception name-clearance gate](docs/name-clearance.md) and have the Owner
+dispose the exact candidate first. The gate records what was searched; it is
+not a legal opinion.
 
 ## What the pilot showed
 
-The evidence is from **one self-hosting pilot**: Plumbline governed ten work
-orders used to maintain Plumbline itself. It recorded 12 denials and **0
+The evidence is from **one self-hosting pilot conducted under the former
+Plumbline identity**: the repository governed ten work orders used to maintain
+the methodology itself. It recorded 12 denials and **0
 successful out-of-grant mutations**, but also 19 rework cycles and 18 extra
 agent sessions. The first five orders needed 4 rework cycles; the last five
 needed 15. Under the strict complete-channel metric, every counted order
@@ -111,16 +129,17 @@ reported 0 wholly mechanically enforced capability surfaces (for example,
 8 declared / 0 enforced / 8 unenforced).
 
 That is evidence that the records exposed real drift and that tested channels
-blocked forbidden actions. It is not proof that Plumbline lowers operating
+blocked forbidden actions. It is not proof that Writwall lowers operating
 cost, contains every tool channel, or generalizes to other teams and projects.
 The full public-safe measurements and caveats are in
-[the self-hosting pilot](examples/plumbline-self-hosting-pilot.md).
+[the self-hosting pilot](examples/plumbline-self-hosting-pilot.md), conducted
+under the former Plumbline identity.
 
-## How Plumbline differs
+## How Writwall differs
 
-Plumbline complements familiar project tools rather than replacing them:
+Writwall complements familiar project tools rather than replacing them:
 
-| Tool | What it is best at | What Plumbline adds |
+| Tool | What it is best at | What Writwall adds |
 |---|---|---|
 | A good `CLAUDE.md` or equivalent | Stable project instructions and conventions | Change-controlled authority, per-order capability bounds, denials, review, and closeout evidence |
 | Architecture decision records | Durable reasoning for important technical choices | A live plan/current-state distinction and an executable scope for each change |
@@ -132,7 +151,7 @@ exist before the Owner calls the work complete.
 
 ## Enforcement boundary
 
-Plumbline can be used as instruction-bounded governance with any capable agent.
+Writwall can be used as instruction-bounded governance with any capable agent.
 Today, only the supplied **Claude Code** adapter can make selected tool-call
 channels mechanically enforced, and only after it is installed for the actual
 host and birth-tested in the executing session. Other providers remain
@@ -149,21 +168,23 @@ for installation, preflight, and birth-test requirements.
 
 Three ways in, from least to most tooling. All of them end at the same place:
 an adoption record (DR-001) and a birth-tested wall. See `ADOPTING.md` for the
-full sequence.
+full sequence and `START-HERE.md` for the human operating model and starter
+prompts.
 
 **1. Chat companion, no tooling.** Open any capable chat model and paste the
 adoption prompt from `ADOPTING.md` section 2 together with `DOCTRINE.md`. The
 model interviews you and drafts the adoption mapping and DR-001; you place the
 artifacts in your repository.
 
-**2. Coding agent with the skill.** Copy `skills/plumbline-adopt/` into your
+**2. Coding agent with the skill.** Copy `skills/writwall-adopt/` into your
 coding agent's skills directory and invoke it in the target repository. Its
 bootstrap mode inventories existing authority, scaffolds `governance/`,
 installs the Claude Code adapter and validator where applicable, runs the birth
 test, and returns proposals for the Owner. Its separately authorized recorder
 mode records already-ratified decisions and may make one local adoption commit.
 Neither mode ratifies intent, pushes, publishes, tags, or changes visibility.
-Delete the temporary skill bundle when bootstrap is complete.
+Keep the temporary skill bundle through the final recorder action that needs
+it; delete it only before the adoption commit.
 
 **3. Scaffolder.** The command above creates directories and copies templates
 and the pre-dispatch validator. It skips existing files and refuses to merge a
@@ -198,8 +219,9 @@ ratified. The 0.1 proposal is retained only in the private governed source's
 `archive/` and never enters a public candidate. Projects bind to a ratified
 revision and move only by an Owner-ratified migration (Doctrine DC.4).
 
-Plumbline's private self-hosting instance first adopted 0.6 and later migrated
-cumulatively to 0.8. Its ratifying project decision is a private record not
+This repository's private self-hosting instance first adopted 0.6 under the
+former identity and later migrated cumulatively to 0.8. Its ratifying project
+decision is a private record not
 carried by public candidates; `SELF-HOSTING.md` preserves the public-safe
 summary. See `DOCTRINE.md` DC.1, `decisions/README.md`, and the two guides under
 `migration-guides/` for the complete revision history.
@@ -212,7 +234,7 @@ methodology is proven.
 ## What is in this repository
 
 The layout below is a **reference layout for the private governed source
-repository** — how Plumbline's own working tree is organized, including
+repository** — how Writwall's own working tree is organized, including
 this repository's own governance instance under `governance/` and its
 methodology decision log under `decisions/`. It documents that layout; it is
 not necessarily the tree a given reader is looking at, and no artifact
@@ -231,7 +253,7 @@ are private-governed-source-only and are absent from every
 positive-allowlist public candidate, as marked below.
 
 ```
-plumbline/
+writwall/
 ├── DOCTRINE.md              The methodology, for humans. Formal clause numbering,
 │                            change-controlled under its own DC section.
 ├── ADOPTING.md              How to instantiate the doctrine into a project.
@@ -249,14 +271,14 @@ plumbline/
 ├── migration-guides/        One companion per revision transition, e.g.
 │                            0.1-to-0.6.md. Followed only when a project moves.
 ├── skills/                  Entry points for chat and coding agents (see On-ramps).
-│   └── plumbline-adopt/     Self-contained bootstrap bundle: carries its own
+│   └── writwall-adopt/     Self-contained bootstrap bundle: carries its own
 │                            doctrine, guides, adapter, and templates.
 ├── checks/                  Deterministic distribution checks. Nonzero exit on
 │                            a drifted copy, stale reference, or bad package.
 ├── scripts/                 Distribution builder (standard library only).
 ├── tests/                   Unit tests for the adapter and the scaffolder.
 ├── examples/                Evidence-backed examples from completed pilots:
-│                            plumbline-self-hosting-pilot.md.
+│                            plumbline-self-hosting-pilot.md (former identity).
 ├── archive/                 Superseded doctrine revisions and drafts, retained
 │                            as historical evidence, never current authority.
 │                            Private governed source only; not carried by any
@@ -269,13 +291,13 @@ plumbline/
 Pre-adoption records are retained under the private `archive/`; `dist/` holds
 build output. Neither is part of a positive-allowlist public candidate.
 
-`CLAUDE.md` at the root is Plumbline's own operating charter: the tier-1 injectable of the repository-local governance instance described in Doctrine 5.1.4. It ships in the private governed source distribution deliberately, as an inspectable worked example. In the clean-history public projection the builder replaces it with a short public-only notice stating that the checkout is ungoverned and ordinary contribution is allowed; the private-instance instructions never enter public bytes. It is not a template, and section "The archive is a source distribution" below says exactly what that means for you.
+`CLAUDE.md` at the root is Writwall's own operating charter: the tier-1 injectable of the repository-local governance instance described in Doctrine 5.1.4. It ships in the private governed source distribution deliberately, as an inspectable worked example. In the clean-history public projection the builder replaces it with a short public-only notice stating that the checkout is ungoverned and ordinary contribution is allowed; the private-instance instructions never enter public bytes. It is not a template, and section "The archive is a source distribution" below says exactly what that means for you.
 
 ## The archive is a source distribution
 
-`plumbline-<revision>.zip` is **a source distribution, not an overlay.** Do not unpack it into your project.
+`writwall-<revision>.zip` is **a source distribution, not an overlay.** Do not unpack it into your project.
 
-Unpacking it on top of a repository would drop Plumbline's own charter, doctrine, work history, and eventually its governance directory into your project root, where your agents would read another project's records as if they were yours. That is precisely the stale-but-discoverable failure the doctrine exists to eliminate (Doctrine 5.3.4).
+Unpacking it on top of a repository would drop Writwall's own charter, doctrine, work history, and eventually its governance directory into your project root, where your agents would read another project's records as if they were yours. That is precisely the stale-but-discoverable failure the doctrine exists to eliminate (Doctrine 5.3.4).
 
 What you actually do is instantiate **only the applicable project-side artifacts**, through one of the three documented adoption routes in `ADOPTING.md`. Those artifacts are:
 
@@ -287,9 +309,9 @@ What you actually do is instantiate **only the applicable project-side artifacts
 └── governance/                               (created empty; you fill it)
 ```
 
-Everything else in the archive is either the methodology itself, which you read, or Plumbline's own working records, which you may read as an example and never copy.
+Everything else in the archive is either the methodology itself, which you read, or Writwall's own working records, which you may read as an example and never copy.
 
-**Never copied into an adopting project:** Plumbline's root `CLAUDE.md`, its `governance/` directory, its decisions, plan, state, routing map, work orders, reports, briefs, history, and its authority. Doctrine 5.1.5 states this as a rule; the adoption routes enforce it by only ever copying templates, the adapter, and the pre-dispatch validator, and `checks/check_distribution.py` fails if a Plumbline governance record ever appears inside the adoption skill's bundle.
+**Never copied into an adopting project:** Writwall's root `CLAUDE.md`, its `governance/` directory, its decisions, plan, state, routing map, work orders, reports, briefs, history, and its authority. Doctrine 5.1.5 states this as a rule; the adoption routes enforce it by only ever copying templates, the adapter, and the pre-dispatch validator, and `checks/check_distribution.py` fails if a Writwall governance record ever appears inside the adoption skill's bundle.
 
 ## What is instantiated into a project
 
@@ -310,15 +332,15 @@ Not this repository. A project receives the project-side artifacts the doctrine 
 
 ## Revision binding and updates
 
-A project's adoption record states `Doctrine revision: 0.x`, not `dependency: plumbline@0.x`. When Plumbline publishes a later revision, nothing changes in any project until that project's Owner ratifies a migration (Doctrine DC.4). A migration is change-controlled: compare revisions, list the affected local artifacts, update them, record a decision, commit. There is no automatic upgrade path by design; a governance substrate that updates itself underneath a running project is a source of drift, which is the thing this exists to prevent.
+A project's adoption record states `Doctrine revision: 0.x`, not `dependency: writwall@0.x`. When Writwall publishes a later revision, nothing changes in any project until that project's Owner ratifies a migration (Doctrine DC.4). A migration is change-controlled: compare revisions, list the affected local artifacts, update them, record a decision, commit. There is no automatic upgrade path by design; a governance substrate that updates itself underneath a running project is a source of drift, which is the thing this exists to prevent.
 
-## What Plumbline is not, yet
+## What Writwall is not, yet
 
-There is no `plumbline validate`, no `plumbline diff`, and no dashboard. Each of those is worth building only if pilot data shows the manual version costs more than the tool would. The methodology's own rule applies to the methodology: build what a fixture forces.
+There is no `writwall validate`, no `writwall diff`, and no dashboard. Each of those is worth building only if pilot data shows the manual version costs more than the tool would. The methodology's own rule applies to the methodology: build what a fixture forces.
 
 ## Licensing
 
-HLLMR Ventures LLC licenses Plumbline prose under CC-BY-4.0, extracted
+HLLMR Ventures LLC licenses Writwall prose under CC-BY-4.0, extracted
 templates under CC0-1.0, adapters and `init.sh` under MIT-0, and scripts,
 checks, and tests under Apache-2.0. Files in the adoption bundle retain their
 canonical licenses. Extracted templates and adapters use CC0-1.0 and MIT-0
@@ -329,7 +351,7 @@ The authoritative path-by-path terms are in [LICENSE-MAP.md](LICENSE-MAP.md).
 Run `python3 -B checks/check_licenses.py` with Python 3.11 or newer for the
 machine-checkable SPDX/REUSE gate;
 the distribution checker invokes it as part of the ordinary source gate.
-The Plumbline name and revision designations are not licensed; see
+The Writwall name and revision designations are not licensed; see
 [NAMING.md](NAMING.md).
 
 ## Building a public projection

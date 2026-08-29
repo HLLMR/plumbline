@@ -67,7 +67,7 @@ def pre_adoption_fixture(repo: Path) -> Path:
 
     The exact inverse of ``adopt_fixture``. Every fixture is a copy of the real
     tree, so without this the live repository's own lifecycle stage leaks in:
-    before Plumbline adopted itself the copy was pre-adoption by accident, and
+    before Writwall adopted itself the copy was pre-adoption by accident, and
     the moment the Owner signed and renamed the adoption record every
     pre-adoption assertion below began running against an adopted fixture.
     Some failed loudly; others would have passed vacuously, which is worse.
@@ -86,6 +86,33 @@ def pre_adoption_fixture(repo: Path) -> Path:
         "**Status: PROPOSED.** Never packaged in any release archive.\n\n"
         "Not a real record. It pins this fixture to the pre-adoption state.\n",
         encoding="utf-8", newline="\n")
+    # The identity manifest describes the release projection, while this
+    # fixture deliberately removes the ratified adoption record. Keep the
+    # fixture's own projection inventory and retained-path list coherent rather
+    # than making every unrelated pre-adoption test fail on that intentional
+    # absence.
+    retired_path = "governance/decisions/DR-001.md"
+    allowlist = repo / "projection" / "public-files.txt"
+    if allowlist.is_file():
+        lines = [
+            line for line in allowlist.read_text(encoding="utf-8").splitlines()
+            if line != retired_path
+        ]
+        allowlist.write_text(
+            "\n".join(lines) + "\n", encoding="utf-8", newline="\n"
+        )
+    identity_manifest = repo / "identity" / "legacy-references.json"
+    if identity_manifest.is_file():
+        payload = json.loads(identity_manifest.read_text(encoding="utf-8"))
+        payload["retained"] = [
+            entry for entry in payload.get("retained", [])
+            if entry.get("path") != retired_path
+        ]
+        identity_manifest.write_text(
+            json.dumps(payload, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
     return repo
 
 
@@ -176,7 +203,7 @@ class DistributionTestCase(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
-        self.repo = copy_repo(self.tmp / "plumbline")
+        self.repo = copy_repo(self.tmp / "writwall")
 
     def check(self, *extra):
         return subprocess.run(
@@ -304,6 +331,70 @@ class CurrentDocumentationSynchronizationTests(unittest.TestCase):
 
 
 class CheckerFailureCategories(DistributionTestCase):
+    def test_unclassified_former_identity_fails_release_gate(self):
+        self.edit(
+            "START-HERE.md",
+            "Writwall adoption coordinator",
+            "Plumbline adoption coordinator",
+        )
+
+        result = self.check()
+        self.assert_fails(result, "identity")
+        self.assertIn(
+            "START-HERE.md contains an unclassified former-identity match",
+            result.stdout,
+        )
+
+    def test_pending_name_clearance_disposition_fails_release_gate(self):
+        ledger = (
+            self.repo / "examples" / "name-clearance-ledgers" /
+            "writwall-candidate.json"
+        )
+        payload = json.loads(ledger.read_text(encoding="utf-8"))
+        payload["disposition"] = {"decision": "pending"}
+        ledger.write_text(
+            json.dumps(payload, indent=2) + "\n", encoding="utf-8", newline="\n"
+        )
+
+        self.assert_fails(self.check(), "name-clearance")
+
+    def test_selected_name_disposition_is_pinned_for_release(self):
+        ledger = (
+            self.repo / "examples" / "name-clearance-ledgers" /
+            "writwall-candidate.json"
+        )
+        payload = json.loads(ledger.read_text(encoding="utf-8"))
+        payload["disposition"]["decision"] = "reject"
+        payload["disposition"]["rationale"] = "Mutated release decision."
+        ledger.write_text(
+            json.dumps(payload, indent=2) + "\n", encoding="utf-8", newline="\n"
+        )
+
+        result = self.check()
+
+        self.assert_fails(result, "name-clearance")
+        self.assertIn("writwall-candidate.json must record Writwall accept", result.stdout)
+
+    def test_owner_human_review_attestation_is_pinned_for_release(self):
+        ledger = (
+            self.repo / "examples" / "name-clearance-ledgers" /
+            "writwall-candidate.json"
+        )
+        payload = json.loads(ledger.read_text(encoding="utf-8"))
+        human_source = next(
+            source for source in payload["sources"]
+            if source["id"] == "web_common_law"
+        )
+        human_source["reviewed_by"] = "Codex"
+        ledger.write_text(
+            json.dumps(payload, indent=2) + "\n", encoding="utf-8", newline="\n"
+        )
+
+        result = self.check()
+
+        self.assert_fails(result, "name-clearance")
+        self.assertIn("must retain HLLMR, Owner human review", result.stdout)
+
     def test_missing_required_file_fails(self):
         (self.repo / "templates" / "A-charter.md").unlink()
         self.assert_fails(self.check(), "required-file")
@@ -321,12 +412,12 @@ class CheckerFailureCategories(DistributionTestCase):
         self.assertIn("decisions/DR-005.md", result.stdout)
 
     def test_drifted_skill_bundle_copy_fails(self):
-        path = self.repo / "skills" / "plumbline-adopt" / "references" / "DOCTRINE.md"
+        path = self.repo / "skills" / "writwall-adopt" / "references" / "DOCTRINE.md"
         path.write_text(path.read_text(encoding="utf-8") + "\ndrift\n", encoding="utf-8", newline="\n")
         self.assert_fails(self.check(), "bundle")
 
     def test_missing_skill_bundle_copy_fails(self):
-        (self.repo / "skills" / "plumbline-adopt" / "assets" / "templates" /
+        (self.repo / "skills" / "writwall-adopt" / "assets" / "templates" /
          "C-owner-brief.md").unlink()
         result = self.check()
         self.assertNotEqual(result.returncode, 0)
@@ -388,7 +479,7 @@ class DoctrineRatificationTests(DistributionTestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.assertIn("doctrine revision 0.8", result.stdout)
         self.assertIn("DC.1 status 'Ratified'", result.stdout)
-        bundled = (self.repo / "skills" / "plumbline-adopt" / "references" /
+        bundled = (self.repo / "skills" / "writwall-adopt" / "references" /
                    "DOCTRINE.md").read_bytes()
         canonical = (self.repo / "DOCTRINE.md").read_bytes()
         self.assertEqual(bundled, canonical)
@@ -416,12 +507,12 @@ class DoctrineRatificationTests(DistributionTestCase):
 class MigrationGuideZeroSevenTests(DistributionTestCase):
     def test_bundled_0_6_to_0_7_guide_exists_matches_and_drift_fails(self):
         canonical = self.repo / "migration-guides" / "0.6-to-0.7.md"
-        bundled = (self.repo / "skills" / "plumbline-adopt" / "references" /
+        bundled = (self.repo / "skills" / "writwall-adopt" / "references" /
                    "migration-guides" / "0.6-to-0.7.md")
         self.assertTrue(canonical.is_file(),
                         "migration-guides/0.6-to-0.7.md does not exist")
         self.assertTrue(bundled.is_file(),
-                        "skills/plumbline-adopt/references/migration-guides/"
+                        "skills/writwall-adopt/references/migration-guides/"
                         "0.6-to-0.7.md does not exist")
         self.assertEqual(bundled.read_bytes(), canonical.read_bytes())
 
@@ -496,10 +587,10 @@ class MigrationGuideZeroSevenTests(DistributionTestCase):
 
 
 class SelfHostingSegregationTests(DistributionTestCase):
-    """Doctrine 5.1.5: Plumbline's working records never reach an adopter."""
+    """Doctrine 5.1.5: Writwall's working records never reach an adopter."""
 
     def bundle(self):
-        return self.repo / "skills" / "plumbline-adopt"
+        return self.repo / "skills" / "writwall-adopt"
 
     def test_charter_inside_the_bundle_fails(self):
         (self.bundle() / "references" / "CLAUDE.md").write_text("x", encoding="utf-8", newline="\n")
@@ -557,7 +648,7 @@ class SelfHostingSegregationTests(DistributionTestCase):
 class PositioningTests(DistributionTestCase):
     """WO-PL-002 items 5.1 and 5.2."""
 
-    CANONICAL = ("Plumbline is a document-controlled governance methodology with a "
+    CANONICAL = ("Writwall is a document-controlled governance methodology with a "
                  "self-hosting reference implementation and project-scaffolding toolkit.")
 
     def test_canonical_description_present_verbatim(self):
@@ -565,7 +656,7 @@ class PositioningTests(DistributionTestCase):
         self.assertIn(self.CANONICAL, collapsed)
 
     def test_missing_canonical_description_fails(self):
-        self.edit("README.md", self.CANONICAL, "Plumbline is a governance thing.")
+        self.edit("README.md", self.CANONICAL, "Writwall is a governance thing.")
         self.assert_fails(self.check(), "positioning")
 
     def test_missing_source_distribution_phrase_in_readme_fails(self):
@@ -603,16 +694,16 @@ class CharterRetentionTests(DistributionTestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         archive = next((self.repo / "dist").glob("*.zip"))
         with zipfile.ZipFile(archive) as handle:
-            self.assertIn("plumbline/CLAUDE.md", handle.namelist())
+            self.assertIn("writwall/CLAUDE.md", handle.namelist())
 
     def test_archive_without_charter_fails_the_check(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        path = out / "plumbline-0.6-rc.zip"
+        path = out / "writwall-0.6-rc.zip"
         with zipfile.ZipFile(path, "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_missing_charter_in_repo_fails(self):
         (self.repo / "CLAUDE.md").unlink()
@@ -623,7 +714,7 @@ class LineEndingTests(DistributionTestCase):
     """WO-PL-002 item 4.3: conversion cannot silently invalidate equality."""
 
     def test_crlf_in_a_bundle_copy_fails_loudly_and_names_the_cause(self):
-        path = self.repo / "skills" / "plumbline-adopt" / "references" / "DOCTRINE.md"
+        path = self.repo / "skills" / "writwall-adopt" / "references" / "DOCTRINE.md"
         path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
         result = self.check()
         self.assert_fails(result, "bundle")
@@ -662,8 +753,8 @@ class LineEndingTests(DistributionTestCase):
         self.assertEqual(self.build().returncode, 0)
         archive = next((self.repo / "dist").glob("*.zip"))
         with zipfile.ZipFile(archive) as handle:
-            stored = handle.read("plumbline/README.md")
-            manifest = handle.read("plumbline/MANIFEST.sha256").decode("utf-8")
+            stored = handle.read("writwall/README.md")
+            manifest = handle.read("writwall/MANIFEST.sha256").decode("utf-8")
         digests = {rel: dig for dig, _, rel in
                    (line.partition("  ") for line in manifest.splitlines())}
         self.assertEqual(stored, lf)
@@ -725,8 +816,8 @@ class GitAttributesTests(unittest.TestCase):
             self.assertIn(attrs[path]["text"], ("auto", "set"), path)
 
     def test_binaries_are_not_converted(self):
-        attrs = self.check_attr("text", "--", "dist/plumbline.zip", "img/x.png")
-        self.assertEqual(attrs["dist/plumbline.zip"]["text"], "unset")
+        attrs = self.check_attr("text", "--", "dist/writwall.zip", "img/x.png")
+        self.assertEqual(attrs["dist/writwall.zip"]["text"], "unset")
         self.assertEqual(attrs["img/x.png"]["text"], "unset")
 
 
@@ -891,7 +982,7 @@ class ProjectionContextTests(unittest.TestCase):
             self.skipTest("only meaningful against a public projection tree")
         tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
-        repo = copy_repo(tmp / "plumbline")
+        repo = copy_repo(tmp / "writwall")
         provenance = repo / "PROJECTION-PROVENANCE.md"
         original = provenance.read_text(encoding="utf-8")
         tampered = original.replace(
@@ -917,13 +1008,13 @@ class PublicFrontDoorTests(unittest.TestCase):
     def test_readme_banner_and_repository_chrome_are_release_ready(self):
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         banner_path = (REPO_ROOT / "docs" / "assets" /
-                       "plumbline-readme-banner.png")
+                       "writwall-readme-banner.png")
         banner = banner_path.read_bytes()
         banner_svg = (REPO_ROOT / "docs" / "assets" /
-                      "plumbline-readme-banner.svg").read_text(encoding="utf-8")
-        social = (REPO_ROOT / "docs" / "assets" / "plumbline-og.png").read_bytes()
+                      "writwall-readme-banner.svg").read_text(encoding="utf-8")
+        social = (REPO_ROOT / "docs" / "assets" / "writwall-og.png").read_bytes()
         social_svg = (REPO_ROOT / "docs" / "assets" /
-                      "plumbline-og.svg").read_text(encoding="utf-8")
+                      "writwall-og.svg").read_text(encoding="utf-8")
 
         self.assertLess(len(banner), 500 * 1024)
         self.assertEqual(banner[:8], b"\x89PNG\r\n\x1a\n")
@@ -938,8 +1029,8 @@ class PublicFrontDoorTests(unittest.TestCase):
              int.from_bytes(social[20:24], "big")),
             (1280, 640),
         )
-        self.assertIn('src="docs/assets/plumbline-readme-banner.png"', readme)
-        self.assertIn('alt="Plumbline: document-governed AI work', readme)
+        self.assertIn('src="docs/assets/writwall-readme-banner.png"', readme)
+        self.assertIn('alt="Writwall: document-governed AI work', readme)
         self.assertIn('width="720"', readme)
         self.assertIn('viewBox="0 0 1280 320"', banner_svg)
         self.assertIn("Document-governed AI work: scoped grants, denial evidence, human acceptance.", banner_svg)
@@ -950,14 +1041,14 @@ class PublicFrontDoorTests(unittest.TestCase):
         self.assertIn("birth-tested where installed.", social_svg)
         self.assertNotIn("Capability walls", social_svg)
         self.assertLess(readme.index("<img"), readme.index(
-            '<h1 align="center">Plumbline</h1>'))
+            '<h1 align="center">Writwall</h1>'))
         for chrome in (
                 "actions/workflows/ci.yml/badge.svg",
-                "img.shields.io/github/v/release/HLLMR/plumbline",
+                "img.shields.io/github/v/release/HLLMR/writwall",
                 "doctrine-0.8",
                 "security-policy",
                 'href="#try-it-in-five-minutes">Five-minute start</a>',
-                'href="#how-plumbline-differs">How it differs</a>',
+                'href="#how-writwall-differs">How it differs</a>',
                 'href="LICENSE-MAP.md">License map</a>'):
             self.assertIn(chrome, readme)
 
@@ -976,10 +1067,10 @@ class PublicFrontDoorTests(unittest.TestCase):
 
     def test_banner_is_public_allowlisted_and_license_mapped(self):
         relatives = {
-            "docs/assets/plumbline-og.png",
-            "docs/assets/plumbline-og.svg",
-            "docs/assets/plumbline-readme-banner.png",
-            "docs/assets/plumbline-readme-banner.svg",
+            "docs/assets/writwall-og.png",
+            "docs/assets/writwall-og.svg",
+            "docs/assets/writwall-readme-banner.png",
+            "docs/assets/writwall-readme-banner.svg",
         }
         allowlist = (REPO_ROOT / "projection" / "public-files.txt").read_text(
             encoding="utf-8").splitlines()
@@ -997,7 +1088,7 @@ class PublicFrontDoorTests(unittest.TestCase):
             "## The four-step loop",
             "## Try it in five minutes",
             "## What the pilot showed",
-            "## How Plumbline differs",
+            "## How Writwall differs",
             "## Enforcement boundary",
             "## What is in this repository",
         ]
@@ -1012,10 +1103,123 @@ class PublicFrontDoorTests(unittest.TestCase):
                 "governs AI-assisted development",
                 "what the installed adapter actually blocked",
                 "Spec-driven tools",
-                "does not install or birth-test",
+                "does not register, activate, or birth-test",
                 "19 rework cycles",
                 "0 successful out-of-grant mutations"):
             self.assertIn(truth, front_door)
+
+    def test_human_start_ramp_names_roles_interfaces_and_first_prompts(self):
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        start = (REPO_ROOT / "START-HERE.md").read_text(encoding="utf-8")
+        adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
+
+        self.assertIn('href="START-HERE.md">Start here</a>', readme)
+        self.assertLess(readme.index('href="START-HERE.md">Start here</a>'),
+                        readme.index('href="ADOPTING.md">Adopt</a>'))
+        self.assertIn("does not register, activate, or birth-test", readme)
+        for truth in (
+                "Small project",
+                "Split-role",
+                "Provider-neutral",
+                "adoption coordinator",
+                "walled Implementer",
+                "fresh Reviewer",
+                "Act as my Writwall adoption coordinator",
+                "already-installed lockout",
+                "accidental-overlay recovery coordinator",
+                "recorder closeout",
+                "one question at a time",
+                "chat exchange alone is not lifecycle authorization"):
+            self.assertIn(truth, start)
+        self.assertIn("START-HERE.md", adopting)
+        self.assertIn("both doctrinal birth-test levels", adopting)
+        self.assertIn("does not by itself block adoption", adopting)
+        self.assertIn("durable lifecycle authorization", adopting)
+
+    def test_bootstrap_guidance_is_local_first_and_external_probe_safe(self):
+        adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
+        skill = (REPO_ROOT / "skills" / "writwall-adopt" /
+                 "SKILL.md").read_text(encoding="utf-8")
+        adapter = (REPO_ROOT / "adapters" / "claude-code" /
+                   "README.md").read_text(encoding="utf-8")
+        combined = "\n".join((adopting, skill, adapter)).lower()
+
+        for truth in (
+                "before the wall is registered",
+                "minimal provider profile",
+                "explicit disposable",
+                "indeterminate, never a pass",
+                "re-establish the no-pointer state"):
+            self.assertIn(truth, combined)
+        self.assertIn(
+            "unplanned denials are not retroactively promoted into a birth test",
+            combined,
+        )
+        self.assertIn("portable windows-and-posix claim", combined)
+
+    def test_public_contribution_workflow_is_agent_routable(self):
+        required = (
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+            ".github/pull_request_template.md",
+            "docs/agents/issue-tracker.md",
+            "docs/agents/triage-labels.md",
+            "docs/agents/domain.md",
+        )
+        for relative in required:
+            self.assertTrue((REPO_ROOT / relative).is_file(), relative)
+
+    def test_inception_name_clearance_gate_is_public_and_evidence_backed(self):
+        required = {
+            "checks/check_name_clearance.py",
+            "scripts/collect_name_clearance.py",
+            "tests/test_name_clearance.py",
+            "docs/name-clearance.md",
+            "examples/name-clearance-incident-2026-08.md",
+            "examples/name-clearance-ledgers/plumbline-incident.json",
+            "examples/name-clearance-ledgers/writwall-candidate.json",
+            "examples/name-clearance-ledgers/grantcord-candidate.json",
+            "examples/name-clearance-ledgers/writcord-candidate.json",
+        }
+        allowlist = set(
+            (REPO_ROOT / "projection" / "public-files.txt").read_text(
+                encoding="utf-8"
+            ).splitlines()
+        )
+        self.assertTrue(required.issubset(allowlist))
+        reuse = (REPO_ROOT / "REUSE.toml").read_text(encoding="utf-8")
+        self.assertIn('"docs/name-clearance.md"', reuse)
+        for relative in required:
+            self.assertTrue((REPO_ROOT / relative).is_file(), relative)
+
+        for relative in ("README.md", "START-HERE.md", "CONTRIBUTING.md"):
+            text = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn("docs/name-clearance.md", text, relative)
+
+        incident = (REPO_ROOT /
+                    "examples/name-clearance-incident-2026-08.md").read_text(
+                        encoding="utf-8"
+                    )
+        for truth in (
+                "plumbline-ai",
+                "askalf/plumbline",
+                "dbreunig/plumb",
+                "does not prove legal clearance",
+                "Writwall",
+                "Grantcord",
+                "Writcord"):
+            self.assertIn(truth, incident)
+
+        triage = (REPO_ROOT / "docs" / "agents" /
+                  "triage-labels.md").read_text(encoding="utf-8")
+        for label in ("bug", "enhancement", "needs-triage", "needs-info",
+                      "ready-for-agent", "ready-for-human", "wontfix"):
+            self.assertIn(f"`{label}`", triage)
+
+        contributing = (REPO_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+        self.assertIn("Public issue and pull-request workflow", contributing)
+        self.assertIn("private governed source", contributing)
+        self.assertIn("clean projection", contributing)
 
 
 class RatifiedReleaseTests(DistributionTestCase):
@@ -1041,28 +1245,28 @@ class RatifiedReleaseTests(DistributionTestCase):
         result = self.build()
         self.assertEqual(result.returncode, 0, result.stderr)
         archives = sorted((self.repo / "dist").glob("*.zip"))
-        self.assertEqual([a.name for a in archives], ["plumbline-0.8.zip"])
+        self.assertEqual([a.name for a in archives], ["writwall-0.8.zip"])
 
     def test_final_archive_passes_the_archive_check(self):
         self.build()
-        result = self.check("--archive", "dist/plumbline-0.8.zip")
+        result = self.check("--archive", "dist/writwall-0.8.zip")
         self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_candidate_name_is_refused_once_ratified(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6-rc.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6-rc.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_candidate_state_still_produces_rc(self):
         self.make_candidate()
         result = self.build()
         self.assertEqual(result.returncode, 0, result.stderr)
         archives = sorted((self.repo / "dist").glob("*.zip"))
-        self.assertEqual([a.name for a in archives], ["plumbline-0.8-rc.zip"])
+        self.assertEqual([a.name for a in archives], ["writwall-0.8-rc.zip"])
 
 
 def adopt_fixture(repo):
@@ -1106,7 +1310,7 @@ class GovernancePackagingGateTests(DistributionTestCase):
     def gov_entries(self, archive):
         with zipfile.ZipFile(archive) as handle:
             return [n for n in handle.namelist()
-                    if n.startswith("plumbline/governance/")]
+                    if n.startswith("writwall/governance/")]
 
     def build_ok(self):
         result = self.build()
@@ -1134,12 +1338,12 @@ class GovernancePackagingGateTests(DistributionTestCase):
     def test_pre_adoption_archive_with_governance_fails_the_check(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/governance/PLAN.md", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/governance/PLAN.md", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_proposed_adoption_record_never_packaged(self):
         archive = self.build_ok()
@@ -1150,13 +1354,13 @@ class GovernancePackagingGateTests(DistributionTestCase):
     def test_archive_containing_the_proposed_record_fails(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
             archive.writestr(
-                "plumbline/governance/decisions/DR-001-ADOPTION-PROPOSED.md", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+                "writwall/governance/decisions/DR-001-ADOPTION-PROPOSED.md", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     # --- adopted ----------------------------------------------------------
 
@@ -1164,8 +1368,8 @@ class GovernancePackagingGateTests(DistributionTestCase):
         self.sign_adoption_record()
         archive = self.build_ok()
         entries = self.gov_entries(archive)
-        self.assertIn("plumbline/governance/decisions/DR-001.md", entries)
-        self.assertIn("plumbline/governance/PLAN.md", entries)
+        self.assertIn("writwall/governance/decisions/DR-001.md", entries)
+        self.assertIn("writwall/governance/PLAN.md", entries)
         self.assertFalse(any("PROPOSED" in n for n in entries), entries)
 
     def test_adopted_archive_passes_the_archive_check(self):
@@ -1178,11 +1382,11 @@ class GovernancePackagingGateTests(DistributionTestCase):
         self.sign_adoption_record()
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_a_marker_inside_the_scan_window_is_detected(self):
         """A governance document declaring PROPOSED inside the scan window is
@@ -1272,7 +1476,7 @@ class GovernancePackagingGateTests(DistributionTestCase):
     # --- no adoption route ever receives the instance ---------------------
 
     def test_governance_never_enters_the_adoption_bundle(self):
-        target = (self.repo / "skills" / "plumbline-adopt" / "assets"
+        target = (self.repo / "skills" / "writwall-adopt" / "assets"
                   / "governance")
         target.mkdir(parents=True)
         (target / "PLAN.md").write_text("x", encoding="utf-8", newline="\n")
@@ -1298,24 +1502,24 @@ class MachineSpecificDataTests(DistributionTestCase):
     def test_archive_carrying_the_enforcement_installation_fails(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/.claude/settings.json", '{"hooks": {}}')
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/.claude/settings.json", '{"hooks": {}}')
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_build_machine_path_in_a_shipped_file_fails(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
             # The path of the repository that built this archive, which is the
             # fixture copy, not the real repository.
-            archive.writestr("plumbline/README.md",
+            archive.writestr("writwall/README.md",
                              f"install from {self.repo.as_posix()}/adapters\n")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_real_archive_is_free_of_machine_paths(self):
         result = self.build()
@@ -1441,8 +1645,8 @@ class ClaudeDirPackagingTests(DistributionTestCase):
 
     def claude_entries(self, archive):
         with zipfile.ZipFile(archive) as handle:
-            return sorted(n[len("plumbline/"):] for n in handle.namelist()
-                          if n.startswith("plumbline/.claude/"))
+            return sorted(n[len("writwall/"):] for n in handle.namelist()
+                          if n.startswith("writwall/.claude/"))
 
     def test_pre_adoption_excludes_the_installation(self):
         self.assertEqual(self.claude_entries(self.build_ok()), [])
@@ -1471,42 +1675,42 @@ class ClaudeDirPackagingTests(DistributionTestCase):
         self.sign()
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/.claude/settings.json", "{}")
-            archive.writestr("plumbline/.claude/hooks/wo_capability_wall.py", "x")
-            archive.writestr("plumbline/.claude/active-wo.txt", "x")
-            archive.writestr("plumbline/governance/decisions/DR-001.md", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/.claude/settings.json", "{}")
+            archive.writestr("writwall/.claude/hooks/wo_capability_wall.py", "x")
+            archive.writestr("writwall/.claude/active-wo.txt", "x")
+            archive.writestr("writwall/governance/decisions/DR-001.md", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_archive_carrying_settings_local_fails(self):
         self.sign()
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/.claude/settings.json", "{}")
-            archive.writestr("plumbline/.claude/hooks/wo_capability_wall.py", "x")
-            archive.writestr("plumbline/.claude/settings.local.json", "{}")
-            archive.writestr("plumbline/governance/decisions/DR-001.md", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/.claude/settings.json", "{}")
+            archive.writestr("writwall/.claude/hooks/wo_capability_wall.py", "x")
+            archive.writestr("writwall/.claude/settings.local.json", "{}")
+            archive.writestr("writwall/governance/decisions/DR-001.md", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_pre_adoption_archive_with_installation_fails(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/.claude/settings.json", "{}")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/.claude/settings.json", "{}")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
-    def test_adoption_routes_never_receive_plumblines_installation(self):
-        target = self.repo / "skills" / "plumbline-adopt" / "assets" / ".claude"
+    def test_adoption_routes_never_receive_writwalls_installation(self):
+        target = self.repo / "skills" / "writwall-adopt" / "assets" / ".claude"
         target.mkdir(parents=True)
         (target / "settings.json").write_text("{}", encoding="utf-8", newline="\n")
         self.assert_fails(self.check(), "segregation")
@@ -1528,10 +1732,10 @@ class LineEndingPreflightTests(DistributionTestCase):
         self.assertIn("DOCTRINE.md", output)
 
     def test_crlf_bundled_copy_fails_the_build(self):
-        self.to_crlf("skills/plumbline-adopt/references/DOCTRINE.md")
+        self.to_crlf("skills/writwall-adopt/references/DOCTRINE.md")
         result = self.build()
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("skills/plumbline-adopt/references/DOCTRINE.md",
+        self.assertIn("skills/writwall-adopt/references/DOCTRINE.md",
                       result.stderr + result.stdout)
 
     def test_build_does_not_silently_normalize(self):
@@ -1554,9 +1758,9 @@ class LineEndingPreflightTests(DistributionTestCase):
         archive = next((self.repo / "dist").glob("*.zip"))
         with zipfile.ZipFile(archive) as handle:
             for name in handle.namelist():
-                if name.endswith("/") or name == "plumbline/MANIFEST.sha256":
+                if name.endswith("/") or name == "writwall/MANIFEST.sha256":
                     continue
-                on_disk = self.repo / name[len("plumbline/"):]
+                on_disk = self.repo / name[len("writwall/"):]
                 self.assertTrue(on_disk.is_file(), name)
                 self.assertEqual(handle.read(name), on_disk.read_bytes(),
                                  f"{name} differs from the working-tree bytes")
@@ -1573,13 +1777,13 @@ class BuilderTests(DistributionTestCase):
     def test_candidate_name_while_unratified(self):
         self.make_candidate()
         archive = self.build_and_open()
-        self.assertEqual(archive.name, "plumbline-0.8-rc.zip")
+        self.assertEqual(archive.name, "writwall-0.8-rc.zip")
 
     def test_single_top_level_directory(self):
         archive = self.build_and_open()
         with zipfile.ZipFile(archive) as handle:
             roots = {name.split("/", 1)[0] for name in handle.namelist()}
-        self.assertEqual(roots, {"plumbline"})
+        self.assertEqual(roots, {"writwall"})
 
     def test_excludes_build_and_bootstrap_and_report(self):
         (self.repo / "bootstrap").mkdir(exist_ok=True)
@@ -1608,25 +1812,25 @@ class BuilderTests(DistributionTestCase):
     def test_archive_containing_a_per_work_order_report_fails_the_check(self):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/REMEDIATION-REPORT-WO-PL-002.md", "x")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/REMEDIATION-REPORT-WO-PL-002.md", "x")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_manifest_present_and_correct(self):
         archive = self.build_and_open()
         import hashlib
         with zipfile.ZipFile(archive) as handle:
-            manifest = handle.read("plumbline/MANIFEST.sha256").decode("utf-8")
+            manifest = handle.read("writwall/MANIFEST.sha256").decode("utf-8")
             entries = {}
             for line in manifest.splitlines():
                 digest, _, relative = line.partition("  ")
                 entries[relative] = digest
             self.assertGreater(len(entries), 20)
             for relative, digest in entries.items():
-                data = handle.read(f"plumbline/{relative}")
+                data = handle.read(f"writwall/{relative}")
                 self.assertEqual(hashlib.sha256(data).hexdigest(), digest, relative)
 
     def test_no_nested_zip_in_archive(self):
@@ -1645,23 +1849,23 @@ class BuilderTests(DistributionTestCase):
         self.set_dc1_status("Ratified")
         self.set_dc2_ratified("Yes")
         archive = self.build_and_open()
-        self.assertEqual(archive.name, "plumbline-0.8.zip")
+        self.assertEqual(archive.name, "writwall-0.8.zip")
 
     def test_candidate_name_when_only_dc2_flipped(self):
         # DC.2 says ratified, DC.1 still a candidate: not a release.
         self.set_dc1_status("Ratification candidate")
         archive = self.build_and_open()
-        self.assertEqual(archive.name, "plumbline-0.8-rc.zip")
+        self.assertEqual(archive.name, "writwall-0.8-rc.zip")
 
     def test_candidate_name_when_only_dc1_flipped(self):
         # DC.1 says ratified, DC.2 still pending: not a release.
         self.set_dc2_ratified("Pending")
         archive = self.build_and_open()
-        self.assertEqual(archive.name, "plumbline-0.8-rc.zip")
+        self.assertEqual(archive.name, "writwall-0.8-rc.zip")
 
 
 class ArchiveCheckFailureTests(DistributionTestCase):
-    def make_archive(self, names, filename="plumbline-0.6-rc.zip"):
+    def make_archive(self, names, filename="writwall-0.6-rc.zip"):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
         path = out / filename
@@ -1671,33 +1875,33 @@ class ArchiveCheckFailureTests(DistributionTestCase):
         return path
 
     def test_two_top_level_directories_fail(self):
-        self.make_archive(["plumbline/README.md", "other/README.md",
-                           "plumbline/MANIFEST.sha256"])
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+        self.make_archive(["writwall/README.md", "other/README.md",
+                           "writwall/MANIFEST.sha256"])
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_forbidden_path_inside_archive_fails(self):
-        self.make_archive(["plumbline/README.md", "plumbline/MANIFEST.sha256",
-                           "plumbline/mnt/user-data/x.md"])
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+        self.make_archive(["writwall/README.md", "writwall/MANIFEST.sha256",
+                           "writwall/mnt/user-data/x.md"])
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_nested_zip_inside_archive_fails(self):
-        self.make_archive(["plumbline/README.md", "plumbline/MANIFEST.sha256",
-                           "plumbline/inner.zip"])
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+        self.make_archive(["writwall/README.md", "writwall/MANIFEST.sha256",
+                           "writwall/inner.zip"])
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_missing_manifest_fails(self):
-        self.make_archive(["plumbline/README.md"])
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+        self.make_archive(["writwall/README.md"])
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_final_release_name_while_candidate_fails(self):
-        self.make_archive(["plumbline/README.md", "plumbline/MANIFEST.sha256"],
-                          filename="plumbline-0.6.zip")
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6.zip"), "archive")
+        self.make_archive(["writwall/README.md", "writwall/MANIFEST.sha256"],
+                          filename="writwall-0.6.zip")
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6.zip"), "archive")
 
     def test_bootstrap_leaking_into_archive_fails(self):
-        self.make_archive(["plumbline/README.md", "plumbline/MANIFEST.sha256",
-                           "plumbline/bootstrap/WO.md"])
-        self.assert_fails(self.check("--archive", "dist/plumbline-0.6-rc.zip"), "archive")
+        self.make_archive(["writwall/README.md", "writwall/MANIFEST.sha256",
+                           "writwall/bootstrap/WO.md"])
+        self.assert_fails(self.check("--archive", "dist/writwall-0.6-rc.zip"), "archive")
 
     def test_missing_archive_fails(self):
         self.assert_fails(self.check("--archive", "dist/nope.zip"), "archive")
@@ -1714,7 +1918,7 @@ ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 ZIP_CREATE_SYSTEM = 3          # Unix, so external_attr carries the mode
 MODE_EXECUTABLE = 0o755
 MODE_REGULAR = 0o644
-EXECUTABLE_ARCNAMES = {"plumbline/init.sh"}
+EXECUTABLE_ARCNAMES = {"writwall/init.sh"}
 
 
 class DeterministicArchiveTests(DistributionTestCase):
@@ -1765,7 +1969,7 @@ class DeterministicArchiveTests(DistributionTestCase):
     def test_identical_trees_with_different_mtimes_build_identical_archives(self):
         """The strong form: a fresh checkout has different mtimes than the tree
         the release was built from, and must still reproduce the hash."""
-        other = copy_repo(self.tmp / "plumbline-b")
+        other = copy_repo(self.tmp / "writwall-b")
         # Deliberately far apart, and neither is "now".
         self.set_all_mtimes(self.repo, 1_000_000_000)   # 2001-09-09
         self.set_all_mtimes(other, 1_600_000_000)       # 2020-09-13
@@ -1793,7 +1997,7 @@ class DeterministicArchiveTests(DistributionTestCase):
                 self.assertEqual(info.comment, b"")
                 self.assertEqual(info.internal_attr, 0)
                 self.assertEqual(info.flag_bits & 0x08, 0)
-            if info.filename == "plumbline/MANIFEST.sha256":
+            if info.filename == "writwall/MANIFEST.sha256":
                 manifest_seen = True
         self.assertTrue(manifest_seen,
                         "MANIFEST.sha256 must be normalized like every other entry")
@@ -1818,9 +2022,9 @@ class DeterministicArchiveTests(DistributionTestCase):
         with zipfile.ZipFile(archive) as handle:
             modes = {i.filename: (i.external_attr >> 16) & 0o777
                      for i in handle.infolist()}
-        self.assertEqual(modes["plumbline/init.sh"], MODE_EXECUTABLE)
+        self.assertEqual(modes["writwall/init.sh"], MODE_EXECUTABLE)
         for name, mode in modes.items():
-            if name == "plumbline/init.sh":
+            if name == "writwall/init.sh":
                 continue
             with self.subTest(entry=name):
                 self.assertEqual(mode, MODE_REGULAR)
@@ -1841,14 +2045,14 @@ class DeterministicArchiveTests(DistributionTestCase):
         import hashlib
         archive = self.build_in(self.repo)
         with zipfile.ZipFile(archive) as handle:
-            manifest = handle.read("plumbline/MANIFEST.sha256").decode("utf-8")
+            manifest = handle.read("writwall/MANIFEST.sha256").decode("utf-8")
             recorded = {path: digest for digest, _, path in
                         (line.partition("  ") for line in manifest.splitlines())}
             self.assertTrue(recorded)
             for name in handle.namelist():
-                if name == "plumbline/MANIFEST.sha256":
+                if name == "writwall/MANIFEST.sha256":
                     continue
-                rel = name[len("plumbline/"):]
+                rel = name[len("writwall/"):]
                 self.assertIn(rel, recorded, f"{rel} missing from the manifest")
                 stored = handle.read(name)
                 self.assertEqual(hashlib.sha256(stored).hexdigest(), recorded[rel],
@@ -1859,9 +2063,9 @@ class DeterministicArchiveTests(DistributionTestCase):
         archive = self.build_in(self.repo)
         with zipfile.ZipFile(archive) as handle:
             for name in handle.namelist():
-                if name == "plumbline/MANIFEST.sha256":
+                if name == "writwall/MANIFEST.sha256":
                     continue
-                source = self.repo / name[len("plumbline/"):]
+                source = self.repo / name[len("writwall/"):]
                 with self.subTest(entry=name):
                     self.assertTrue(source.is_file(), name)
                     self.assertEqual(handle.read(name), source.read_bytes())
@@ -2053,19 +2257,19 @@ class ShippedArchiveMachinePathTests(DistributionTestCase):
     """RFI-15: no packageable subtree is exempt merely because it is historical.
 
     `archive/pre-adoption-bootstrap/` became a deliberate shipping target when
-    the Owner disposed RFI-09. The blanket `plumbline/archive/` exemption
+    the Owner disposed RFI-09. The blanket `writwall/archive/` exemption
     predates that disposition, so this build machine's own path shipped
     unchecked inside evidence the archive is meant to carry.
     """
 
-    def minimal_archive(self, extra, filename="plumbline-0.6.zip"):
+    def minimal_archive(self, extra, filename="writwall-0.6.zip"):
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
         target = out / filename
         with zipfile.ZipFile(target, "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
             for name, body in extra.items():
                 archive.writestr(name, body)
         return target
@@ -2073,20 +2277,20 @@ class ShippedArchiveMachinePathTests(DistributionTestCase):
     # --- the checker rejects a hand-built archive -------------------------
 
     def test_build_machine_path_inside_shipped_archive_evidence_fails(self):
-        entry = "plumbline/archive/pre-adoption-bootstrap/EVIDENCE.md"
+        entry = "writwall/archive/pre-adoption-bootstrap/EVIDENCE.md"
         self.minimal_archive(
             {entry: f"| 1 | Project root | `{self.repo.as_posix()}` |\n"})
-        result = self.check("--archive", "dist/plumbline-0.6.zip")
+        result = self.check("--archive", "dist/writwall-0.6.zip")
         self.assert_fails(result, "archive")
         self.assertIn(entry, result.stdout)
         self.assertIn("build machine's own path", result.stdout)
 
     def test_build_machine_home_path_inside_shipped_archive_evidence_fails(self):
-        entry = "plumbline/archive/proposed-v0.1/HISTORY.md"
+        entry = "writwall/archive/proposed-v0.1/HISTORY.md"
         home = Path.home().as_posix()
         self.minimal_archive(
             {entry: f"the operator profile used at the time was {home}/Documents\n"})
-        result = self.check("--archive", "dist/plumbline-0.6.zip")
+        result = self.check("--archive", "dist/writwall-0.6.zip")
         self.assert_fails(result, "archive")
         self.assertIn(entry, result.stdout)
 
@@ -2345,13 +2549,13 @@ class AdoptedStateProjectionTests(DistributionTestCase):
         """The checker gate, independently of the builder preflight."""
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        entry = "plumbline/" + self.FIXTURE_WO
-        with zipfile.ZipFile(out / "plumbline-0.6.zip", "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
+        entry = "writwall/" + self.FIXTURE_WO
+        with zipfile.ZipFile(out / "writwall-0.6.zip", "w") as archive:
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
             archive.writestr(entry, f"repository: {self.repo.as_posix()}\n")
-        result = self.check("--archive", "dist/plumbline-0.6.zip")
+        result = self.check("--archive", "dist/writwall-0.6.zip")
         self.assert_fails(result, "archive")
         self.assertIn(entry, result.stdout)
         self.assertIn("build machine's own path", result.stdout)
@@ -2365,7 +2569,7 @@ class AdoptedStateProjectionTests(DistributionTestCase):
         archive = next((self.repo / "dist").glob("*.zip"))
         with zipfile.ZipFile(archive) as handle:
             names = handle.namelist()
-        self.assertIn("plumbline/" + self.FIXTURE_WO, names,
+        self.assertIn("writwall/" + self.FIXTURE_WO, names,
                       "the adopted projection did not ship the work order")
         checked = self.check("--archive", f"dist/{archive.name}")
         self.assertEqual(checked.returncode, 0, checked.stdout)
@@ -2406,7 +2610,7 @@ class AdoptedStateProjectionTests(DistributionTestCase):
         archive_path = next((self.repo / "dist").glob("*.zip"))
         with zipfile.ZipFile(archive_path) as handle:
             names = handle.namelist()
-        self.assertFalse([n for n in names if n.startswith("plumbline/governance/")],
+        self.assertFalse([n for n in names if n.startswith("writwall/governance/")],
                          "governance/ shipped in a pre-adoption archive")
 
 
@@ -2624,9 +2828,9 @@ class TransientReleaseStateTests(DistributionTestCase):
         quotes the word must not trip the gate."""
         self.make_adopted()
         self.clear_live_dirs()
-        self.edit("README.md", "Plumbline is a document-controlled",
+        self.edit("CONTRIBUTING.md", "Thank you for helping improve Writwall.",
                   "This repository quotes the word ACTIVE in ordinary prose. "
-                  "Plumbline is a document-controlled")
+                  "Thank you for helping improve Writwall.")
         result = self.check()
         self.assertEqual(result.returncode, 0, result.stdout)
 
@@ -2691,62 +2895,62 @@ class TransientReleaseStateTests(DistributionTestCase):
         self.clear_live_dirs()
         out = self.repo / "dist"
         out.mkdir(exist_ok=True)
-        path = out / "plumbline-0.6.zip"
+        path = out / "writwall-0.6.zip"
         with zipfile.ZipFile(path, "w") as archive:
-            archive.writestr("plumbline/README.md", "x")
-            archive.writestr("plumbline/CLAUDE.md", "x")
-            archive.writestr("plumbline/MANIFEST.sha256", "x")
-            archive.writestr("plumbline/governance/decisions/DR-001.md", "x")
-            archive.writestr("plumbline/.claude/settings.json", "{}")
-            archive.writestr("plumbline/.claude/hooks/wo_capability_wall.py", "x")
+            archive.writestr("writwall/README.md", "x")
+            archive.writestr("writwall/CLAUDE.md", "x")
+            archive.writestr("writwall/MANIFEST.sha256", "x")
+            archive.writestr("writwall/governance/decisions/DR-001.md", "x")
+            archive.writestr("writwall/.claude/settings.json", "{}")
+            archive.writestr("writwall/.claude/hooks/wo_capability_wall.py", "x")
             for name, content in extra_entries.items():
                 archive.writestr(name, content)
         return path
 
     def test_archive_carrying_the_pointer_fails(self):
-        self.build_hand_archive({"plumbline/.claude/active-wo.txt": "x"})
+        self.build_hand_archive({"writwall/.claude/active-wo.txt": "x"})
         self.assert_fails(
-            self.check("--archive", "dist/plumbline-0.6.zip"), "transient-release-state")
+            self.check("--archive", "dist/writwall-0.6.zip"), "transient-release-state")
 
     def test_archive_carrying_a_live_work_order_member_fails(self):
         self.build_hand_archive(
-            {"plumbline/governance/work-orders/WO-999.md": "x"})
+            {"writwall/governance/work-orders/WO-999.md": "x"})
         self.assert_fails(
-            self.check("--archive", "dist/plumbline-0.6.zip"), "transient-release-state")
+            self.check("--archive", "dist/writwall-0.6.zip"), "transient-release-state")
 
     def test_archive_carrying_a_nested_live_work_order_member_fails(self):
         self.build_hand_archive(
-            {"plumbline/governance/work-orders/sub/WO-999.md": "x"})
+            {"writwall/governance/work-orders/sub/WO-999.md": "x"})
         self.assert_fails(
-            self.check("--archive", "dist/plumbline-0.6.zip"), "transient-release-state")
+            self.check("--archive", "dist/writwall-0.6.zip"), "transient-release-state")
 
     def test_archive_carrying_a_live_report_member_fails(self):
         self.build_hand_archive(
-            {"plumbline/governance/reports/WO-999-REPORT.md": "x"})
+            {"writwall/governance/reports/WO-999-REPORT.md": "x"})
         self.assert_fails(
-            self.check("--archive", "dist/plumbline-0.6.zip"), "transient-release-state")
+            self.check("--archive", "dist/writwall-0.6.zip"), "transient-release-state")
 
     def test_archive_gitkeep_members_pass(self):
         self.build_hand_archive({
-            "plumbline/governance/work-orders/.gitkeep": "",
-            "plumbline/governance/reports/.gitkeep": "",
+            "writwall/governance/work-orders/.gitkeep": "",
+            "writwall/governance/reports/.gitkeep": "",
         })
-        result = self.check("--archive", "dist/plumbline-0.6.zip")
+        result = self.check("--archive", "dist/writwall-0.6.zip")
         self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_archive_nested_gitkeep_member_under_work_orders_fails(self):
         self.build_hand_archive({
-            "plumbline/governance/work-orders/sub/.gitkeep": "",
+            "writwall/governance/work-orders/sub/.gitkeep": "",
         })
         self.assert_fails(
-            self.check("--archive", "dist/plumbline-0.6.zip"), "transient-release-state")
+            self.check("--archive", "dist/writwall-0.6.zip"), "transient-release-state")
 
     def test_archive_nested_gitkeep_member_under_reports_fails(self):
         self.build_hand_archive({
-            "plumbline/governance/reports/sub/.gitkeep": "",
+            "writwall/governance/reports/sub/.gitkeep": "",
         })
         self.assert_fails(
-            self.check("--archive", "dist/plumbline-0.6.zip"), "transient-release-state")
+            self.check("--archive", "dist/writwall-0.6.zip"), "transient-release-state")
 
     # --- the observed WO-PL-014 build, deterministically before/after ------
 
@@ -2832,7 +3036,7 @@ class DocumentationTruthTests(DistributionTestCase):
         examples_dir = self.repo / "examples"
         examples_dir.mkdir(exist_ok=True)
         (examples_dir / "plumbline-self-hosting-pilot.md").write_text(
-            "# Plumbline self-hosting pilot\n\n"
+            "# Writwall self-hosting pilot\n\n"
             "A pilot example that omits the provider-envelope disclosure "
             "required by B.3 item 4.\n",
             encoding="utf-8", newline="\n")
@@ -2860,7 +3064,7 @@ class DocumentationTruthTests(DistributionTestCase):
         examples_dir = self.repo / "examples"
         examples_dir.mkdir(exist_ok=True)
         (examples_dir / "plumbline-self-hosting-pilot.md").write_text(
-            "# Plumbline self-hosting pilot\n\n"
+            "# Writwall self-hosting pilot\n\n"
             "WO-PL-017 through WO-PL-020 ran in Codex, outside the installed "
             "Claude hook, and were instruction-bounded.\n\n"
             "Every declared capability surface was mechanically enforced, "

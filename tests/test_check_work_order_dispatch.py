@@ -1341,7 +1341,7 @@ class RealTreeLockoutTest(unittest.TestCase):
     def test_real_tree_copy_passes_lockout_once_pointer_removed(self):
         tmp = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
-        repo = tmp / "plumbline"
+        repo = tmp / "writwall"
         shutil.copytree(REPO_ROOT, repo, ignore=shutil.ignore_patterns(*SKIP_DIRS),
                         dirs_exist_ok=True)
         pointer = repo / ".claude" / "active-wo.txt"

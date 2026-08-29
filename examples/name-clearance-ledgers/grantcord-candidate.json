@@ -1,0 +1,320 @@
+{
+  "candidate": {
+    "display_name": "Grantcord",
+    "slug": "grantcord",
+    "variants": [
+      "grantcord"
+    ]
+  },
+  "collected_at": "2026-08-28T22:43:28Z",
+  "disposition": {
+    "decided_at": "2026-08-29T00:48:52.000001Z",
+    "decided_by": "HLLMR, Owner",
+    "decision": "reject",
+    "rationale": "Owner selected Writwall; Grantcord was not chosen because its meaning is less immediate."
+  },
+  "expires_at": "2026-09-04T22:43:28Z",
+  "limitations": [
+    "The ledger proves the recorded search procedure, not legal clearance.",
+    "Unavailable or unreviewed sources cannot be interpreted as clear."
+  ],
+  "schema": 1,
+  "sources": [
+    {
+      "checked_at": "2026-08-29T00:22:09Z",
+      "error": null,
+      "findings": [],
+      "id": "github",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "grantcord"
+        ],
+        "similar": [
+          "Grantcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=grantcord%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=grantcord%20in%3Alogin%20type%3Aorg&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=Grantcord%20software%20AI%20agent%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=Grantcord%20software%20AI%20agent%20in%3Alogin%20type%3Aorg&per_page=100"
+        }
+      ],
+      "response_sha256": "68b1b4849ddf1ed40258c98c0a40279fca14f1d69ce7c80399b41393737cf069",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://api.github.com/search/repositories?q=grantcord%20in%3Aname&per_page=100"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:09Z",
+      "error": null,
+      "findings": [],
+      "id": "pypi",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "grantcord"
+        ],
+        "similar": [
+          "Grantcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/grantcord/json"
+        },
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/grantcord-software-ai-agent/json"
+        }
+      ],
+      "response_sha256": "07d4915e8ea2269561d072272290972f193738feec9418d156ff0a8f877f39d3",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://pypi.org/pypi/grantcord/json"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:09Z",
+      "error": null,
+      "findings": [],
+      "id": "npm",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "grantcord"
+        ],
+        "similar": [
+          "Grantcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/grantcord"
+        },
+        {
+          "body_sha256": "2cc94f5f4c1eacaa8ab7e2516ba0cf35815a023fe23dc41c6a02823f1f956309",
+          "http_status": 200,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=grantcord"
+        },
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/grantcord-software-ai-agent"
+        },
+        {
+          "body_sha256": "59a6f1f0e47403e299940901ac11c182e02ccb5fe93c56ca435ab965ff5b22d5",
+          "http_status": 200,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=Grantcord%20software%20AI%20agent"
+        }
+      ],
+      "response_sha256": "5e56c155a228db7a03636125d65cc007d40e2dd5b64bcfef40776fbf7095448d",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://registry.npmjs.org/grantcord"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:09Z",
+      "error": null,
+      "findings": [],
+      "id": "crates_io",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "grantcord"
+        ],
+        "similar": [
+          "Grantcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "509ddc2e3f1dfdc12ccd2197ce7a5b6dcf86e2251d6dd819ed7813da195cfdfd",
+          "http_status": 404,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/grantcord"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=grantcord&per_page=100"
+        },
+        {
+          "body_sha256": "a3a61fd6f5da42c563094c412c3fecd6fb99ae37280909c9561ada199439731c",
+          "http_status": 404,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/grantcord-software-ai-agent"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=Grantcord%20software%20AI%20agent&per_page=100"
+        }
+      ],
+      "response_sha256": "043069a48409d54bc0ca46a73ff394c1cd69a4c4d7fae653a0db3d9c027210f2",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://crates.io/api/v1/crates/grantcord"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:09Z",
+      "error": null,
+      "findings": [],
+      "id": "com_rdap",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "grantcord"
+        ],
+        "similar": [
+          "Grantcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "grantcord",
+          "query_kind": "exact",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/grantcord.com"
+        },
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "Grantcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/grantcord-software-ai-agent.com"
+        }
+      ],
+      "response_sha256": "930ca0bec6303a0371fbd4afa82e921372b205a81aaac7341e2469d77c77f4a5",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://rdap.verisign.com/com/v1/domain/grantcord.com"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "notes": "Exact and software-category searches found no meaningful public product or service use; one historical OCR false positive was reviewed as non-use.",
+        "queries": [
+          "\"Grantcord\"",
+          "\"Grantcord\" software OR AI OR agent",
+          "\"Grant cord\""
+        ],
+        "result_count": 0,
+        "reviewed_at": "2026-08-29T00:48:52Z",
+        "urls": []
+      },
+      "findings": [],
+      "id": "web_common_law",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "\"Grantcord\""
+        ],
+        "similar": [
+          "\"Grantcord\" software OR AI OR agent",
+          "\"Grant cord\""
+        ]
+      },
+      "response_sha256": "feb255237dc23b2c7877a3848ffd2248b9bfa5f138807caf0f7b2dbfebe23fdd",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "clear",
+      "url": "https://www.google.com/search?q=%22Grantcord%22+OR+%22grantcord%22+software+AI+agent"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "endpoint": "https://tmsearch.uspto.gov/prod-v1-0-0/tmsearch",
+        "live_exact_count": 0,
+        "notes": "Official federal exact and spaced-word searches returned zero hits.",
+        "queries": [
+          "Grantcord",
+          "Grant cord"
+        ],
+        "result_count": 0,
+        "reviewed_at": "2026-08-29T00:48:52Z"
+      },
+      "findings": [],
+      "id": "uspto",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "Grantcord"
+        ],
+        "similar": [
+          "Grant cord"
+        ]
+      },
+      "response_sha256": "785c0522b8df5edfcd9990e3ed389089e0bad3aa68fa8256a30741c391672610",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "clear",
+      "url": "https://tmsearch.uspto.gov/search/search-results"
+    }
+  ]
+}

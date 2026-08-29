@@ -317,3 +317,37 @@ existing license and projection machinery; and correct the private State's
 observed publication status. This work may improve presentation and access to
 existing evidence, but it may not enlarge enforcement, effectiveness, pilot,
 provider, or operating-cost claims or revise Doctrine 0.8.
+
+## 13. Owner-ratified first-adopter repair — 2026-08-28
+
+The Owner authorized WO-PL-035 after the first clean public adoption exposed a
+human-ramp defect: the wall locked down correctly, but the novice did not have
+an executable coordinator-first path. WO-PL-035 is complete and accepted. It
+delivered a human-first start page, exact prompts, safe lockout and overlay
+recovery, external-fixture boundaries, and a public issue-to-PR workflow.
+
+## 14. Owner-ratified naming correction and public case study — 2026-08-28
+
+The Owner directs an emergency pre-promotion naming tranche after discovering
+that the public release had never passed an inception name-clearance gate and
+that earlier same-category and adjacent AI-agent tools already use `Plumbline`
+or `plumb`. Tuesday promotion is frozen until this tranche is complete.
+
+1. **WO-PL-036 — Name-clearance evidence and replacement selection.** Build a
+   small deterministic collector/checker contract that records exact queries,
+   source availability, timestamps, response evidence, category overlap, and
+   Owner disposition across GitHub, major package registries, domain/RDAP,
+   common-law web use, and federal trademark records. Use the incident and
+   rejected replacement candidates as public evidence. Automated output is not
+   a legal opinion. Return a short screened candidate set and one recommendation
+   for Owner ratification.
+2. **WO-PL-037 — Controlled identity migration.** Only after the Owner ratifies
+   a replacement, migrate current product, documentation, code identifiers,
+   package/repository references, public assets, launch copy, and release
+   surfaces. Preserve old names in historical records and explicit provenance;
+   do not rewrite history or imply the replacement name existed earlier.
+
+The current public repository and release remain available as evidence, but no
+new promotion, Show HN submission, replacement release, tag, or mass rebrand is
+authorized before WO-PL-036 produces and the Owner ratifies the replacement
+disposition. Public issue #2 is the durable public defect record.

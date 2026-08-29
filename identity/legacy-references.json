@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "current": {
+    "display_name": "Writwall",
+    "slug": "writwall",
+    "repository": "https://github.com/HLLMR/writwall",
+    "skill": "writwall-adopt",
+    "selected_on": "2026-08-28"
+  },
+  "former": {
+    "display_name": "Plumbline",
+    "slug": "plumbline",
+    "retired_on": "2026-08-28"
+  },
+  "retained": [
+    {
+      "path": "README.md",
+      "context": "migration_provenance",
+      "sha256": "32115aab0a64cedd8e2cb681800a8c35e30c891aadbfc767e153d3f12b67e92c"
+    },
+    {
+      "path": "SELF-HOSTING.md",
+      "context": "mixed_current_guidance_and_history",
+      "sha256": "6a51c1211cc675599634d144ca24a705ec1696f84640a6464b14efb1d6c3a629"
+    },
+    {
+      "path": "NAMING.md",
+      "context": "migration_provenance",
+      "sha256": "35e6d37b7c5fa0c1fc872315cbd362cd24bfa41e1b7dc3019fbcd31e99350f51"
+    },
+    {
+      "path": "checks/check_distribution.py",
+      "context": "historical_evidence_path",
+      "sha256": "1e988ba28767063ff0d93969730321b4d7942f992edb3bbc177fbd2124c29f1b"
+    },
+    {
+      "path": "checks/check_identity.py",
+      "context": "authority_ledger_path",
+      "sha256": "60fe377dac32b8d1697f859371ef40d26ed4e695fdceeda6d29ec0318d539504"
+    },
+    {
+      "path": "decisions/DR-001.md",
+      "context": "ratified_historical_decision",
+      "sha256": "bcaecb148cd44b7372151081d8e32da0401ad472da05121bf5a907555532300d",
+      "projection_sha256": "b49e8c6fb8ef321e5a8f8b2012a77ab3870df2d4826ecb8fe0b33345d57d060a"
+    },
+    {
+      "path": "decisions/DR-003.md",
+      "context": "ratified_historical_decision",
+      "sha256": "1dc105a91f76dd749463e91e492646ff5188a62359f21caba5245cb173c2a8ac"
+    },
+    {
+      "path": "decisions/DR-004.md",
+      "context": "ratified_historical_decision",
+      "sha256": "f73c71c7aac19f4a979f7fc4926464ceaa912b1d24f37447af695785d7a889ae"
+    },
+    {
+      "path": "decisions/DR-005.md",
+      "context": "ratified_historical_decision",
+      "sha256": "a2647446e311fa7c17d21b5cb23009de55d986c890fbf307ff86d706e92c21b9",
+      "projection_sha256": "7cb90c45d8246464872a2158f21dc4213116843d543a3b0d1b5bf1b865fcb9a6"
+    },
+    {
+      "path": "docs/identity-migration.md",
+      "context": "migration_case_study",
+      "sha256": "1185647d1251e6c34a604698e7ec23609040cbcd40a83fdcd02e1aec0b920e78"
+    },
+    {
+      "path": "examples/README.md",
+      "context": "historical_evidence_index",
+      "sha256": "55716ad256ad76dd355d10ab872ffcd29b03fbf9651763b21351e813ef89d0c5"
+    },
+    {
+      "path": "examples/name-clearance-incident-2026-08.md",
+      "context": "name_clearance_incident",
+      "sha256": "f5c83009bcb248eccc8e861b5fc52b208a193c0b02293c72c0f4e96fcf3072de"
+    },
+    {
+      "path": "examples/name-clearance-ledgers/plumbline-incident.json",
+      "context": "rejected_identity_evidence",
+      "sha256": "9e6f0af99e334684a96e4ae2d2d70db444d62a92f1eee437664c05423aea25cd"
+    },
+    {
+      "path": "examples/plumbline-self-hosting-pilot.md",
+      "context": "historical_pilot_evidence",
+      "sha256": "0d62666ddc07a4283309bcbc8f9501add4ecec052d26369d30ce232e17c17702"
+    },
+    {
+      "path": "governance/ADOPTION-MAPPING.md",
+      "context": "ratified_historical_mapping",
+      "sha256": "c0934b2f661a31bfcdcfec4dc146713ec7b4014da4c7a6c682aa9f85c82bdf47",
+      "projection_sha256": "30cdb11fbeb2fd9bbf4048255331ccbbdd6e516fae5adfa5317af00ce53607c9"
+    },
+    {
+      "path": "governance/LOG.md",
+      "context": "historical_pilot_summary",
+      "sha256": "dd66e67423e9985ce427651dbb970937e6b3cedf43071aa4ab0abbb55a8869d8",
+      "projection_transform": "private_evidence_redaction"
+    },
+    {
+      "path": "governance/PLAN.md",
+      "context": "ratified_historical_intent",
+      "sha256": "97bf9d0ddbf913667a224250dbdaa6264a8c1584cf78f42fda678fb53b47d7d6"
+    },
+    {
+      "path": "governance/STATE.md",
+      "context": "mixed_current_state_and_history",
+      "sha256": "36b1eac414e3a9e644d9c85c45447379de1ac6552d41ee76ba902c254ed830a5",
+      "projection_sha256": "26f472919a67f9bca73b84067f5ade513e6606be449c34b2324e8c6f596096ac"
+    },
+    {
+      "path": "governance/decisions/DR-001.md",
+      "context": "ratified_historical_adoption",
+      "sha256": "355890668a2bcf6a6e744f0631e284ec5abc2f06912fbba41d4c4f8ca95dda93",
+      "projection_sha256": "d7ac543c46acd5dc7353dc2c24ba287b8ed9e521e04f950e7dec15df3fc85ba5"
+    },
+    {
+      "path": "governance/decisions/DR-002.md",
+      "context": "ratified_historical_pilot_disposition",
+      "sha256": "217d10a796711f55d4fb64ab4393b0cf81a3be284303e7a54578226994ed8321"
+    },
+    {
+      "path": "projection/public-files.txt",
+      "context": "historical_path_index",
+      "sha256": "d676bcf6ecafe24e10fa793ed1b762d7046856ad805ce0802d307c9a0388eacd"
+    },
+    {
+      "path": "tests/test_distribution.py",
+      "context": "historical_evidence_fixture",
+      "sha256": "ce9a6dbf6e33767c28e924529dd0e5b8c3f648fc017bee5f6d12ce4aa44e0e23"
+    },
+    {
+      "path": "tests/test_identity_migration.py",
+      "context": "former_identity_failure_fixtures",
+      "sha256": "e150a2f988a4b0beac5f70644f55f5e185a8aa575e988a19642bafabc0f07775"
+    }
+  ]
+}

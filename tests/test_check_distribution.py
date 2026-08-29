@@ -31,7 +31,7 @@ NEW_REQUIRED_FILES = (
     "tests/test_check_work_order_dispatch.py",
 )
 
-BUNDLE_CHECKER_RELPATH = "skills/plumbline-adopt/assets/checks/check_work_order_dispatch.py"
+BUNDLE_CHECKER_RELPATH = "skills/writwall-adopt/assets/checks/check_work_order_dispatch.py"
 
 LICENSE_RECORDS = (
     "LICENSE",
@@ -43,7 +43,7 @@ LICENSE_RECORDS = (
     "NAMING.md",
     "CONTRIBUTING.md",
     "decisions/DR-003.md",
-    "skills/plumbline-adopt/LICENSE-MAP.md",
+    "skills/writwall-adopt/LICENSE-MAP.md",
 )
 
 LICENSE_CURRENT_DOCUMENTS = (
@@ -51,7 +51,7 @@ LICENSE_CURRENT_DOCUMENTS = (
     "NAMING.md",
     "CONTRIBUTING.md",
     "decisions/DR-003.md",
-    "skills/plumbline-adopt/LICENSE-MAP.md",
+    "skills/writwall-adopt/LICENSE-MAP.md",
 )
 
 PROJECTION_REQUIRED_FILES = (
@@ -67,7 +67,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
-        self.repo = self.tmp / "plumbline"
+        self.repo = self.tmp / "writwall"
         shutil.copytree(REPO_ROOT, self.repo, ignore=shutil.ignore_patterns(*SKIP_DIRS),
                         dirs_exist_ok=True)
 
@@ -122,6 +122,37 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         self.assertNotIn("[v0.1]", result.stdout)
         self.assertNotIn("[provenance]", result.stdout)
 
+    def test_onboarding_contract_fails_when_first_prompt_drifts(self):
+        start = self.repo / "START-HERE.md"
+        text = start.read_text(encoding="utf-8")
+        start.write_text(
+            text.replace("Act as my Writwall adoption coordinator",
+                         "Act as my generic helper"),
+            encoding="utf-8",
+            newline="\n",
+        )
+
+        result = self.check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("[onboarding]", result.stdout)
+        self.assertIn("START-HERE.md", result.stdout)
+
+    def test_onboarding_contract_fails_when_probe_safety_drifts(self):
+        adapter = self.repo / "adapters" / "claude-code" / "README.md"
+        text = adapter.read_text(encoding="utf-8")
+        adapter.write_text(
+            text.replace("explicit disposable fixture", "external target", 1),
+            encoding="utf-8",
+            newline="\n",
+        )
+
+        result = self.check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("[onboarding]", result.stdout)
+        self.assertIn("adapters/claude-code/README.md", result.stdout)
+
     def test_projection_mode_validates_projection_manifest_contents(self):
         candidate = self.build_projection()
         manifest = candidate / "PROJECTION-MANIFEST.sha256"
@@ -149,7 +180,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         candidate = self.build_projection()
         archive = self.build_projection_archive(candidate)
         with zipfile.ZipFile(archive, "a") as handle:
-            handle.writestr("plumbline/governance/history/secret.md", "secret\n")
+            handle.writestr("writwall/governance/history/secret.md", "secret\n")
         result = subprocess.run(
             [sys.executable, "-B",
              str(candidate / "checks" / "check_distribution.py"),
@@ -162,7 +193,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         candidate = self.build_projection()
         archive = self.build_projection_archive(candidate)
         with zipfile.ZipFile(archive, "a") as handle:
-            handle.writestr("plumbline/unknown.txt", "unknown\n")
+            handle.writestr("writwall/unknown.txt", "unknown\n")
         result = subprocess.run(
             [sys.executable, "-B",
              str(candidate / "checks" / "check_distribution.py"),
@@ -175,7 +206,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         candidate = self.build_projection()
         archive = self.build_projection_archive(candidate)
         with zipfile.ZipFile(archive, "a") as handle:
-            handle.writestr("plumbline/README.md", "duplicate\n")
+            handle.writestr("writwall/README.md", "duplicate\n")
         result = subprocess.run(
             [sys.executable, "-B",
              str(candidate / "checks" / "check_distribution.py"),
@@ -189,7 +220,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         candidate = self.build_projection()
         archive = self.build_projection_archive(candidate)
         with zipfile.ZipFile(archive, "a") as handle:
-            handle.writestr("plumbline/../escape.txt", "escape\n")
+            handle.writestr("writwall/../escape.txt", "escape\n")
         result = subprocess.run(
             [sys.executable, "-B",
              str(candidate / "checks" / "check_distribution.py"),
@@ -202,7 +233,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         candidate = self.build_projection()
         archive = self.build_projection_archive(candidate)
         with zipfile.ZipFile(archive, "a") as handle:
-            handle.writestr("plumbline/governance/history/", b"")
+            handle.writestr("writwall/governance/history/", b"")
         result = subprocess.run(
             [sys.executable, "-B",
              str(candidate / "checks" / "check_distribution.py"),
@@ -214,7 +245,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
     def test_projection_archive_rejects_symlink_member(self):
         candidate = self.build_projection()
         archive = self.build_projection_archive(candidate)
-        link = zipfile.ZipInfo("plumbline/link")
+        link = zipfile.ZipInfo("writwall/link")
         link.create_system = 3
         link.external_attr = (stat.S_IFLNK | 0o777) << 16
         with zipfile.ZipFile(archive, "a") as handle:
@@ -334,7 +365,7 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
     def test_bundle_license_map_is_recognized_metadata(self):
         result = self.check()
         self.assertNotIn(
-            "skills/plumbline-adopt/LICENSE-MAP.md is an unrecognized file",
+            "skills/writwall-adopt/LICENSE-MAP.md is an unrecognized file",
             result.stdout)
 
     def test_each_license_prose_record_is_scanned_by_the_public_gate(self):

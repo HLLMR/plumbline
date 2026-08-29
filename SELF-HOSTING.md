@@ -1,6 +1,11 @@
-# Self-hosting Plumbline
+# Self-hosting Writwall
 
-**Status: the doctrine is ratified, both birth tests have been performed against the installed adapter, and step 7 — the adoption commit — has been made under `WO-PL-006`. Plumbline is now self-governed from that commit forward.** Adoption is effective with the commit that first contains the ratified adoption record, `governance/decisions/DR-001.md`, and the completed bootstrap artifacts (Doctrine 2.25). Everything before it is pre-doctrine history, and the first *counted* work order begins after it.
+> **Identity chronology.** This repository adopted and ran the pilot under its
+> former **Plumbline** name. The Owner selected **Writwall** on 2026-08-28.
+> Current operating paths use Writwall; accepted historical facts below retain
+> the former name where changing it would imply the new identity existed then.
+
+**Status: the doctrine is ratified, both birth tests have been performed against the installed adapter, and step 7 — the adoption commit — has been made under `WO-PL-006`. The repository, then named Plumbline, is self-governed from that commit forward.** Adoption is effective with the commit that first contains the ratified adoption record, `governance/decisions/DR-001.md`, and the completed bootstrap artifacts (Doctrine 2.25). Everything before it is pre-doctrine history, and the first *counted* work order begins after it.
 
 Step 1 is complete: revision 0.6 was ratified on 2026-08-16 by `decisions/DR-001.md`. Steps 2 through 4 are complete. Step 5 is installed. **Step 6 is complete as an observation, and its result is mixed by surface.** Level 1 failed once outside the envelope, then passed inside it, then passed again against the current structured-log adapter — that third run is the one the 6.4.2 precondition rests on. Level 2 then found that the wall scopes file-edit writes exactly and denies the shell when told to, and that it does not enforce `shell.execute: restricted` or filesystem writes made through a shell at all.
 
@@ -41,7 +46,7 @@ It also means the failure mode is public. If self-hosting proves the controls do
 | Doctrine 0.6 ratified by the amendment authority (DC.3.5) | **MET, 2026-08-16.** DC.1 reads `Ratified`; DC.2's 0.6 row reads `Yes` |
 | Adoption record ratified | **MET.** `decisions/DR-001.md`, Owner HLLMR, 2026-08-16 |
 | Archived v0.1 status resolved | **MET.** RFI-01 closed: v0.1 was proposed only and never ratified. See `archive/README.md` (private governed-source reference, not present in this candidate) |
-| License chosen | **MET, 2026-08-20.** DR-003 records ownership and the Plumbline license map. Publication remains a separate Owner decision |
+| License chosen | **MET, 2026-08-20.** DR-003 records ownership and the then-current Plumbline license map. Publication remained a separate Owner decision |
 
 The hard preconditions of 6.4.1 are satisfied: the revision this repository would bind to has been ratified, so adoption may proceed whenever the Owner issues the grant. The licensing question is not a precondition for self-adoption; it is a precondition for making any of this public.
 
@@ -61,7 +66,7 @@ Note the segregation this creates and must preserve: `templates/` at the root is
 
 ### 3. Materialize `PLAN.md`, `STATE.md`, and `ROUTING.md` — COMPLETE, 2026-08-16
 
-- **`governance/PLAN.md`.** Ratified intent for developing and publishing Plumbline. The root `CLAUDE.md` already named it as the authority under A.2.1, so when this step was written that pointer resolved to a file that did not exist. Closing that gap was the substance of this step, and it is closed: `governance/PLAN.md` exists and is Owner-ratified.
+- **`governance/PLAN.md`.** Ratified intent for developing and publishing Plumbline at the time. The root `CLAUDE.md` already named it as the authority under A.2.1, so when this step was written that pointer resolved to a file that did not exist. Closing that gap was the substance of this step, and it is closed: `governance/PLAN.md` exists and is Owner-ratified.
 - **`governance/STATE.md`.** OBSERVED derived mechanically; INTERPRETED written by a fresh agent with provenance per claim (7.8.1). Do not let the agent that performed the bootstrap write the INTERPRETED section; it is not fresh with respect to that work.
 - **`governance/ROUTING.md`.** Seed it from `CLAUDE.md` A.4, which already declares ten governed paths. Declared governed paths only (8.2.4).
 
@@ -92,7 +97,7 @@ Per 8.3.5, and per the procedure in the adapter README.
 
 #### Enforcement operating envelope
 
-> Plumbline's Claude Code wall is mechanically active only within the specific executing session in which enforcement has been observed. Launch with this repository as the project root; inspect `/hooks` to confirm the matcher, source, and portable command; then, when an Owner-authorized procedure calls for it, run one mutation-capable out-of-grant canary. The wall is live only if the provider blocks the call before mutation, the target remains absent, and the denial log gains exactly one record carrying that executing session's real session ID. `/hooks`, configuration inspection, or direct adapter invocation alone is not proof, and evidence does not transfer between sessions. A session without this evidence must not mutate Plumbline; that prohibition is instruction-only and is not represented as a wall.
+> Writwall's Claude Code wall is mechanically active only within the specific executing session in which enforcement has been observed. Launch with this repository as the project root; inspect `/hooks` to confirm the matcher, source, and portable command; then, when an Owner-authorized procedure calls for it, run one mutation-capable out-of-grant canary. The wall is live only if the provider blocks the call before mutation, the target remains absent, and the denial log gains exactly one record carrying that executing session's real session ID. `/hooks`, configuration inspection, or direct adapter invocation alone is not proof, and evidence does not transfer between sessions. A session without this evidence must not mutate Writwall; that prohibition is instruction-only and is not represented as a wall.
 
 ### Birth-test preflight
 
@@ -108,7 +113,7 @@ Per 8.3.5, and per the procedure in the adapter README.
 
 #### The live-wall canary
 
-Proof of a live wall is **local to one executing provider session**. It does not transfer to another session, to a parent or child context, to a different UI, or to a separate provider invocation. Each session that intends to mutate Plumbline establishes its own evidence.
+Proof of a live wall is **local to one executing provider session**. It does not transfer to another session, to a parent or child context, to a different UI, or to a separate provider invocation. Each session that intends to mutate Writwall establishes its own evidence.
 
 A **valid canary** is an Owner-authorized, genuinely mutation-capable, out-of-grant call that survives provider input validation and therefore reaches `PreToolUse`. An out-of-grant `Write` carrying real content is the reference shape. The canary target must be **explicitly named by the Owner-authorized procedure** and deliberately excluded from the active `filesystem.write` grant.
 
@@ -170,10 +175,10 @@ The adoption commit contains `governance/`, `CLAUDE.md`, `.claude/`, and the ado
 
 The live self-hosted instance is intended to remain in the public repository as a real working example. That is only safe while the segregation holds:
 
-1. **Distribution artifacts and Plumbline's working records stay distinguishable.** `templates/`, `adapters/`, `skills/`, `migration-guides/`, `checks/`, `scripts/`, `DOCTRINE.md` are what adopters instantiate. `CLAUDE.md`, `governance/`, and `decisions/` are what Plumbline runs on.
-2. **No adoption route ever copies Plumbline's working records into a target project.** `init.sh` copies templates, the adapter, and the pre-dispatch validator, and refuses charters. The `plumbline-adopt` bundle carries only the doctrine, migration guides, adapter, pre-dispatch validator, and templates. `checks/check_distribution.py` fails if a Plumbline governance record appears in that bundle.
+1. **Distribution artifacts and Writwall's working records stay distinguishable.** `templates/`, `adapters/`, `skills/`, `migration-guides/`, `checks/`, `scripts/`, `DOCTRINE.md` are what adopters instantiate. `CLAUDE.md`, `governance/`, and `decisions/` are what Writwall runs on.
+2. **No adoption route ever copies Writwall's working records into a target project.** `init.sh` copies templates, the adapter, and the pre-dispatch validator, and refuses charters. The `writwall-adopt` bundle carries only the doctrine, migration guides, adapter, pre-dispatch validator, and templates. `checks/check_distribution.py` fails if a Writwall governance record appears in that bundle.
 3. **The archive stays a source distribution.** It is not an overlay, and `README.md` says so where someone about to unzip it will look.
-4. **Plumbline's own decisions never acquire authority over an adopting project.** A project binds to a ratified revision, not to this repository's contents (5.1.6, DC.4.1).
+4. **Writwall's own decisions never acquire authority over an adopting project.** A project binds to a ratified revision, not to this repository's contents (5.1.6, DC.4.1).
 
 ## Current status of every step
 
@@ -187,7 +192,7 @@ The live self-hosted instance is intended to remain in the public repository as 
 | 6. Birth tests, both levels | **BOTH PERFORMED 2026-08-16.** Level 1 PASSED against the installed structured-log adapter, inside the envelope. Level 2 PERFORMED with a mixed per-surface result: `shell.execute: denied` and the file-edit write channel enforced; `shell.execute: restricted` and writes through a shell observed **unenforced** |
 | 7. Adoption commit | **COMPLETE, 2026-08-17 (WO-PL-006).** Ratified adoption record committed as `governance/decisions/DR-001.md`, naming baseline `a905c87`. Nothing pushed, tagged, published, or licensed |
 
-Ratifying the doctrine and adopting it are different acts, and completing the first changed nothing about the second. Every row above now reads complete, so **the separate private governed source is governed by Plumbline's Doctrine from the adoption commit forward** (6.1.1). Work done *before* that commit is not made governed by it: the eleven bootstrap work orders remain uncounted under 6.1.3, and no Part 9 measurement draws on them.
+Ratifying the doctrine and adopting it are different acts, and completing the first changed nothing about the second. Every row above now reads complete, so **the separate private governed source is governed by the ratified Doctrine from the adoption commit forward** (6.1.1). The project was named Plumbline then; the later Writwall identity does not move that boundary. Work done *before* that commit is not made governed by it: the eleven bootstrap work orders remain uncounted under 6.1.3, and no Part 9 measurement draws on them.
 
 Steps 2 through 5 were carried out under the bootstrap work orders WO-PL-001 through WO-PL-004, whose records are closed pre-adoption evidence indexed at `archive/pre-adoption-bootstrap/README.md`. Step 6 was carried out under `WO-000-level-2-birth-test.md`, issued by the Owner on 2026-08-16. Step 7 was carried out under `archive/pre-adoption-bootstrap/WO-PL-006-adoption-commit.md`, issued by the Owner on 2026-08-17 and now retired with the other uncounted bootstrap records (private governed-source reference, not present in this candidate). Counted governed work begins with WO-PL-007.
 
@@ -230,7 +235,7 @@ Record the exact commands and exits for both legs in the work-order report. If e
 
 `checks/check_work_order_dispatch.py` is a deterministic, read-only, standard-library-only command that detects malformed Owner-issued work-order state *before* an Implementer session is launched. It never activates, edits, repairs, or infers authority; it is dispatch-preparation tooling, not a runtime enforcement surface, and it is not part of `.claude/hooks/wo_capability_wall.py`.
 
-WO-PL-016 made this checker adopter-facing rather than a Plumbline-only tool: the work-order `id` pattern accepts the generic Doctrine form (`WO-NNN`) and an optional uppercase project namespace (`WO-<NAMESPACE>-NNN`), not only `WO-PL-NNN`, and both `init.sh` and the `plumbline-adopt` skill bundle install a byte-identical copy of it, create-only, into an adopting project (`checks/check_work_order_dispatch.py`).
+WO-PL-016 made this checker adopter-facing rather than a Plumbline-only tool: the work-order `id` pattern accepts the generic Doctrine form (`WO-NNN`) and an optional uppercase project namespace (`WO-<NAMESPACE>-NNN`), not only `WO-PL-NNN`. The current `init.sh` and `writwall-adopt` skill bundle install a byte-identical copy of it, create-only, into an adopting project (`checks/check_work_order_dispatch.py`).
 
 WO-PL-017 made Appendix B's enforcement classification fail-closed. Every
 candidate must carry top-level `enforced_by` and `unenforced_boundaries` fields.

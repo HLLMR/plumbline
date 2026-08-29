@@ -1,0 +1,211 @@
+# Start here: the human operating guide
+
+You do not need to understand the Doctrine before beginning. You need to know
+which role you are talking to, where that agent is running, and what decision
+belongs to you.
+
+The safest default is: **prepare adoption with a coordinator before opening a
+walled Implementer session.** Make the self-contained `writwall-adopt` bundle
+local before the wall is registered. The wall may intentionally deny network
+access once the project enters lockout; an agent cannot fetch instructions it
+does not already have.
+
+## Who does what
+
+| Function | Who or what performs it | May share an agent? |
+|---|---|---|
+| **Owner** | You. You decide intent, ratify records, authorize lifecycle actions, and accept results. | Never delegated. |
+| **Adoption coordinator / recorder** | A chat or coding agent that can inspect the project and prepare or record your decisions. During recovery it runs outside the walled Implementer grant. | May also act as Dispatcher on a small project. |
+| **Dispatcher** | Turns ratified Plan intent into one bounded work order. | May be the coordinator in a fresh turn or session. |
+| **Implementer** | The coding agent operating inside the project with one active work order. | Does not review or authorize its own work. |
+| **Reviewer** | A fresh read-only agent given the work order, report, and changed result. | Use a fresh session with no implementation role; a different provider is optional, not required. |
+
+These are functions, not permanent job titles. One model can perform several
+functions sequentially for a small project, but it does not carry authority
+between them and does not review its own implementation in the same context.
+
+## Pick an operating model
+
+### Small project
+
+Use one capable coordinator for interviewing, dispatch drafting, and recorder
+mechanics; use your IDE coding agent as the walled Implementer; open a fresh
+session for Reviewer work. This is the lightest credible arrangement.
+
+Talk first to the coordinator outside the walled IDE, or to the IDE agent
+**before** any project hook is registered. Give it the public Writwall source
+or the complete local adoption bundle.
+
+### Split-role project
+
+Use an external adoption coordinator / recorder (for example a general-purpose
+coding task or chat with repository access), a walled Implementer inside the
+IDE, and a fresh Reviewer. This is the recommended path when the wall is
+already installed, the repository has substantial existing intent, or the IDE
+session cannot perform protected lifecycle mechanics.
+
+### Provider-neutral
+
+Use any capable model for coordinator, Dispatcher, Implementer, and Reviewer
+functions. Without a birth-tested provider adapter, the grants are
+instruction-bounded rather than mechanically enforced. The records and review
+flow still work; describe the enforcement boundary honestly.
+
+## Normal path: start before the wall is registered
+
+If this is a new project and its public name is not already settled, run the
+[inception name-clearance gate](docs/name-clearance.md) before creating package
+names, repository slugs, domains, logos, or launch copy. The coordinator may
+collect evidence, but the Owner chooses the identity; unavailable sources are
+not clear results.
+
+1. Obtain the Writwall source distribution. Do not unpack it over your project.
+2. Copy the complete `skills/writwall-adopt/` directory into the target
+   provider's temporary skill location. For Claude Code, use
+   `.claude/skills/writwall-adopt/`.
+3. Confirm the bundle is locally readable. It contains the Doctrine, adapter,
+   checker, templates, and migration guides it needs.
+4. Start the adoption coordinator. The bundle stays available until recorder
+   closeout no longer needs it and is removed before the adoption commit.
+5. Register and birth-test the wall only through the exact lifecycle the
+   coordinator prepares and you ratify.
+
+Paste this first:
+
+```text
+Act as my Writwall adoption coordinator, not as an Implementer. Use the local
+writwall-adopt bundle and follow its bootstrap mode. I decide and ratify; you
+perform every clerical step an authorized recorder may perform. Ask me one question at a time
+in plain language, with your recommendation first.
+Do not install or register the wall until you have confirmed that the complete
+bundle and recovery instructions are locally available. Do not begin product
+work or ask about WO-001 until adoption is complete.
+```
+
+## If the archive was already unpacked into your project
+
+Stop before deleting or continuing. Do not assume every Writwall-looking file
+is disposable: an existing project may already have a `README.md`, `CLAUDE.md`,
+`.github/`, `checks/`, or governance material of its own.
+
+Use a separate clean Writwall distribution and an external coordinator to
+inventory the overlay. Compare candidate files with that clean distribution's
+`PROJECTION-MANIFEST.sha256`; treat byte-identical matches only as proposed
+overlay residue, and treat every differing or pre-existing path as unknown.
+The coordinator proposes an exact keep/remove/move disposition. You ratify it;
+an authorized recorder may then perform those exact mechanics. Never run a
+blanket delete or unpack a second archive over the first.
+
+Paste this recovery prompt:
+
+```text
+Act as my Writwall accidental-overlay recovery coordinator. Inventory only;
+do not delete, overwrite, move, install, or register anything. Compare this
+project against a separate clean Writwall distribution and its manifest.
+Classify exact matches as proposed overlay residue and every differing or
+pre-existing path as unknown. Give me an exact disposition packet and ask one
+question at a time. Do not begin adoption until I ratify the recovery packet.
+```
+
+If your coding agent supports skills, the shorter invocation is:
+
+```text
+Use the writwall-adopt skill. Bootstrap this repository for Doctrine 0.8
+adoption. Baseline commit candidate: determine and propose. Ask one question at
+a time and do not begin product work.
+```
+
+## Recovery path: already-installed lockout
+
+If `.claude/active-wo.txt` is absent and the wall denies mutation or network
+access, **stop using that session as the coordinator**. That session is behaving
+as a walled Implementer in lockout. Do not weaken the hook, invent a pointer, or
+ask it to fetch missing instructions.
+
+Open an external coordinator / recorder with access to the target repository
+and the downloaded Writwall source, then paste:
+
+```text
+Act as my Writwall adoption coordinator for an already-installed lockout, not
+as the walled Implementer. The target has a registered wall and no active-work-
+order pointer. Use the local public Writwall source; do not ask the locked
+session to fetch it or bypass the wall. Inventory the incomplete adoption,
+prepare the exact birth-test and recorder lifecycle packets, and ask me one
+question at a time in plain language. I ratify decisions; after exact
+ratification, first record my authorization verbatim in the packet's named
+durable lifecycle record and verify it. Only then perform the protected
+repository mechanics named in that record on my behalf. Do not probe any
+external service unless I have named a disposable target and cleanup authority
+in advance. Do not begin WO-001.
+```
+
+An authorized lifecycle action may remove a pointer and re-establish the no-
+pointer state for a fresh Level 1 session. The condition is not a one-time
+window. Unplanned denials remain honest log evidence, but unplanned denials are
+not retroactively promoted into a birth test.
+
+## Make the birth test safe
+
+Start with a **minimal provider profile**. Disable unrelated plugins,
+connectors, MCP servers, and delegated agents before inventorying the mutation
+surface. If an external mutation tool must remain available, test it only when
+the lifecycle packet names an **explicit disposable fixture**, expected side
+effect, verification method, and cleanup authority.
+
+Never aim a first-run probe at ordinary Drive, Notion, Figma, email, calendar,
+deployment, or production objects. Authentication failure, provider rejection
+before hook dispatch, an unavailable tool, or an unprobed channel is
+**indeterminate, never a pass**. Reduce the active surface or retain the honest
+unenforced classification.
+
+The human may need to perform genuinely interactive provider actions such as
+viewing Claude Code's `/hooks`, completing authentication, or privately creating
+a read-deny sentinel. Those are exceptions. File creation, pointer changes,
+validation, Git mechanics, and recorder closeout are not automatically human
+chores; an exactly authorized recorder may perform them.
+
+## Recorder closeout prompt
+
+After the coordinator presents the exact decision and lifecycle packet and you
+agree with every substantive decision, ratify that exact packet. Then say:
+
+```text
+Enter writwall-adopt recorder closeout mode. Record only the exact packet I
+ratified. First durably record this authorization in the packet's named
+lifecycle record and verify it; a chat exchange alone is not lifecycle authorization.
+Then perform the authorized clerical operations and local
+adoption commit on my behalf; do not infer or improve my decisions. Remove the
+temporary bootstrap bundle before the adoption commit, return the project to
+lockout, and do not dispatch WO-001.
+```
+
+## First work order
+
+After the adoption commit, tell the Dispatcher:
+
+```text
+Act as Dispatcher. Read the charter, Plan, State, Routing, and ratified adoption
+record. Draft one bounded work order for the project's genuine next product
+task. Generate and validate its boundaries, but do not activate it. Return the
+exact candidate and your scope rationale for my approval.
+```
+
+After you approve and activate that work order, start a fresh Implementer:
+
+```text
+Act as Implementer for the active work order only. Confirm the active dispatch
+and required live-wall canary before mutation. Execute the order, preserve RED
+and GREEN evidence, write its report, and stop before acceptance or closeout.
+```
+
+For review, start a fresh session:
+
+```text
+Act as a read-only Reviewer. Review the active work order, implementation diff,
+test evidence, and report for conformance and record truth. Do not implement a
+fix. Return ACCEPT or specific findings with severity and evidence.
+```
+
+The complete adoption contract, artifact sequence, and provider-specific birth
+test details are in [ADOPTING.md](ADOPTING.md). Read those after choosing the
+operating model above.

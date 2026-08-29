@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: Apache-2.0
-"""Deterministic distribution checks for the Plumbline methodology repository.
+"""Deterministic distribution checks for the Writwall methodology repository.
 
 Standard library only. Exits nonzero on the first category of failure found,
 after reporting every failure it found. These are mechanical checks over the
@@ -10,7 +10,7 @@ Owner must decide.
 
 Usage:
     python checks/check_distribution.py
-    python checks/check_distribution.py --archive dist/plumbline-0.6-rc.zip
+    python checks/check_distribution.py --archive dist/writwall-0.6-rc.zip
 """
 from __future__ import annotations
 
@@ -43,6 +43,7 @@ NO_AUTHORITY_MARKER = "DRAFT — NO AUTHORITY"
 DECISIONS_DIR = REPO_ROOT / "decisions"
 LICENSING_DIRECTION = REPO_ROOT / "decisions" / "LICENSING-DIRECTION.md"
 LICENSE_CHECKER = REPO_ROOT / "checks" / "check_licenses.py"
+IDENTITY_CHECKER = REPO_ROOT / "checks" / "check_identity.py"
 PROJECTION_RECORDS = (
     "PROJECTION-MANIFEST.sha256",
     "PROJECTION-PROVENANCE.md",
@@ -67,6 +68,7 @@ BASELINE_COMMIT = "6e165e585f907baf83a787ba5cc71270a5a4652e"
 # written and are never edited to describe a later state.
 CURRENT_DOCUMENTS = (
     "README.md",
+    "START-HERE.md",
     "REUSE.toml",
     "LICENSE-MAP.md",
     "NAMING.md",
@@ -79,7 +81,7 @@ CURRENT_DOCUMENTS = (
     "decisions/README.md",
     "decisions/DR-001.md",
     "decisions/DR-003.md",
-    "skills/plumbline-adopt/LICENSE-MAP.md",
+    "skills/writwall-adopt/LICENSE-MAP.md",
 )
 
 # The candidate-phrase scan excludes the ratification record itself: a record of
@@ -104,7 +106,7 @@ V01_AUTHORITY_CLAIM_PHRASES = (
     "ratified revision 0.1",
 )
 
-SKILL = REPO_ROOT / "skills" / "plumbline-adopt"
+SKILL = REPO_ROOT / "skills" / "writwall-adopt"
 
 TEMPLATE_FILES = {
     "A": "A-charter.md",
@@ -136,6 +138,9 @@ BUNDLE_COPIES = {
 }
 
 REQUIRED_FILES = [
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/pull_request_template.md",
     ".github/workflows/ci.yml",
     ".gitattributes",
     ".gitignore",
@@ -153,12 +158,15 @@ REQUIRED_FILES = [
     "PUBLICATION.md",
     "README.md",
     "SELF-HOSTING.md",
+    "START-HERE.md",
     "init.sh",
     "adapters/claude-code/README.md",
     "adapters/claude-code/wo_capability_wall.py",
     "archive/README.md",
     "checks/check_distribution.py",
+    "checks/check_identity.py",
     "checks/check_licenses.py",
+    "checks/check_name_clearance.py",
     "checks/check_public_projection.py",
     "checks/check_work_order_dispatch.py",
     "decisions/DR-001.md",
@@ -167,17 +175,31 @@ REQUIRED_FILES = [
     "decisions/DR-005.md",
     "decisions/LICENSING-DIRECTION.md",
     "decisions/README.md",
+    "docs/agents/domain.md",
+    "docs/agents/issue-tracker.md",
+    "docs/agents/triage-labels.md",
+    "docs/name-clearance.md",
+    "docs/identity-migration.md",
     "examples/README.md",
+    "examples/name-clearance-incident-2026-08.md",
+    "examples/name-clearance-ledgers/grantcord-candidate.json",
+    "examples/name-clearance-ledgers/plumbline-incident.json",
+    "examples/name-clearance-ledgers/writcord-candidate.json",
+    "examples/name-clearance-ledgers/writwall-candidate.json",
+    "identity/legacy-references.json",
     "migration-guides/0.1-to-0.6.md",
     "migration-guides/0.6-to-0.7.md",
     "migration-guides/0.7-to-0.8.md",
     "scripts/build_distribution.py",
     "scripts/build_public_projection.py",
-    "skills/plumbline-adopt/SKILL.md",
-    "skills/plumbline-adopt/LICENSE-MAP.md",
+    "scripts/collect_name_clearance.py",
+    "skills/writwall-adopt/SKILL.md",
+    "skills/writwall-adopt/LICENSE-MAP.md",
     "tests/test_init_sh.py",
+    "tests/test_identity_migration.py",
     "tests/test_distribution.py",
     "tests/test_check_licenses.py",
+    "tests/test_name_clearance.py",
     "tests/test_wo_capability_wall.py",
     "tests/test_check_work_order_dispatch.py",
     "tests/test_public_projection.py",
@@ -206,7 +228,7 @@ def ratified_claim_phrases(revision: str) -> tuple[str, ...]:
         f"{revision} is authoritative",
     )
 
-# Doctrine 5.1.5: Plumbline's own working records are never carried into an
+# Doctrine 5.1.5: Writwall's own working records are never carried into an
 # adopting project. The adoption skill bundle is the one route that copies a
 # directory wholesale, so it is the one that must be policed mechanically.
 SELF_HOSTED_RECORD_NAMES = frozenset({
@@ -224,7 +246,7 @@ SELF_HOSTED_RECORD_DIRS = frozenset({"governance", "decisions", "bootstrap", "ar
 
 # The canonical short description (WO-PL-002 item 5.1), required verbatim.
 CANONICAL_DESCRIPTION = (
-    "Plumbline is a document-controlled governance methodology with a "
+    "Writwall is a document-controlled governance methodology with a "
     "self-hosting reference implementation and project-scaffolding toolkit."
 )
 
@@ -656,7 +678,7 @@ def check_license_mechanization(failures: Failures) -> None:
     if not LICENSE_CHECKER.is_file():
         return
     spec = importlib.util.spec_from_file_location(
-        "_plumbline_check_licenses", LICENSE_CHECKER
+        "_writwall_check_licenses", LICENSE_CHECKER
     )
     if spec is None or spec.loader is None:
         failures.add("license-gate", "cannot load checks/check_licenses.py")
@@ -693,7 +715,7 @@ def check_bundle_copies(failures: Failures) -> None:
 
 
 def check_self_hosting_segregation(failures: Failures) -> None:
-    """Doctrine 5.1.5: no Plumbline working record reaches an adopting project.
+    """Doctrine 5.1.5: no Writwall working record reaches an adopting project.
 
     The skill bundle is copied wholesale into a target repository, so anything
     inside it is, by construction, something an adopter receives.
@@ -710,7 +732,7 @@ def check_self_hosting_segregation(failures: Failures) -> None:
         if path.name in SELF_HOSTED_RECORD_NAMES:
             failures.add(
                 "segregation",
-                f"{rel(path)} carries a Plumbline working record into the "
+                f"{rel(path)} carries a Writwall working record into the "
                 "adoption bundle (Doctrine 5.1.5)")
         relative_parts = path.relative_to(SKILL).parts[:-1]
         for part in relative_parts:
@@ -1070,6 +1092,175 @@ def check_positioning(failures: Failures) -> None:
                          f"ADOPTING.md does not state {SOURCE_DISTRIBUTION_PHRASE!r}")
 
 
+def check_onboarding_contract(failures: Failures) -> None:
+    """The human ramp, agent ramp, and public contribution flow stay aligned."""
+    paths = {
+        "README.md": REPO_ROOT / "README.md",
+        "START-HERE.md": REPO_ROOT / "START-HERE.md",
+        "ADOPTING.md": REPO_ROOT / "ADOPTING.md",
+        "skills/writwall-adopt/SKILL.md": SKILL / "SKILL.md",
+        "adapters/claude-code/README.md": ADAPTER_README,
+        "init.sh": REPO_ROOT / "init.sh",
+        "CONTRIBUTING.md": REPO_ROOT / "CONTRIBUTING.md",
+    }
+    if any(not path.is_file() for path in paths.values()):
+        return  # check_required_files reports the missing path precisely.
+
+    texts = {name: read_text(path) for name, path in paths.items()}
+    requirements = {
+        "README.md": (
+            "START-HERE.md",
+            "docs/name-clearance.md",
+            "does not register, activate, or birth-test",
+            "final recorder action",
+        ),
+        "START-HERE.md": (
+            "Small project",
+            "Split-role",
+            "Provider-neutral",
+            "Act as my Writwall adoption coordinator",
+            "already-installed lockout",
+            "accidental-overlay recovery coordinator",
+            "fresh Reviewer",
+            "chat exchange alone is not lifecycle authorization",
+            "docs/name-clearance.md",
+        ),
+        "ADOPTING.md": (
+            "before the wall is registered",
+            "minimal provider profile",
+            "indeterminate, never a pass",
+            "Unplanned denials are not retroactively promoted into a birth test",
+            "both doctrinal birth-test levels",
+            "does not by itself block adoption",
+            "durable lifecycle authorization",
+        ),
+        "skills/writwall-adopt/SKILL.md": (
+            "before the wall is registered",
+            "explicit disposable",
+            "indeterminate, never a pass",
+            "not retroactively promoted into a birth test",
+            "chat alone is not the",
+            "portable Windows-and-POSIX claim",
+            "PROJECTION-MANIFEST.sha256",
+        ),
+        "adapters/claude-code/README.md": (
+            "minimal provider profile",
+            "explicit disposable fixture",
+            "indeterminate, never a pass",
+            "re-establish the no-pointer state",
+        ),
+        "init.sh": (
+            "make the adoption bundle local before",
+            "Do not register the wall yet",
+            "already registered",
+            "exact recorder authority",
+        ),
+        "CONTRIBUTING.md": (
+            "Public issue and pull-request workflow",
+            "private governed source",
+            "clean projection",
+            "docs/name-clearance.md",
+        ),
+    }
+    for name, markers in requirements.items():
+        for marker in markers:
+            if marker not in texts[name]:
+                failures.add(
+                    "onboarding",
+                    f"{name} is missing the required onboarding contract marker "
+                    f"{marker!r}",
+                )
+
+
+def check_name_clearance_ledgers(failures: Failures) -> None:
+    """Release candidates retain complete, current identity evidence."""
+    checker = REPO_ROOT / "checks" / "check_name_clearance.py"
+    ledger_dir = REPO_ROOT / "examples" / "name-clearance-ledgers"
+    if not checker.is_file() or not ledger_dir.is_dir():
+        return  # check_required_files reports the missing path precisely.
+    spec = importlib.util.spec_from_file_location(
+        "writwall_name_clearance_gate", checker
+    )
+    if spec is None or spec.loader is None:
+        failures.add("name-clearance", "cannot load name-clearance checker")
+        return
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    expected_dispositions = {
+        "plumbline-incident.json": ("Plumbline", "reject"),
+        "grantcord-candidate.json": ("Grantcord", "reject"),
+        "writcord-candidate.json": ("Writcord", "reject"),
+        "writwall-candidate.json": ("Writwall", "accept"),
+    }
+    for ledger in sorted(ledger_dir.glob("*.json")):
+        for problem in module.check_ledger(ledger):
+            failures.add(
+                "name-clearance",
+                f"{ledger.relative_to(REPO_ROOT).as_posix()}: {problem}",
+            )
+        if ledger.name in expected_dispositions:
+            try:
+                payload = json.loads(ledger.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, json.JSONDecodeError):
+                continue  # The generic ledger checker reports the read failure.
+            if not isinstance(payload, dict):
+                continue  # The generic ledger checker reports the schema failure.
+            expected_name, expected_decision = expected_dispositions[ledger.name]
+            candidate = payload.get("candidate", {})
+            disposition = payload.get("disposition", {})
+            if not (
+                isinstance(candidate, dict)
+                and candidate.get("display_name") == expected_name
+                and isinstance(disposition, dict)
+                and disposition.get("decision") == expected_decision
+                and disposition.get("decided_by") == "HLLMR, Owner"
+            ):
+                failures.add(
+                    "name-clearance",
+                    f"{ledger.name} must record {expected_name} "
+                    f"{expected_decision} by HLLMR, Owner",
+                )
+            sources = payload.get("sources", [])
+            human_sources = (
+                [
+                    source for source in sources
+                    if isinstance(source, dict)
+                    and source.get("id") in {"web_common_law", "uspto"}
+                ]
+                if isinstance(sources, list)
+                else []
+            )
+            if not (
+                len(human_sources) == 2
+                and all(
+                    source.get("reviewed_by") == "HLLMR, Owner"
+                    and source.get("reviewer_kind") == "human"
+                    for source in human_sources
+                )
+            ):
+                failures.add(
+                    "name-clearance",
+                    f"{ledger.name} must retain HLLMR, Owner human review",
+                )
+
+
+def check_identity_migration(failures: Failures) -> None:
+    """Current identity and retained former-name bytes stay classified."""
+    if not IDENTITY_CHECKER.is_file():
+        return  # check_required_files reports the missing path precisely.
+    spec = importlib.util.spec_from_file_location(
+        "writwall_identity_gate", IDENTITY_CHECKER
+    )
+    if spec is None or spec.loader is None:
+        failures.add("identity", "cannot load identity checker")
+        return
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    manifest = REPO_ROOT / "identity" / "legacy-references.json"
+    for problem in module.check_identity(REPO_ROOT, manifest):
+        failures.add("identity", problem)
+
+
 def check_documentation_truth(failures: Failures) -> None:
     """WO-PL-022 B.3 item 6: the public documentation-truth rule.
 
@@ -1371,15 +1562,15 @@ def check_archive(archive_path: Path, failures: Failures,
         return
 
     roots = {name.split("/", 1)[0] for name in names}
-    if roots != {"plumbline"}:
+    if roots != {"writwall"}:
         failures.add("archive",
                      f"archive must contain exactly one top-level directory "
-                     f"'plumbline/', found: {', '.join(sorted(roots))}")
+                     f"'writwall/', found: {', '.join(sorted(roots))}")
 
     # Governance packaging gate.
     for name in names:
         if "/" not in name.rstrip("/"):
-            failures.add("archive", f"{name} sits at the archive root outside plumbline/")
+            failures.add("archive", f"{name} sits at the archive root outside writwall/")
 
     for name in names:
         parts = name.split("/")
@@ -1397,7 +1588,7 @@ def check_archive(archive_path: Path, failures: Failures,
         if leaf.startswith(("REMEDIATION-REPORT", "REMEDIATION-INVENTORY")):
             failures.add("archive", f"{name} should have been excluded from the distribution")
 
-    if "plumbline/MANIFEST.sha256" not in names:
+    if "writwall/MANIFEST.sha256" not in names:
         failures.add("archive", "archive has no MANIFEST.sha256")
 
     if projection:
@@ -1408,27 +1599,27 @@ def check_archive(archive_path: Path, failures: Failures,
                 failures.add("projection",
                              "projection archive contains a directory entry")
                 continue
-            if not name.startswith("plumbline/"):
+            if not name.startswith("writwall/"):
                 continue
-            relative = name[len("plumbline/"):]
+            relative = name[len("writwall/"):]
             if ("\\" in relative or
                     any(part in ("", ".", "..") for part in relative.split("/"))):
                 failures.add("projection",
                              "projection archive has an unsafe member path")
         projection_members = [
             name for name in names
-            if name.startswith("plumbline/") and not name.endswith("/")
+            if name.startswith("writwall/") and not name.endswith("/")
         ]
         if len(projection_members) != len(set(projection_members)):
             failures.add("projection", "projection archive has a duplicate member")
         for name in projection_members:
-            relative = name[len("plumbline/"):]
+            relative = name[len("writwall/"):]
             if ("\\" in relative or
                     any(part in ("", ".", "..") for part in relative.split("/"))):
                 failures.add("projection",
                              "projection archive has an unsafe member path")
         relative_names = {
-            name[len("plumbline/"):] for name in projection_members
+            name[len("writwall/"):] for name in projection_members
         }
         for relative in relative_names:
             if any(relative == prefix[:-1] or relative.startswith(prefix)
@@ -1442,9 +1633,9 @@ def check_archive(archive_path: Path, failures: Failures,
                     failures.add("projection",
                                  "projection archive contains a symlink member")
             validate_projection_records(
-                lambda relative: projection_archive.read(f"plumbline/{relative}"),
+                lambda relative: projection_archive.read(f"writwall/{relative}"),
                 relative_names, failures, "archive")
-            allowlist_name = "plumbline/projection/public-files.txt"
+            allowlist_name = "writwall/projection/public-files.txt"
             if allowlist_name in names:
                 archive_entries = parse_projection_allowlist(
                     projection_archive.read(allowlist_name), failures, "archive")
@@ -1456,10 +1647,10 @@ def check_archive(archive_path: Path, failures: Failures,
                 if relative_names != exact_members:
                     failures.add("projection",
                                  "projection archive member set differs from the allowlist")
-                if "plumbline/MANIFEST.sha256" in names:
+                if "writwall/MANIFEST.sha256" in names:
                     try:
                         distribution_lines = projection_archive.read(
-                            "plumbline/MANIFEST.sha256").decode("utf-8").splitlines()
+                            "writwall/MANIFEST.sha256").decode("utf-8").splitlines()
                     except UnicodeDecodeError:
                         failures.add("projection",
                                      "projection archive distribution manifest is not UTF-8")
@@ -1487,7 +1678,7 @@ def check_archive(archive_path: Path, failures: Failures,
                                 "projection",
                                 "projection archive distribution manifest coverage differs")
                         for relative, digest in distribution_found.items():
-                            member = f"plumbline/{relative}"
+                            member = f"writwall/{relative}"
                             if member not in names:
                                 continue
                             actual = hashlib.sha256(
@@ -1499,7 +1690,7 @@ def check_archive(archive_path: Path, failures: Failures,
 
     # Transient live-work state (WO-PL-015). Same relative-path rule as the
     # source and build modes, applied to archive member names once their
-    # `plumbline/` archive root is stripped.
+    # `writwall/` archive root is stripped.
     if BUILDER.is_file():
         try:
             builder = load_builder()
@@ -1510,9 +1701,9 @@ def check_archive(archive_path: Path, failures: Failures,
                          f"{type(exc).__name__}: {exc}")
         else:
             for name in names:
-                if name.endswith("/") or not name.startswith("plumbline/"):
+                if name.endswith("/") or not name.startswith("writwall/"):
                     continue
-                relative = name[len("plumbline/"):]
+                relative = name[len("writwall/"):]
                 if builder.is_transient_release_path(relative):
                     failures.add(
                         "transient-release-state",
@@ -1557,8 +1748,8 @@ def check_archive(archive_path: Path, failures: Failures,
                         "machine-specific data in a release archive")
                     break
     state = governance_state(failures)
-    claude_entries = sorted(n[len("plumbline/"):] for n in names
-                            if n.startswith("plumbline/.claude/"))
+    claude_entries = sorted(n[len("writwall/"):] for n in names
+                            if n.startswith("writwall/.claude/"))
     if projection:
         if claude_entries:
             failures.add(
@@ -1568,7 +1759,7 @@ def check_archive(archive_path: Path, failures: Failures,
     elif state == PRE_ADOPTION:
         if claude_entries:
             failures.add("archive",
-                         "plumbline/.claude/ is in the archive while the "
+                         "writwall/.claude/ is in the archive while the "
                          "repository is pre-adoption; the enforcement "
                          "installation ships only after adoption: "
                          + ", ".join(claude_entries))
@@ -1576,19 +1767,19 @@ def check_archive(archive_path: Path, failures: Failures,
         for entry in claude_entries:
             if entry not in PACKAGED_CLAUDE_FILES:
                 failures.add("archive",
-                             f"plumbline/{entry} must never be packaged; the "
+                             f"writwall/{entry} must never be packaged; the "
                              "post-adoption archive carries only "
                              + ", ".join(sorted(PACKAGED_CLAUDE_FILES)))
         for required in sorted(PACKAGED_CLAUDE_FILES):
             if required not in claude_entries:
                 failures.add("archive",
-                             f"the repository is adopted but plumbline/{required} "
+                             f"the repository is adopted but writwall/{required} "
                              "is missing from the archive")
     for forbidden in NEVER_PACKAGED_CLAUDE:
-        if f"plumbline/{forbidden}" in names:
-            failures.add("archive", f"plumbline/{forbidden} must never be packaged")
+        if f"writwall/{forbidden}" in names:
+            failures.add("archive", f"writwall/{forbidden} must never be packaged")
     governance_entries = [n for n in names
-                          if n.startswith(f"plumbline/{GOVERNANCE}/")]
+                          if n.startswith(f"writwall/{GOVERNANCE}/")]
     if state == PRE_ADOPTION:
         if governance_entries:
             failures.add(
@@ -1597,7 +1788,7 @@ def check_archive(archive_path: Path, failures: Failures,
                 "while the repository is pre-adoption; the unratified instance "
                 "must be excluded (e.g. " + governance_entries[0] + ")")
     else:
-        if f"plumbline/{GOVERNANCE}/decisions/DR-001.md" not in names:
+        if f"writwall/{GOVERNANCE}/decisions/DR-001.md" not in names:
             failures.add("archive",
                          "the repository is adopted but the archive carries no "
                          "governance/decisions/DR-001.md")
@@ -1615,14 +1806,14 @@ def check_archive(archive_path: Path, failures: Failures,
                 failures.add("archive",
                              f"{name} is still marked PROPOSED and must not ship")
 
-    # RFI-05 resolution: the governed source distribution retains Plumbline's
+    # RFI-05 resolution: the governed source distribution retains Writwall's
     # own charter as an inspectable self-hosting example. A clean-history
     # public projection replaces those private-instance instructions with the
     # exact public-only notice enforced by the projection builder/checker.
-    if not projection and "plumbline/CLAUDE.md" not in names:
+    if not projection and "writwall/CLAUDE.md" not in names:
         failures.add("archive",
-                     "archive is missing plumbline/CLAUDE.md; the source "
-                     "distribution retains Plumbline's operating charter")
+                     "archive is missing writwall/CLAUDE.md; the source "
+                     "distribution retains Writwall's operating charter")
 
     control = document_control()
     ratified = (control["status"] or "").strip().lower() == "ratified" and \
@@ -1642,7 +1833,7 @@ def check_archive(archive_path: Path, failures: Failures,
 # --------------------------------------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Check the Plumbline distribution.")
+    parser = argparse.ArgumentParser(description="Check the Writwall distribution.")
     parser.add_argument("--archive", help="also inspect a built distribution archive")
     parser.add_argument("--projection", action="store_true",
                         help="validate explicit clean-history projection mode")
@@ -1665,6 +1856,9 @@ def main(argv: list[str] | None = None) -> int:
     check_transient_release_state(failures)
     check_source_machine_paths(failures)
     check_positioning(failures)
+    check_onboarding_contract(failures)
+    check_name_clearance_ledgers(failures)
+    check_identity_migration(failures)
     check_documentation_truth(failures)
     check_templates(control, failures)
     check_qualification_references(failures)

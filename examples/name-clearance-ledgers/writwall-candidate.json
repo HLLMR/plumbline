@@ -1,0 +1,468 @@
+{
+  "candidate": {
+    "display_name": "Writwall",
+    "slug": "writwall",
+    "variants": [
+      "writwall"
+    ]
+  },
+  "collected_at": "2026-08-28T22:43:27Z",
+  "disposition": {
+    "decided_at": "2026-08-29T00:48:52.000001Z",
+    "decided_by": "HLLMR, Owner",
+    "decision": "accept",
+    "rationale": "Owner selected Writwall after reviewing the complete evidence, AEC hold-point and security reference-monitor framing, and stated residual risks."
+  },
+  "expires_at": "2026-09-04T22:43:27Z",
+  "limitations": [
+    "The ledger proves the recorded search procedure, not legal clearance.",
+    "Unavailable or unreviewed sources cannot be interpreted as clear."
+  ],
+  "schema": 1,
+  "sources": [
+    {
+      "checked_at": "2026-08-29T00:26:57Z",
+      "error": null,
+      "findings": [],
+      "id": "github",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writwall"
+        ],
+        "similar": [
+          "Writwall AI",
+          "Writwall software",
+          "Writwall agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=writwall%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=writwall%20in%3Alogin%20type%3Aorg&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=Writwall%20AI%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=Writwall%20AI%20in%3Alogin%20type%3Aorg&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=Writwall%20software%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=Writwall%20software%20in%3Alogin%20type%3Aorg&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=Writwall%20agent%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=Writwall%20agent%20in%3Alogin%20type%3Aorg&per_page=100"
+        }
+      ],
+      "response_sha256": "e4519630cd0ca2c15ce7ceb30b295cc20c398a7162a15b43fe37477fff3c6c42",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://api.github.com/search/repositories?q=writwall%20in%3Aname&per_page=100"
+    },
+    {
+      "checked_at": "2026-08-29T00:26:57Z",
+      "error": null,
+      "findings": [],
+      "id": "pypi",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writwall"
+        ],
+        "similar": [
+          "Writwall AI",
+          "Writwall software",
+          "Writwall agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/writwall/json"
+        },
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/writwall-ai/json"
+        },
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/writwall-software/json"
+        },
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/writwall-agent/json"
+        }
+      ],
+      "response_sha256": "36d1fa0e9c33860040d1546d6997fcb31266dd3f9429fa74ef7e0926102b7234",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://pypi.org/pypi/writwall/json"
+    },
+    {
+      "checked_at": "2026-08-29T00:26:57Z",
+      "error": null,
+      "findings": [],
+      "id": "npm",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writwall"
+        ],
+        "similar": [
+          "Writwall AI",
+          "Writwall software",
+          "Writwall agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/writwall"
+        },
+        {
+          "body_sha256": "4552f3e389ea42f812c21a49774d3e9ffaad6cb92ff7a5aec5ac2b0fec2ad3b6",
+          "http_status": 200,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=writwall"
+        },
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/writwall-ai"
+        },
+        {
+          "body_sha256": "ab898dcaba703f31194d6add5976c18ef4fd12e4abb66d150e9f0f2ca54e03d5",
+          "http_status": 200,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=Writwall%20AI"
+        },
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/writwall-software"
+        },
+        {
+          "body_sha256": "c1cb8967100ef1d200d16cd446ffb4366fea61dd813f951a6613571ad600ce86",
+          "http_status": 200,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=Writwall%20software"
+        },
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/writwall-agent"
+        },
+        {
+          "body_sha256": "313764f747bd570439302c4754e3854bcc7bb83e5239d429ad1cdef144a4750c",
+          "http_status": 200,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=Writwall%20agent"
+        }
+      ],
+      "response_sha256": "d515a5379b79e37d58d1622e9cb0e6fda14ec22fa2e720fcaf6a91f518fc7bb0",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://registry.npmjs.org/writwall"
+    },
+    {
+      "checked_at": "2026-08-29T00:26:57Z",
+      "error": null,
+      "findings": [],
+      "id": "crates_io",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writwall"
+        ],
+        "similar": [
+          "Writwall AI",
+          "Writwall software",
+          "Writwall agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "0cded20b7e2b74e5e23b94e39b37c27674c30173f0cb33a02d64b75d22f11556",
+          "http_status": 404,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/writwall"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=writwall&per_page=100"
+        },
+        {
+          "body_sha256": "7ca0bdbeab907cfc47f9826de4af0565aa1a7eab85e16fe78470172fa47d85b2",
+          "http_status": 404,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/writwall-ai"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=Writwall%20AI&per_page=100"
+        },
+        {
+          "body_sha256": "e87c4e88e77be1723199380119e09062c7d03c9c3da587e397300d9708bc670c",
+          "http_status": 404,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/writwall-software"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=Writwall%20software&per_page=100"
+        },
+        {
+          "body_sha256": "2abd927ea9b611ca14752bc94931967222c57ca932e88e17e49a4e36f68da4e1",
+          "http_status": 404,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/writwall-agent"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=Writwall%20agent&per_page=100"
+        }
+      ],
+      "response_sha256": "f265c5d699668625ff3cbed9c711e50076cc9d0248707d42e2ea581db218a06d",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://crates.io/api/v1/crates/writwall"
+    },
+    {
+      "checked_at": "2026-08-29T00:26:57Z",
+      "error": null,
+      "findings": [],
+      "id": "com_rdap",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writwall"
+        ],
+        "similar": [
+          "Writwall AI",
+          "Writwall software",
+          "Writwall agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "writwall",
+          "query_kind": "exact",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/writwall.com"
+        },
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "Writwall AI",
+          "query_kind": "similar",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/writwall-ai.com"
+        },
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "Writwall software",
+          "query_kind": "similar",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/writwall-software.com"
+        },
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "Writwall agent",
+          "query_kind": "similar",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/writwall-agent.com"
+        }
+      ],
+      "response_sha256": "f7592506fe21e00ce6be8ecd1e95b70f2733c2b1f68b0fce79536e579ff4fd50",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://rdap.verisign.com/com/v1/domain/writwall.com"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "notes": "Exact web search found one earlier fictional use of Writwall in a literary work and no software or commercial product use.",
+        "queries": [
+          "\"Writwall\"",
+          "\"Writwall\" software OR AI OR agent",
+          "\"Writ wall\""
+        ],
+        "result_count": 1,
+        "reviewed_at": "2026-08-29T00:48:52Z",
+        "urls": [
+          "https://embarkliteraryjournal.com/issues/issue-5-july-2018/blindsand-sara-rivera/"
+        ]
+      },
+      "findings": [
+        {
+          "category_overlap": "unrelated",
+          "first_public_use": "2018-07",
+          "name": "Writwall in Blindsand",
+          "relationship": "exact",
+          "url": "https://embarkliteraryjournal.com/issues/issue-5-july-2018/blindsand-sara-rivera/"
+        }
+      ],
+      "id": "web_common_law",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "\"Writwall\""
+        ],
+        "similar": [
+          "\"Writwall\" software OR AI OR agent",
+          "\"Writ wall\""
+        ]
+      },
+      "response_sha256": "6f5fe0452568a59a9b89dc165e07013132dfc601f4e911ab9e8a150fd9428df4",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "finding",
+      "url": "https://www.google.com/search?q=%22Writwall%22+OR+%22writwall%22+software+AI+agent"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "endpoint": "https://tmsearch.uspto.gov/prod-v1-0-0/tmsearch",
+        "live_exact_count": 0,
+        "notes": "Official federal exact and spaced-word searches returned zero hits.",
+        "queries": [
+          "Writwall",
+          "Writ wall"
+        ],
+        "result_count": 0,
+        "reviewed_at": "2026-08-29T00:48:52Z"
+      },
+      "findings": [],
+      "id": "uspto",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "Writwall"
+        ],
+        "similar": [
+          "Writ wall"
+        ]
+      },
+      "response_sha256": "faa53368306192a356b7b020280b86d26fbe47b4a726deaa8ace5f8873623df6",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "clear",
+      "url": "https://tmsearch.uspto.gov/search/search-results"
+    }
+  ]
+}

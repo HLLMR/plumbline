@@ -1,4 +1,4 @@
-# ROUTING — Plumbline
+# ROUTING — Writwall
 
 **Status: RATIFIED by the Owner (HLLMR) on 2026-08-16; current R.12, R.13,
 and R.14 wording explicitly ratified on 2026-08-20 by DR-002.**
@@ -31,7 +31,7 @@ assigned, an identifier's number is never reused for a different route.
 | R.5 | `migration-guides/**` | The DC.2 entries for both revisions; every canonical artifact the guide installs, transforms, or supersedes |
 | R.6 | `checks/**`, `scripts/**`, release packaging | `README.md`; `ADOPTING.md`; the canonical repository layout; packaging tests; the release manifest; the governance packaging gate |
 | R.7 | `README.md`, `examples/**` | The ratified Doctrine; current distribution contents; observed evidence. Positioning may summarize; it may not enlarge the claims |
-| R.8 | `governance/**`, `CLAUDE.md` | Doctrine Parts 5 through 9; this repository's ratified decisions; `SELF-HOSTING.md`. These records govern Plumbline itself and are not adoption templates |
+| R.8 | `governance/**`, `CLAUDE.md` | Doctrine Parts 5 through 9; this repository's ratified decisions; `SELF-HOSTING.md`. These records govern Writwall itself and are not adoption templates |
 | R.9 | `archive/**` | `archive/README.md` and the work order's explicit historical question. Archived material is evidence only; retrieval requires explicit Owner authorization recorded in the work order or an RFI resolution (8.6.2) (private governed-source reference, not present in this candidate) |
 | **R.10** | **`.claude/**`** | Doctrine 8.3; `adapters/claude-code/README.md`; the canonical adapter; applicable provider documentation; installation and birth-test evidence; the active work order's enforcement declarations |
 | **R.11** | **`decisions/**`** | Doctrine DC.3 and DC.4; `decisions/README.md`; the relevant existing methodology decisions; the ratified `PLAN.md` sections governing the proposed decision; the evidence and alternatives named by the active work order |
@@ -71,7 +71,7 @@ Every Tier-2 row in `governance/ADOPTION-MAPPING.md` cites a route identifier th
 | `DOCTRINE.md` | R.1 |
 | `templates/**` | R.2 |
 | `adapters/claude-code/README.md`, `wo_capability_wall.py` | R.3, R.10 |
-| `ADOPTING.md`, `skills/plumbline-adopt/**`, `init.sh` | R.4 |
+| `ADOPTING.md`, `skills/writwall-adopt/**`, `init.sh` | R.4 |
 | `migration-guides/0.1-to-0.6.md` | R.5 |
 | `checks/check_distribution.py`, `scripts/build_distribution.py` | R.6 |
 | `decisions/DR-001.md`, `decisions/README.md`, `decisions/LICENSING-DIRECTION.md`, `governance/decisions/**` | R.6 for packaging concerns, **R.11** for decision drafting |

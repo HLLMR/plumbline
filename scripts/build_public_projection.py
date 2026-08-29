@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: Apache-2.0
-"""Build a deterministic clean-history Plumbline projection candidate."""
+"""Build a deterministic clean-history Writwall projection candidate."""
 from __future__ import annotations
 
 import argparse
@@ -24,12 +24,12 @@ TARGET_PROJECT_REFERENCE_NOTE = (
     "(target-project path, not a candidate member)")
 PUBLIC_CLAUDE_BYTES = (
     "# Public projection instructions\n\n"
-    "This clean-history public copy is not Plumbline's governed source and "
-    "does not govern its own maintenance. No active Plumbline work order or "
+    "This clean-history public copy is not Writwall's governed source and "
+    "does not govern its own maintenance. No active Writwall work order or "
     "capability wall is installed here. Contributors and coding agents may "
     "make ordinary repository changes under the host platform's controls; "
     "see `CONTRIBUTING.md`. Do not represent this checkout as mechanically "
-    "governed unless an Owner separately adopts and installs Plumbline.\n"
+    "governed unless an Owner separately adopts and installs Writwall.\n"
 ).encode("utf-8")
 CONTRIBUTING_RELATIVE = "CONTRIBUTING.md"
 SOURCE_DISTRIBUTION_COMMAND = b"python -B checks/check_distribution.py"
@@ -77,8 +77,12 @@ STATE_SNAPSHOT_NOTE = (
     "checkpoint, not the current public copy.")
 TARGET_PROJECT_REFERENCE_FILES = frozenset({
     "migration-guides/0.1-to-0.6.md",
-    "skills/plumbline-adopt/references/migration-guides/0.1-to-0.6.md",
+    "skills/writwall-adopt/references/migration-guides/0.1-to-0.6.md",
 })
+PRIVATE_EVIDENCE_REDACTION_FILES = frozenset({
+    "governance/LOG.md",
+})
+PRIVATE_EVIDENCE_REDACTION = "[private governed-source identifier omitted]"
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -95,6 +99,29 @@ def read_private_input(path: Path) -> bytes:
     except UnicodeDecodeError:
         raise SystemExit("private pattern input is not UTF-8") from None
     return raw
+
+
+def parse_private_patterns(raw: bytes) -> list[str]:
+    return sorted(
+        {
+            line.strip()
+            for line in raw.decode("utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        },
+        key=lambda value: (-len(value), value.casefold()),
+    )
+
+
+def redact_private_evidence(relative: str, data: bytes,
+                            patterns: list[str]) -> bytes:
+    if relative not in PRIVATE_EVIDENCE_REDACTION_FILES:
+        return data
+    text = data.decode("utf-8")
+    for pattern in patterns:
+        text = re.sub(
+            re.escape(pattern), PRIVATE_EVIDENCE_REDACTION, text,
+            flags=re.IGNORECASE)
+    return text.encode("utf-8")
 
 
 def read_allowlist(source_root: Path) -> tuple[list[str], bytes]:
@@ -170,6 +197,8 @@ def source_identity(source_root: Path) -> tuple[str, str]:
 
 
 def state_snapshot_bytes(data: bytes) -> bytes:
+    if STATE_SNAPSHOT_NOTE.encode("utf-8") in data:
+        return data
     return (f"> **{STATE_SNAPSHOT_NOTE}**\n\n".encode("utf-8") + data)
 
 
@@ -213,6 +242,7 @@ def build(source_root: Path, output: Path, private_pattern_file: Path) -> None:
     source_root = source_root.resolve()
     output = output.resolve()
     private_raw = read_private_input(private_pattern_file)
+    private_patterns = parse_private_patterns(private_raw)
     if output == source_root or source_root in output.parents:
         raise SystemExit("output must be outside the source root")
     if output.exists() and any(output.iterdir()):
@@ -233,10 +263,13 @@ def build(source_root: Path, output: Path, private_pattern_file: Path) -> None:
             data = PUBLIC_CLAUDE_BYTES
         if relative == CONTRIBUTING_RELATIVE:
             data = transform_contributing(data)
-        if relative.endswith(".md") and b"recoverable from Git history" in data:
+        if (relative.endswith(".md")
+                and b"recoverable from Git history" in data
+                and PROJECTION_NOTE.encode("utf-8") not in data):
             data = (f"> **{PROJECTION_NOTE}**\n\n".encode("utf-8") + data)
         if relative.endswith(".md"):
             data = transform_retained_references(relative, data, candidate_paths)
+        data = redact_private_evidence(relative, data, private_patterns)
         if relative == STATE_RELATIVE:
             data = state_snapshot_bytes(data)
         target.write_bytes(data)

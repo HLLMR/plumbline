@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: Apache-2.0
-"""Independently verify a clean-history Plumbline projection candidate."""
+"""Independently verify a clean-history Writwall projection candidate."""
 from __future__ import annotations
 
 import argparse
@@ -49,12 +49,12 @@ RETAINED_REFERENCE_NOTES = (
 )
 PUBLIC_CLAUDE_BYTES = (
     "# Public projection instructions\n\n"
-    "This clean-history public copy is not Plumbline's governed source and "
-    "does not govern its own maintenance. No active Plumbline work order or "
+    "This clean-history public copy is not Writwall's governed source and "
+    "does not govern its own maintenance. No active Writwall work order or "
     "capability wall is installed here. Contributors and coding agents may "
     "make ordinary repository changes under the host platform's controls; "
     "see `CONTRIBUTING.md`. Do not represent this checkout as mechanically "
-    "governed unless an Owner separately adopts and installs Plumbline.\n"
+    "governed unless an Owner separately adopts and installs Writwall.\n"
 ).encode("utf-8")
 CONTRIBUTING_RELATIVE = "CONTRIBUTING.md"
 SOURCE_DISTRIBUTION_COMMAND = "python -B checks/check_distribution.py"
@@ -94,7 +94,7 @@ PRIVATE_RETAINED_REFERENCE_FILES = frozenset({
 })
 TARGET_PROJECT_REFERENCE_FILES = frozenset({
     "migration-guides/0.1-to-0.6.md",
-    "skills/plumbline-adopt/references/migration-guides/0.1-to-0.6.md",
+    "skills/writwall-adopt/references/migration-guides/0.1-to-0.6.md",
 })
 STATE_RELATIVE = "governance/STATE.md"
 STATE_SNAPSHOT_NOTE = (
@@ -102,6 +102,23 @@ STATE_SNAPSHOT_NOTE = (
     "at the source commit named in `PROJECTION-PROVENANCE.md`. Push, "
     "publication, visibility, and queued-work statements below describe that "
     "checkpoint, not the current public copy.")
+PRIVATE_EVIDENCE_REDACTION_FILES = frozenset({
+    "governance/LOG.md",
+})
+PRIVATE_EVIDENCE_REDACTION = "[private governed-source identifier omitted]"
+
+
+def transform_expected_private_evidence(relative: str, data: bytes,
+                                        patterns: list[str]) -> bytes:
+    if relative not in PRIVATE_EVIDENCE_REDACTION_FILES:
+        return data
+    text = data.decode("utf-8")
+    for pattern in sorted(set(patterns),
+                          key=lambda value: (-len(value), value.casefold())):
+        text = re.sub(
+            re.escape(pattern), PRIVATE_EVIDENCE_REDACTION, text,
+            flags=re.IGNORECASE)
+    return text.encode("utf-8")
 
 
 def check_retained_references(relative: str, text: str, candidate_paths: set[str]) -> None:
@@ -193,12 +210,13 @@ def source_identity(source_root: Path) -> tuple[str, str]:
 
 
 def expected_provenance_bytes(source_root: Path, entries: list[str],
-                              allowlist_raw: bytes) -> bytes:
+                              allowlist_raw: bytes,
+                              patterns: list[str]) -> bytes:
     identifiers: dict[str, set[str]] = {}
     for relative in entries:
         try:
             text = expected_source_bytes(
-                source_root, relative, set(entries)).decode("utf-8")
+                source_root, relative, set(entries), patterns).decode("utf-8")
         except UnicodeDecodeError:
             continue
         for identifier in FULL_ID.findall(text):
@@ -229,7 +247,8 @@ def expected_provenance_bytes(source_root: Path, entries: list[str],
 
 
 def expected_source_bytes(source_root: Path, relative: str,
-                          candidate_paths: set[str]) -> bytes:
+                          candidate_paths: set[str],
+                          patterns: list[str]) -> bytes:
     source = source_root / relative
     if source.is_symlink() or not source.is_file():
         fail("governed source allowlist names a missing or unsafe payload")
@@ -241,12 +260,16 @@ def expected_source_bytes(source_root: Path, relative: str,
         data = PUBLIC_CLAUDE_BYTES
     if relative == CONTRIBUTING_RELATIVE:
         data = transform_expected_contributing(data)
-    if relative.endswith(".md") and b"recoverable from Git history" in data:
+    if (relative.endswith(".md")
+            and b"recoverable from Git history" in data
+            and PROJECTION_NOTE.encode("utf-8") not in data):
         data = (f"> **{PROJECTION_NOTE}**\n\n".encode("utf-8") + data)
     if relative.endswith(".md"):
         data = transform_expected_retained_references(
             relative, data, candidate_paths)
-    if relative == STATE_RELATIVE:
+    data = transform_expected_private_evidence(relative, data, patterns)
+    if (relative == STATE_RELATIVE
+            and STATE_SNAPSHOT_NOTE.encode("utf-8") not in data):
         data = (f"> **{STATE_SNAPSHOT_NOTE}**\n\n".encode("utf-8") + data)
     return data
 
@@ -374,7 +397,7 @@ def verify(root: Path, pattern_file: Path) -> None:
                                          for path in paths):
             fail("candidate contains an unclassified legacy commit identifier")
     expected_provenance = expected_provenance_bytes(
-        source_root, source_entries, source_allowlist_raw)
+        source_root, source_entries, source_allowlist_raw, patterns)
     if provenance_raw != expected_provenance:
         fail("projection provenance differs from the governed source identity/inventory")
     if "checks/check_licenses.py" in entries:
@@ -393,7 +416,7 @@ def verify(root: Path, pattern_file: Path) -> None:
             fail("candidate distribution gate failed")
     for relative in source_entries:
         if (root / relative).read_bytes() != expected_source_bytes(
-                source_root, relative, set(source_entries)):
+                source_root, relative, set(source_entries), patterns):
             fail("candidate payload differs from the governed source payload")
     print(f"OK: public projection verified ({len(expected)} files)")
 

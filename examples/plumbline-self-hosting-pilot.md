@@ -1,5 +1,9 @@
 # Plumbline self-hosting pilot
 
+> **Former identity.** This preserved evidence records the pilot under the
+> Plumbline name used at the time. The project selected **Writwall** on
+> 2026-08-28; that later identity is not applied retroactively here.
+
 **Evidence boundary.** This example reports only aggregate facts already
 recorded in the separate private governed source's governance instance —
 `governance/STATE.md`, `governance/LOG.md`, and the ratified

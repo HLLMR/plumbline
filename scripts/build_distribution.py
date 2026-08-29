@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: Apache-2.0
-"""Build the Plumbline source distribution archive.
+"""Build the Writwall source distribution archive.
 
 Standard library only. Produces exactly one ZIP containing exactly one
-top-level directory, `plumbline/`. No nested archive, no loose duplicate
+top-level directory, `writwall/`. No nested archive, no loose duplicate
 files alongside the canonical paths.
 
-WHAT THIS ARCHIVE IS. `plumbline-<revision>.zip` is a source distribution, not
+WHAT THIS ARCHIVE IS. `writwall-<revision>.zip` is a source distribution, not
 an overlay. It is not unpacked into an adopting project. It carries the
 methodology, the templates, the adapters, the adoption routes, the checks, and
-Plumbline's own operating charter as an inspectable self-hosting example
+Writwall's own operating charter as an inspectable self-hosting example
 (Doctrine 5.1.4). An adopter instantiates only the project-side artifacts,
 through the routes documented in ADOPTING.md.
 
-Plumbline's own charter, governance directory, decisions, plan, state, work
+Writwall's own charter, governance directory, decisions, plan, state, work
 history, and authority are working records under Doctrine 5.1.5. They ship so
 that the example is readable and auditable. They are never copied into an
 adopting project by any adoption route, and `checks/check_distribution.py`
@@ -38,7 +38,7 @@ import zipfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-ARCHIVE_ROOT = "plumbline"
+ARCHIVE_ROOT = "writwall"
 MANIFEST_NAME = "MANIFEST.sha256"
 
 # Excluded from the distribution entirely.
@@ -54,7 +54,8 @@ EXCLUDED_DIR_NAMES = frozenset({
 
 # Provider installation. Excluded entirely before adoption; after adoption the
 # archive carries exactly these two files, because the portable installation is
-# part of Plumbline's real self-hosted example (Owner disposition 2026-08-16).
+# part of the repository's real self-hosted example (Owner disposition
+# 2026-08-16, under the former identity).
 # Everything else under .claude/ is machine-local and never ships.
 CLAUDE_DIR = ".claude"
 PACKAGED_CLAUDE_FILES = frozenset({
@@ -76,7 +77,7 @@ EXCLUDED_SUFFIXES = (".pyc", ".pyo", ".zip")
 # --------------------------------------------------------------------------
 # Governance packaging gate (Owner disposition, 2026-08-16)
 #
-# Plumbline's finalized self-hosted governance instance belongs in the public
+# Writwall's finalized self-hosted governance instance belongs in the public
 # source distribution as a real working example. Unratified drafts do not.
 #
 #   pre-adoption : the whole governance/ subtree is excluded
@@ -136,7 +137,7 @@ ADOPTED = "adopted"
 # work-order directory, and any regular file under the live report
 # directory. `checks/check_distribution.py` consumes this same definition
 # rather than restating it, and the same relative-path rule applies to an
-# archive member name once its `plumbline/` archive root is stripped.
+# archive member name once its `writwall/` archive root is stripped.
 #
 # The two tracked root `.gitkeep` placeholders are not transient: they are
 # the directory's own tracked presence, not live work. Only those two EXACT
@@ -162,7 +163,7 @@ def is_transient_release_path(relative: str) -> bool:
     """True for a relative POSIX path that names transient live-work state.
 
     Applies identically to a working-tree path relative to the repository
-    root and to an archive member name relative to `plumbline/`.
+    root and to an archive member name relative to `writwall/`.
     """
     if relative == ACTIVATION_POINTER:
         return True
@@ -362,8 +363,8 @@ def is_ratified(control: dict) -> bool:
 def archive_name(control: dict) -> str:
     revision = control["revision"]
     if is_ratified(control):
-        return f"plumbline-{revision}.zip"
-    return f"plumbline-{revision}-rc.zip"
+        return f"writwall-{revision}.zip"
+    return f"writwall-{revision}-rc.zip"
 
 
 def should_skip(path: Path, state: str = PRE_ADOPTION) -> bool:
@@ -585,7 +586,7 @@ def build(output_dir: Path) -> tuple[Path, str, int]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Build the Plumbline distribution archive.")
+    parser = argparse.ArgumentParser(description="Build the Writwall distribution archive.")
     parser.add_argument("--output", default="dist/", help="output directory (default: dist/)")
     args = parser.parse_args(argv)
 

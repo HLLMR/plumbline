@@ -1,7 +1,7 @@
-# Plumbline adoption-bundle license map
+# Writwall adoption-bundle license map
 
-Each carried artifact uses its canonical Plumbline license. Bundling does not
-change that license. This map and the bundle instructions are Plumbline prose
+Each carried artifact uses its canonical Writwall license. Bundling does not
+change that license. This map and the bundle instructions are Writwall prose
 under CC-BY-4.0.
 
 | Bundle path | Canonical source | License |
@@ -17,7 +17,7 @@ under CC-BY-4.0.
 | `LICENSE-MAP.md` | this bundle map | `CC-BY-4.0` |
 
 Canonical legal codes are available at the repository root under `LICENSES/`.
-The Plumbline name and revision designations are not licensed; see the root
+The Writwall name and revision designations are not licensed; see the root
 `NAMING.md`.
 
 The root `REUSE.toml` and `checks/check_licenses.py` mechanically verify the

@@ -1,0 +1,320 @@
+{
+  "candidate": {
+    "display_name": "Writcord",
+    "slug": "writcord",
+    "variants": [
+      "writcord"
+    ]
+  },
+  "collected_at": "2026-08-28T22:43:30Z",
+  "disposition": {
+    "decided_at": "2026-08-29T00:48:52.000001Z",
+    "decided_by": "HLLMR, Owner",
+    "decision": "reject",
+    "rationale": "Owner selected Writwall; Writcord was not chosen because its spoken identity is ambiguous."
+  },
+  "expires_at": "2026-09-04T22:43:30Z",
+  "limitations": [
+    "The ledger proves the recorded search procedure, not legal clearance.",
+    "Unavailable or unreviewed sources cannot be interpreted as clear."
+  ],
+  "schema": 1,
+  "sources": [
+    {
+      "checked_at": "2026-08-29T00:22:35Z",
+      "error": null,
+      "findings": [],
+      "id": "github",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writcord"
+        ],
+        "similar": [
+          "Writcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=writcord%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=writcord%20in%3Alogin%20type%3Aorg&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=Writcord%20software%20AI%20agent%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=Writcord%20software%20AI%20agent%20in%3Alogin%20type%3Aorg&per_page=100"
+        }
+      ],
+      "response_sha256": "8b2adefd03b6b1edb5e1206df992d55c7799e34c6235a9aa3afd771e6edd1ca3",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://api.github.com/search/repositories?q=writcord%20in%3Aname&per_page=100"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:35Z",
+      "error": null,
+      "findings": [],
+      "id": "pypi",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writcord"
+        ],
+        "similar": [
+          "Writcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/writcord/json"
+        },
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/writcord-software-ai-agent/json"
+        }
+      ],
+      "response_sha256": "5b533215a46cc0fd3d87309790ab96b36bed36eed44c351e769c391ae52ae2c5",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://pypi.org/pypi/writcord/json"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:35Z",
+      "error": null,
+      "findings": [],
+      "id": "npm",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writcord"
+        ],
+        "similar": [
+          "Writcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/writcord"
+        },
+        {
+          "body_sha256": "ae45b3ce12a6335af83667f7d71365d98f94acfb57dde05b0bcc3921eb3accc8",
+          "http_status": 200,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=writcord"
+        },
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/writcord-software-ai-agent"
+        },
+        {
+          "body_sha256": "9e0df308cea605a356382ba95d6ae258a234ee71a884be264f8bb360905bb15b",
+          "http_status": 200,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=Writcord%20software%20AI%20agent"
+        }
+      ],
+      "response_sha256": "1020a8b7c760eaa126b0bbb17fd2b376c68382267d3a253ddeeef4f999175daa",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://registry.npmjs.org/writcord"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:35Z",
+      "error": null,
+      "findings": [],
+      "id": "crates_io",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writcord"
+        ],
+        "similar": [
+          "Writcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "86fab257851319edacb9b529e74f83515ba508fedd0ca51970d045afbf854a44",
+          "http_status": 404,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/writcord"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=writcord&per_page=100"
+        },
+        {
+          "body_sha256": "55be3dcdabaedfb1ab259d721a91d021f6916e496410e56c62b74ba20cdc9d54",
+          "http_status": 404,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/writcord-software-ai-agent"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=Writcord%20software%20AI%20agent&per_page=100"
+        }
+      ],
+      "response_sha256": "0d506325093266972ac12947b1d917ec8872d97475589d6cf5b573474610ddba",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://crates.io/api/v1/crates/writcord"
+    },
+    {
+      "checked_at": "2026-08-29T00:22:35Z",
+      "error": null,
+      "findings": [],
+      "id": "com_rdap",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "writcord"
+        ],
+        "similar": [
+          "Writcord software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "writcord",
+          "query_kind": "exact",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/writcord.com"
+        },
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "Writcord software AI agent",
+          "query_kind": "similar",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/writcord-software-ai-agent.com"
+        }
+      ],
+      "response_sha256": "0d7a3ec3720b93604de91fc25bf500c3ba62a997c263e0cd212bef54962304f1",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://rdap.verisign.com/com/v1/domain/writcord.com"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "notes": "Exact and software-category searches found no meaningful public product or service use.",
+        "queries": [
+          "\"Writcord\"",
+          "\"Writcord\" software OR AI OR agent",
+          "\"Writ cord\""
+        ],
+        "result_count": 0,
+        "reviewed_at": "2026-08-29T00:48:52Z",
+        "urls": []
+      },
+      "findings": [],
+      "id": "web_common_law",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "\"Writcord\""
+        ],
+        "similar": [
+          "\"Writcord\" software OR AI OR agent",
+          "\"Writ cord\""
+        ]
+      },
+      "response_sha256": "89df3fafa7843628f7f8f0aee08540fac54e5c96dc30b8d192a96602b7bb171f",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "clear",
+      "url": "https://www.google.com/search?q=%22Writcord%22+OR+%22writcord%22+software+AI+agent"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "endpoint": "https://tmsearch.uspto.gov/prod-v1-0-0/tmsearch",
+        "live_exact_count": 0,
+        "notes": "Official federal exact and spaced-word searches returned zero hits.",
+        "queries": [
+          "Writcord",
+          "Writ cord"
+        ],
+        "result_count": 0,
+        "reviewed_at": "2026-08-29T00:48:52Z"
+      },
+      "findings": [],
+      "id": "uspto",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "Writcord"
+        ],
+        "similar": [
+          "Writ cord"
+        ]
+      },
+      "response_sha256": "b1e5ba06172a3faafcef757ed28f7948c916b95f72918a248c8c1d2de2bdc1ae",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "clear",
+      "url": "https://tmsearch.uspto.gov/search/search-results"
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 ---
-name: plumbline-adopt
-description: Bootstrap a repository for adoption of the Plumbline Doctrine (document-controlled AI-assisted development). Use when the user asks to adopt the doctrine, instantiate Plumbline, set up governance for a project, scaffold a governance directory, install the capability wall, run the birth test, prepare an adoption mapping, or migrate a project from an earlier doctrine revision. Also triggers on "plumbline", "adopt the doctrine", "governance bootstrap", "DR-001", "birth test", "capability wall". Bootstrap mode prepares and proposes only (Doctrine 6.1.3). A separate Owner-directed recorder mode, available only after the bootstrap report and an explicit Owner instruction, records decisions the Owner has already ratified and may make one local adoption commit. Neither mode ratifies intent, invents Owner reasoning, pushes, tags, publishes, or modifies project source.
+name: writwall-adopt
+description: Bootstrap a repository for adoption of the Writwall Doctrine (document-controlled AI-assisted development). Use when the user asks to adopt the doctrine, instantiate Writwall, set up governance for a project, scaffold a governance directory, install the capability wall, run the birth test, prepare an adoption mapping, or migrate a project from an earlier doctrine revision. Also triggers on "writwall", "adopt the doctrine", "governance bootstrap", "DR-001", "birth test", "capability wall". Bootstrap mode prepares and proposes only (Doctrine 6.1.3). A separate Owner-directed recorder mode, available only after the bootstrap report and an explicit Owner instruction, records decisions the Owner has already ratified and may make one local adoption commit. Neither mode ratifies intent, invents Owner reasoning, pushes, tags, publishes, or modifies project source.
 ---
 
-# plumbline-adopt
+# writwall-adopt
 
 You are the bootstrap implementer for a project adopting the Doctrine. You are not the Owner. You prepare; the Owner adopts.
 
@@ -43,10 +43,19 @@ If you believe the Doctrine genuinely forbids what the Owner is directing, stop 
 
 ## This bundle is temporary and self-contained
 
-Everything this skill needs is inside its own directory. It reads nothing from the Plumbline repository and the target project never depends on Plumbline (Doctrine 5.1.2).
+Everything this skill needs is inside its own directory. It reads nothing from the Writwall repository and the target project never depends on Writwall (Doctrine 5.1.2).
+
+The complete bundle must be local and readable **before the wall is
+registered**. Do not install a hook and then rely on network retrieval for this
+skill or its references: correct no-pointer lockout may deny that retrieval. If
+you enter a project where the wall is already registered and this bundle is
+missing, stop acting as the in-wall Implementer. Ask the Owner to use an
+external authorized coordinator / recorder with a local Writwall source to
+prepare the exact recovery lifecycle; never reconstruct the missing authority
+from memory or weaken the wall.
 
 ```
-plumbline-adopt/
+writwall-adopt/
 ├── SKILL.md
 ├── references/
 │   ├── DOCTRINE.md                        the methodology, for you, for this task only
@@ -66,9 +75,19 @@ plumbline-adopt/
 
 `assets/checks/check_work_order_dispatch.py` is the same deterministic, read-only pre-dispatch validator this repository uses on itself. It checks the between-work-order lockout state (`--lockout`), a candidate work order before pointer creation (`--work-order <path>`), or the currently activated work order and pointer (`--active`); it detects a missing, malformed, or mistargeted activation pointer, CRLF/non-UTF-8 work-order bytes, and an unsafe or malformed machine-readable grant. It never repairs, creates, or removes anything, and it is not the capability wall: it proves a work order is well-formed and correctly activated before a mutating session starts, not that any mutation channel is actually enforced during that session.
 
-What this bundle carries is the methodology, the migration guides, the adapter, the pre-dispatch validator, and the templates. `LICENSE-MAP.md` states the license inherited by each bundled path. It carries none of Plumbline's own working records, and you must never introduce any. Plumbline's charter, governance directory, plan, state, routing map, decisions, work orders, reports, and history are that repository's records under Doctrine 5.1.5. They may be read as a worked example; they are never copied into a project you are bootstrapping, and they never carry authority over it.
+What this bundle carries is the methodology, the migration guides, the adapter, the pre-dispatch validator, and the templates. `LICENSE-MAP.md` states the license inherited by each bundled path. It carries none of Writwall's own working records, and you must never introduce any. Writwall's charter, governance directory, plan, state, routing map, decisions, work orders, reports, and history are that repository's records under Doctrine 5.1.5. They may be read as a worked example; they are never copied into a project you are bootstrapping, and they never carry authority over it.
 
-**Remove this bundle from the project's live agent surface before adoption completes.** Delete `plumbline-adopt/` from the skills directory: at the end of Mode 1 if the Owner is finishing the sequence themselves, or as the last mechanical step of Mode 2 if they direct a recorder closeout. It is a bootstrap tool, not project context: leaving it in place would put the doctrine inside the live corpus, which Doctrine 1.2.4 and 8.6.1 forbid. What stays behind is what you installed into the project: the charter, the adapter under the tooling directory, the pre-dispatch validator at `checks/check_work_order_dispatch.py`, and `governance/`. Those are the project's own files from that moment on.
+**Make this complete bundle local before the wall is registered. Remove it from
+the project's live agent surface before adoption completes.** Keep it until the
+final bootstrap or recorder operation that needs it, then delete
+`writwall-adopt/` before the adoption commit. Do not remove it merely because
+Mode 1 entered lockout while Mode 2 still needs its exact instructions. It is a
+bootstrap tool, not project context: leaving it in place after adoption would
+put the doctrine inside the live corpus, which Doctrine 1.2.4 and 8.6.1 forbid.
+What stays behind is what you installed into the project: the charter, the
+adapter under the tooling directory, the pre-dispatch validator at
+`checks/check_work_order_dispatch.py`, and `governance/`. Those are the
+project's own files from that moment on.
 
 After adoption, no Dispatcher, Implementer, or Reviewer invocation receives the doctrine. Never instruct a project workflow agent to read it, and never route to it (1.2.4). They receive the charter, the work order, routed Tier-2 material, and reports.
 
@@ -82,16 +101,23 @@ After adoption, no Dispatcher, Implementer, or Reviewer invocation receives the 
 6. Every unknown becomes a numbered RFI in the report. Do not resolve unknowns by assumption.
 7. You do not improve the doctrine, the templates, or the adapter. Observations go in the report.
 8. If the Owner asks you to skip, weaken, or reinterpret the birth test, decline and cite 6.4.2 and 8.3.5; that refusal holds in both modes. In Mode 1, also decline to create DR-001 or make the adoption commit, citing 6.2 and 6.1.3 — and say plainly that both become available in Mode 2 once the Owner has supplied and ratified their content. Never decline an action merely because it is clerical.
+9. Start birth testing with a minimal provider profile. Disable unrelated
+   plugins, connectors, MCP servers, and delegation tools where practical. An
+   external mutation tool is probed only against an explicit disposable
+   fixture whose side effect, verification, and cleanup authority are named in
+   the lifecycle packet. Authentication failure, provider rejection before hook
+   dispatch, an unavailable tool, or an unprobed channel is **indeterminate, never a pass**.
+   Never improvise against an ordinary live account object.
 
 ## Procedure (Mode 1: bootstrap)
 
-**Phase A: Inventory.** Run `git log --oneline -20`, `git status --short`, list the agent tooling directory, and find any existing governance-like artifacts (charter files, hooks, work orders, governance directories, prior-revision templates). Identify the baseline commit candidate: the parent of the first commit that introduced any doctrine artifact, or HEAD if none. Write `REMEDIATION-INVENTORY.md` at the repo root. Stop and present it.
+**Phase A: Inventory.** Run `git log --oneline -20`, `git status --short`, list the agent tooling directory, and find any existing governance-like artifacts (charter files, hooks, work orders, governance directories, prior-revision templates). Identify the baseline commit candidate: the parent of the first commit that introduced any doctrine artifact, or HEAD if none. If the full Writwall distribution may have been overlaid into the target, stop ordinary bootstrap and use a separate clean distribution plus its `PROJECTION-MANIFEST.sha256`: classify byte-identical matches only as proposed overlay residue and every differing or pre-existing path as unknown. Propose an exact keep/remove/move disposition; delete nothing before the Owner ratifies it. Write `REMEDIATION-INVENTORY.md` at the repo root. Stop and present it.
 
 **Phase B: Layout.** Create `governance/` per Doctrine 5.2 (`PLAN.md` is NOT created by you; `STATE.md` OBSERVED only; `ROUTING.md` proposed only; `decisions/`, `work-orders/`, `reports/`, `briefs/`, `rfis/`, `history/`, `archive/`, `LOG.md` with the 9.2 column header, `LOG-denials.jsonl` empty). Copy the templates from `assets/templates/` into `governance/templates/`. Move any prior-revision artifacts to `history/` or `archive/` with headers.
 
 **Phase C: Charter.** If the tooling already auto-loads a file (Claude Code: `CLAUDE.md`), that file is the charter (5.2). Restructure it to the clause layout of `assets/templates/A-charter.md`, preserving every substantive line, and add at the top: "Doctrine rev [x], pre-adoption. This charter is in bootstrap. No work order under it is counted until DR-001 exists." Verify the token budget (8.1.2); if over, report which section, do not trim.
 
-**Phase D: Enforcement.** Install `assets/adapters/claude-code/wo_capability_wall.py` unmodified at `.claude/hooks/wo_capability_wall.py` only through the exact Owner-ratified adoption lifecycle. The adapter supports CPython 3.10-3.14. Register it for PreToolUse with matcher `*`, an explicit timeout, `${CLAUDE_PROJECT_DIR}`, and the native command: `py -3` on Windows or `python3` on POSIX. The adapter classifies tools itself so an unknown tool denies rather than silently escaping the wall. Never register an absolute path.
+**Phase D: Enforcement.** Install `assets/adapters/claude-code/wo_capability_wall.py` unmodified at `.claude/hooks/wo_capability_wall.py` only through the exact Owner-ratified adoption lifecycle after its authorization is durably recorded and verified. The adapter supports CPython 3.10-3.14. Register it for PreToolUse with matcher `*`, an explicit timeout, `${CLAUDE_PROJECT_DIR}`, and the native command: `py -3` on Windows or `python3` on POSIX. The adapter classifies tools itself so an unknown tool denies rather than silently escaping the wall. Never register an absolute path.
 
 Also install `assets/checks/check_work_order_dispatch.py` unmodified at `checks/check_work_order_dispatch.py`, create-only: if the project already has a file at that path, leave it untouched and note it as skipped rather than overwriting it. This validator is a project-side convenience the Owner can run before activating a work order (Doctrine 6.4.1 step 8); it does not replace the capability wall and enforces nothing on its own.
 
@@ -99,13 +125,24 @@ Also install `assets/checks/check_work_order_dispatch.py` unmodified at `checks/
 
 Inventory every mutation and network channel actually present in this installation before testing: mutation-capable built-in tools, provider-specific command tools, `WebFetch`/`WebSearch`, every connected MCP or plugin tool, every tool that delegates to another session, and any other tool that writes, publishes, schedules, or performs egress. Do not work from a fixed list. Cross-check against the six classification lists in the adapter README and record any installed tool missing from all of them.
 
+Before probing, reduce that inventory to the smallest profile the project
+actually needs. For any external tool that remains, require the Owner-ratified
+explicit disposable target and cleanup procedure from standing rule 9. Do not
+turn “inventory every channel” into authority to mutate every connected
+service.
+
 Run the README's birth-test sequence exactly, using only bootstrap-safe paths under `governance/`. Level 1 inventories no-work-order lockout; Level 2 records ordinary grant scope channel by channel. The source adapter requires exact `status: ACTIVE`, treats `WebFetch`/`WebSearch` as network egress, rejects root/traversal/symlink/junction/alias widening, and denies shell/delegation/MCP/unmodeled mutation channels that cannot prove the protected control plane unchanged. Those logic facts do not qualify a whole surface.
 
-Doctrine 8.7 Level 3 requires an exact Owner-ratified birth-test instrument and durable lifecycle packet. A normal work order cannot grant a protected target. The instrument may name each exact target only as `control_plane_falsification_probe`; that label confers no authority, and the runtime must deny every probe through every exposed mutation-capable channel in separate fresh native Windows and native POSIX sessions. Do not install settings, mutate the pointer, or activate the instrument under a work-order grant. An unavailable or indeterminate required probe blocks the claim.
+Doctrine 8.7 Level 3 requires an exact Owner-ratified birth-test instrument and durable lifecycle packet. A normal work order cannot grant a protected target. The instrument may name each exact target only as `control_plane_falsification_probe`; that label confers no authority, and the runtime must deny every probe through every exposed mutation-capable channel in a fresh native session on every platform the project will use. A portable Windows-and-POSIX claim requires both native legs. An unavailable unused platform is recorded as untested/indeterminate and leaves affected whole surfaces unenforced; it does not by itself block adoption after the actual environment passes Level 1 and the Owner accepts that boundary. Do not install settings, mutate the pointer, or activate the instrument under a work-order grant. An unavailable or indeterminate required probe blocks the claim made for that environment.
 
 If the work order you are bootstrapping toward will declare `grant.filesystem.read.deny`, do not describe that surface as enforced until the adapter README's supplemental read-deny procedure has also been run: the Owner creates one sentinel file under a denied path with content withheld from you, adds that exact path to the grant, and a fresh session observes the modeled read tools (`Glob`, `Grep`, `LS`, `NotebookRead`, `Read`) deny it before content exposure while an allowed sibling read succeeds. You never receive or report the sentinel content. Keep every unqualified whole surface under `unenforced_boundaries`.
 
 Copy `LOG-denials.jsonl` into the report, stating which probe produced each entry and that all of them are pre-adoption; the adapter writes one structured JSON record per denial and does not label entries as pre-adoption. Remove the active-WO pointer when done so the repository sits in lockout.
+
+The no-pointer state may be re-established later through an authorized
+lifecycle action and observed in a fresh session. Do not manufacture urgency or
+call the first no-pointer window irreplaceable. Unplanned denials remain log
+evidence but are not retroactively promoted into a birth test.
 
 **Phase E: Dispatcher/Reviewer text.** Write `governance/dispatcher-reviewer-instructions.md` for the Owner to paste into their review model. In migration mode, use the text in `references/migration-guides/0.1-to-0.6.md` Part 7.3; otherwise derive it from Doctrine 4.2, 7.2.1, 7.6.1, and Appendix C. Supply the charter, work order, report, plan sections, and routed Tier-2 material to those roles. Do not tell them to read the doctrine.
 
@@ -113,7 +150,7 @@ Copy `LOG-denials.jsonl` into the report, stating which probe produced each entr
 
 **Report.** Write `REMEDIATION-REPORT.md` at the repo root: inventory summary and baseline candidate; every artifact moved or created with old and new path and governing clause; exact hook registration; the mutation-channel inventory; birth certificates with their pre-adoption context; RFI list; observations; and the statement that nothing was committed, no source changed, and the repository is in lockout. Then stop.
 
-Tell the Owner the remaining steps are the Owner's sequence in the Plumbline `ADOPTING.md` section 5, and that they have two ways to finish it: perform the repository mechanics themselves, or supply the outstanding decisions and direct a Mode 2 recorder closeout. Say which decisions are still outstanding. Do not start Mode 2 in the same breath, and do not press for it.
+Tell the Owner the remaining steps are the Owner's sequence in the Writwall `ADOPTING.md` section 5, and that they have two ways to finish it: perform the repository mechanics themselves, or supply the outstanding decisions and direct a Mode 2 recorder closeout. Say which decisions are still outstanding. Do not start Mode 2 in the same breath, and do not press for it.
 
 ## Mode 2: Owner-directed recorder closeout
 
@@ -134,12 +171,22 @@ Before touching a file, give the Owner one compact packet:
 - each decision you are about to record, with its source: the Owner's own words, or the exact draft they approved;
 - the exact file operations that follow, one line each: path, operation, and the decision it records;
 - the exact commit message and the exact list of paths the commit will contain;
+- the repository-relative path of the canonical durable lifecycle record, and
+  the exact authorization text or packet digest it will contain before any
+  protected lifecycle mechanic begins;
 - whether the closeout ends by removing the active-WO pointer, and whether the Owner removes it or names that removal here for you to perform;
 - anything still missing, stated as a question about the decision rather than about the edit.
 
-Then stop and wait. Explicit ratification is the gate — the Owner saying so, in this conversation. Silence, a filename, a draft, a prior conversation, and repository state are not ratification, and you may not read them as such.
+Then stop and wait. The Owner's explicit statement in this conversation settles
+the decision and may authorize you to record it, but chat alone is not the
+durable lifecycle authorization required by Doctrine 8.7.6. Silence, a
+filename, a draft, a prior conversation, and repository state are not
+ratification, and you may not read them as such. After the Owner ratifies the
+exact packet, first transcribe that authorization verbatim into the packet's
+named canonical lifecycle record and verify the recorded text or digest. Do not
+begin any protected lifecycle mechanic until that durable record exists.
 
-### What you may execute after ratification
+### What you may execute after durable recording and verification
 
 - Materialize `governance/PLAN.md` from the intent source the Owner identified, and archive the original with a header so two documents never both look authoritative (6.3.2).
 - Execute every disposition in the adoption mapping exactly as the Owner dispositioned it (6.3.3 through 6.3.6).

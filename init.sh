@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: MIT-0
-# Plumbline scaffolder. Creates the governance directory and copies templates,
+# Writwall scaffolder. Creates the governance directory and copies templates,
 # the reference adapter, and the pre-dispatch validator into a target repository.
 #
 # It does not inventory, does not birth-test, does not write an adoption
@@ -164,7 +164,7 @@ fi
 # content (Appendix A.1.4 kill list) that no scaffolder can supply.
 for charter in CHARTER.md CLAUDE.md; do
   if [ -e "$TARGET/$charter" ]; then
-    note_refused "$charter" "existing charter candidate; prune it to Appendix A by hand (Doctrine 5.2, 8.1.2)"
+    note_refused "$charter" "existing charter candidate; requires an Owner decision and exact recorder authority (Doctrine 5.2, 8.1.2)"
   fi
 done
 
@@ -173,29 +173,40 @@ if [ -d "$TARGET/.claude" ]; then
             ".claude/hooks/wo_capability_wall.py" "$force_adapter" "adapter"
   if [ -e "$TARGET/.claude/settings.json" ]; then
     note_refused ".claude/settings.json" \
-      "existing hook registration; merge matcher \"*\", native py -3/python3, \${CLAUDE_PROJECT_DIR}, and explicit timeout by hand (adapters/claude-code/README.md)"
+      "existing hook registration; requires an exact Owner lifecycle record before a recorder merges matcher \"*\", native py -3/python3, \${CLAUDE_PROJECT_DIR}, and explicit timeout (adapters/claude-code/README.md)"
   else
     note_refused ".claude/settings.json" \
       "not written by this script; register native py -3/python3 with matcher \"*\", \${CLAUDE_PROJECT_DIR}, and explicit timeout (adapters/claude-code/README.md)"
   fi
 else
-  note_refused ".claude/" "absent; adapter not installed. Create it, then re-run, or copy the adapter by hand"
+  note_refused ".claude/" "absent; adapter not installed. An exactly authorized recorder may create it and re-run, or copy the adapter"
 fi
 
 printf '\n== created ==\n'
 if [ ${#created[@]} -eq 0 ]; then echo "  (nothing)"; else printf '  %s\n' "${created[@]}"; fi
 printf '\n== skipped (already present, left untouched) ==\n'
 if [ ${#skipped[@]} -eq 0 ]; then echo "  (nothing)"; else printf '  %s\n' "${skipped[@]}"; fi
-printf '\n== refused (needs a human) ==\n'
+printf '\n== refused (needs a project decision or exact recorder authority) ==\n'
 if [ ${#refused[@]} -eq 0 ]; then echo "  (nothing)"; else printf '  %s\n' "${refused[@]}"; fi
 
 cat <<'MSG'
 
 Scaffolded. NOT adopted. No commit was made, no adoption record was written,
-and no birth test has run. Doctrine 6.4.1 sequence, all yours:
+and no birth test has run. Doctrine 6.4.1 sequence, all Owner-decided; an
+exactly authorized coordinator/recorder may perform the resulting mechanics:
   1 confirm the doctrine revision is ratified   2 record the baseline commit
   3 adoption mapping                            4 materialize PLAN.md
   5 charter to Appendix A                       6 ROUTING.md
   7 bootstrap STATE.md                          8 install adapter + birth test
   9 write DR-001                               10 adoption commit
+
+Read START-HERE.md in the Writwall source distribution before continuing. If
+you want agent-guided adoption, make the adoption bundle local before the wall
+is registered. Do not register the wall yet unless the complete bundle and
+recovery instructions are already available to an authorized coordinator.
+
+If the wall is already registered and the project is in no-pointer lockout, do
+not ask the locked IDE session to fetch instructions or bypass it. Follow the
+"already registered" recovery path in START-HERE.md using an external
+authorized coordinator / recorder.
 MSG

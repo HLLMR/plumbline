@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: Apache-2.0
-"""Deterministically check Plumbline's tracked-file license coverage."""
+"""Deterministically check Writwall's tracked-file license coverage."""
 
 from __future__ import annotations
 
@@ -104,14 +104,14 @@ def expected_header(rel: str) -> str | None:
     if rel.endswith(".py") and (
         rel.startswith("adapters/")
         or rel.startswith(".claude/hooks/")
-        or rel.startswith("skills/plumbline-adopt/assets/adapters/")
+        or rel.startswith("skills/writwall-adopt/assets/adapters/")
     ):
         return "MIT-0"
     if rel.endswith(".py") and (
         rel.startswith("scripts/")
         or rel.startswith("checks/")
         or rel.startswith("tests/")
-        or rel.startswith("skills/plumbline-adopt/assets/checks/")
+        or rel.startswith("skills/writwall-adopt/assets/checks/")
     ):
         return "Apache-2.0"
     return None

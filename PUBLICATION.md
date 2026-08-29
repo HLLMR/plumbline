@@ -1,6 +1,6 @@
 # Public projection and publication boundary
 
-Plumbline's governed source repository remains private. Its clean-history
+Writwall's governed source repository remains private. Its clean-history
 public candidate is derived from the exact positive allowlist in
 `projection/public-files.txt`; it is not produced by changing the visibility
 of the governed repository or copying its Git metadata.
@@ -90,7 +90,7 @@ payloads plus `PROJECTION-PROVENANCE.md` and is verified per-entry by the
 checker as part of every run.
 
 The accepted licenses are recorded in `LICENSE-MAP.md` and `REUSE.toml`.
-Plumbline's names and revision designations remain reserved as described in
+Writwall's names and revision designations remain reserved as described in
 `NAMING.md`.
 
 Building or checking a candidate does not publish it. The Owner separately

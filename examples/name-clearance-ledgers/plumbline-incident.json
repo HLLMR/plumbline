@@ -1,0 +1,905 @@
+{
+  "candidate": {
+    "display_name": "Plumbline",
+    "slug": "plumbline",
+    "variants": [
+      "plumb",
+      "plumbline"
+    ]
+  },
+  "collected_at": "2026-08-28T22:43:23Z",
+  "disposition": {
+    "decided_at": "2026-08-29T00:48:52.000001Z",
+    "decided_by": "HLLMR, Owner",
+    "decision": "reject",
+    "rationale": "Earlier exact and similar same-category public software uses make the current identity unsuitable for continued promotion."
+  },
+  "expires_at": "2026-09-04T22:43:23Z",
+  "limitations": [
+    "The ledger proves the recorded search procedure, not legal clearance.",
+    "Unavailable or unreviewed sources cannot be interpreted as clear."
+  ],
+  "schema": 1,
+  "sources": [
+    {
+      "checked_at": "2026-08-29T00:21:19Z",
+      "error": null,
+      "findings": [
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "moxious/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/moxious/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "EmilioCarrion/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/EmilioCarrion/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "use-plumbline/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/use-plumbline/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "ActaClad/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/ActaClad/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "sroberts/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/sroberts/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "DYAI2025/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/DYAI2025/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "BytesFromToby/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/BytesFromToby/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "amos-labs/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/amos-labs/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "nickyfactz/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/nickyfactz/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "integratorjeffj/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/integratorjeffj/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "GreenShoeGarage/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/GreenShoeGarage/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Steven-Ray-Garza/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Steven-Ray-Garza/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "CodeStorm2632/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/CodeStorm2632/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "GautamTalksDev/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/GautamTalksDev/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Heatescape/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Heatescape/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "HLLMR/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/HLLMR/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Ai983/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Ai983/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "SamparkBhol/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/SamparkBhol/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "nvnj/PlumbLine",
+          "relationship": "exact",
+          "url": "https://github.com/nvnj/PlumbLine"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "seckinss/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/seckinss/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "fallguyconsulting/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/fallguyconsulting/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "dabubogdan7/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/dabubogdan7/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "advait33AI/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/advait33AI/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "kacperkadziolka/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/kacperkadziolka/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "viki22uied/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/viki22uied/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "alisoncossette/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/alisoncossette/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "artychang/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/artychang/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "imonirulislam/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/imonirulislam/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "GitHwwb/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/GitHwwb/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "jpmcdonald/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/jpmcdonald/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "suprenvb/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/suprenvb/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "devilevil100/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/devilevil100/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "sunilgentyala/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/sunilgentyala/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "ChelseaKR/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/ChelseaKR/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Thorfast191/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Thorfast191/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "qizwiz/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/qizwiz/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "77Plumbline/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/77Plumbline/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "evolvingintelligenceai/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/evolvingintelligenceai/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "yamanahlawat/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/yamanahlawat/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Titogelo/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Titogelo/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "kaushikb11/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/kaushikb11/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "laith-wallace/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/laith-wallace/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "quirk0o/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/quirk0o/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "saagpatel/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/saagpatel/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "kmatzen/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/kmatzen/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "dr-zog/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/dr-zog/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "islemaster/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/islemaster/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Reiers/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Reiers/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Shravan-Amberkar/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Shravan-Amberkar/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "MW8-ai/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/MW8-ai/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "F16Samuel/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/F16Samuel/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "m66dev/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/m66dev/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "yfwmaniish/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/yfwmaniish/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "colinelliott/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/colinelliott/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "joshuaweber827-ux/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/joshuaweber827-ux/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "NT5x5/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/NT5x5/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "mark124/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/mark124/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "askalf/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/askalf/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "arslan-kursad/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/arslan-kursad/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "hobuinc/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/hobuinc/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "alexpran/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/alexpran/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Motzumoto/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Motzumoto/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Plumbline-Studio/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Plumbline-Studio/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "plumbline-dev/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/plumbline-dev/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "dhk/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/dhk/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Hybridthegamer/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Hybridthegamer/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "glendonjklassen/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/glendonjklassen/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "chandu-koti/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/chandu-koti/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Chonegyrame/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Chonegyrame/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "naveenneog/Plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/naveenneog/Plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "NumanIbnMazid/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/NumanIbnMazid/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "Bhargs24/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/Bhargs24/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "geeknik/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/geeknik/plumbline"
+        },
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "PlumbLine",
+          "relationship": "exact",
+          "url": "https://github.com/PlumbLine"
+        }
+      ],
+      "id": "github",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "plumbline"
+        ],
+        "similar": [
+          "Plumbline software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "11fc72a1a5731cb70c7b293def7f83bdaa722e9d8df29f3841fe921d3509fed4",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=plumbline%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "c2257e1080a8cdf65e605321f38a87b54d34520d446f2579cc7b2f119baf98d9",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=plumbline%20in%3Alogin%20type%3Aorg&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "repository_search",
+          "url": "https://api.github.com/search/repositories?q=Plumbline%20software%20AI%20agent%20in%3Aname&per_page=100"
+        },
+        {
+          "body_sha256": "4af480b8ee5b87b369a76c49bd22c9a783908272ebffbe97898f8ab0f0772a5f",
+          "http_status": 200,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "organization_search",
+          "url": "https://api.github.com/search/users?q=Plumbline%20software%20AI%20agent%20in%3Alogin%20type%3Aorg&per_page=100"
+        }
+      ],
+      "response_sha256": "cdef4180492240d97fe9d040451fa458f800547ba4e5e42c153fa277bfc4082c",
+      "reviewed_by": null,
+      "status": "finding",
+      "url": "https://api.github.com/search/repositories?q=plumbline%20in%3Aname&per_page=100"
+    },
+    {
+      "checked_at": "2026-08-29T00:21:19Z",
+      "error": null,
+      "findings": [
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "plumbline",
+          "relationship": "exact",
+          "url": "https://pypi.org/project/plumbline/"
+        }
+      ],
+      "id": "pypi",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "plumbline"
+        ],
+        "similar": [
+          "Plumbline software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "8653add91532842eb098948ab4c1c9427bd8c306533c033d1f6f52da124d7cbb",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/plumbline/json"
+        },
+        {
+          "body_sha256": "b82014934f66beeb9e05a37f65357c4b50db0349d25d68d818ed0319dd4feb40",
+          "http_status": 404,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://pypi.org/pypi/plumbline-software-ai-agent/json"
+        }
+      ],
+      "response_sha256": "4b2bc25748bc1ed6fceaf3f422fbf9700edc2b888bc2c9c49d4dab1eef7d4170",
+      "reviewed_by": null,
+      "status": "finding",
+      "url": "https://pypi.org/pypi/plumbline/json"
+    },
+    {
+      "checked_at": "2026-08-29T00:21:19Z",
+      "error": null,
+      "findings": [
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "plumbline",
+          "relationship": "exact",
+          "url": "https://www.npmjs.com/package/plumbline"
+        }
+      ],
+      "id": "npm",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "plumbline"
+        ],
+        "similar": [
+          "Plumbline software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "be5ea6a0f3d303ee9100047defc266a51516a7969232a4a97ea6cb7485fff8fe",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/plumbline"
+        },
+        {
+          "body_sha256": "2d8f4202728aed64160655d0ce5d3e1248275546c386541a47772f12dfcf42a4",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=plumbline"
+        },
+        {
+          "body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f",
+          "http_status": 404,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://registry.npmjs.org/plumbline-software-ai-agent"
+        },
+        {
+          "body_sha256": "0ff42c985b5d73fdd6df98d8f5b014d37a940c619f24b8140fc093f651426eeb",
+          "http_status": 200,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://registry.npmjs.org/-/v1/search?size=100&text=Plumbline%20software%20AI%20agent"
+        }
+      ],
+      "response_sha256": "6a66169621efa2cf7d4102606d0221878f05c2930abc13d66ba478882fcc3e86",
+      "reviewed_by": null,
+      "status": "finding",
+      "url": "https://registry.npmjs.org/plumbline"
+    },
+    {
+      "checked_at": "2026-08-29T00:21:19Z",
+      "error": null,
+      "findings": [],
+      "id": "crates_io",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "plumbline"
+        ],
+        "similar": [
+          "Plumbline software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "baf69aa05e66d7d3ecf5fcc006a9384f487363b8d270a9d3c2675c00f79209a1",
+          "http_status": 404,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/plumbline"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=plumbline&per_page=100"
+        },
+        {
+          "body_sha256": "a8f1cddb76e4d1b460cb1f0a1ecec83558b384e0f195f5c59d7c57de4ab0fe18",
+          "http_status": 404,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "exact_lookup",
+          "url": "https://crates.io/api/v1/crates/plumbline-software-ai-agent"
+        },
+        {
+          "body_sha256": "d7387f5dcd24fdc0d26627015f545d5af97cdb03e877a77bc41ab9e0514ef98c",
+          "http_status": 200,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "search",
+          "url": "https://crates.io/api/v1/crates?q=Plumbline%20software%20AI%20agent&per_page=100"
+        }
+      ],
+      "response_sha256": "9a82031aacea5d27c9c5266812744361443871224267bef03e10a96913941b1b",
+      "reviewed_by": null,
+      "status": "clear",
+      "url": "https://crates.io/api/v1/crates/plumbline"
+    },
+    {
+      "checked_at": "2026-08-29T00:21:19Z",
+      "error": null,
+      "findings": [
+        {
+          "category_overlap": "unreviewed",
+          "first_public_use": null,
+          "name": "plumbline.com",
+          "relationship": "exact",
+          "url": "https://rdap.verisign.com/com/v1/domain/plumbline.com"
+        }
+      ],
+      "id": "com_rdap",
+      "mode": "automated",
+      "queries": {
+        "exact": [
+          "plumbline"
+        ],
+        "similar": [
+          "Plumbline software AI agent"
+        ]
+      },
+      "requests": [
+        {
+          "body_sha256": "1ba8878036776e6da9be53a4af0a1d94bc3440a564014f208e8154be62503493",
+          "http_status": 200,
+          "query": "plumbline",
+          "query_kind": "exact",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/plumbline.com"
+        },
+        {
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "http_status": 404,
+          "query": "Plumbline software AI agent",
+          "query_kind": "similar",
+          "request_kind": "domain_lookup",
+          "url": "https://rdap.verisign.com/com/v1/domain/plumbline-software-ai-agent.com"
+        }
+      ],
+      "response_sha256": "17f0f70e3fae4d6b16b325f6ab4d5fbf9240cfd71c1d133d06436f5b0ecc8726",
+      "reviewed_by": null,
+      "status": "finding",
+      "url": "https://rdap.verisign.com/com/v1/domain/plumbline.com"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "notes": "Exact and similar-name web review found earlier same-category and adjacent AI-agent software uses. Search indexes are not exhaustive.",
+        "queries": [
+          "\"Plumbline\" AI agent software",
+          "\"plumbline-ai\"",
+          "\"Plumb\" Claude Code review gate"
+        ],
+        "result_count": 3,
+        "reviewed_at": "2026-08-29T00:48:52Z",
+        "urls": [
+          "https://pypi.org/project/plumbline-ai/",
+          "https://github.com/askalf/plumbline",
+          "https://github.com/dbreunig/plumb"
+        ]
+      },
+      "findings": [
+        {
+          "category_overlap": "same",
+          "first_public_use": "2026-04-18",
+          "name": "plumbline-ai",
+          "relationship": "similar",
+          "url": "https://pypi.org/project/plumbline-ai/"
+        },
+        {
+          "category_overlap": "same",
+          "first_public_use": "2026-07-26",
+          "name": "askalf/plumbline",
+          "relationship": "exact",
+          "url": "https://github.com/askalf/plumbline"
+        },
+        {
+          "category_overlap": "adjacent",
+          "first_public_use": "2026-04",
+          "name": "dbreunig/plumb",
+          "relationship": "similar",
+          "url": "https://github.com/dbreunig/plumb"
+        }
+      ],
+      "id": "web_common_law",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "\"Plumbline\" AI agent software"
+        ],
+        "similar": [
+          "\"plumbline-ai\"",
+          "\"Plumb\" Claude Code review gate"
+        ]
+      },
+      "response_sha256": "4c8603e70056a84515121db04b87d4a805c532c1d08926dbc215e8732b511524",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "finding",
+      "url": "https://www.google.com/search?q=%22Plumbline%22+OR+%22plumbline%22+software+AI+agent"
+    },
+    {
+      "checked_at": "2026-08-29T00:48:52Z",
+      "error": null,
+      "evidence": {
+        "endpoint": "https://tmsearch.uspto.gov/prod-v1-0-0/tmsearch",
+        "live_exact_count": 2,
+        "notes": "Official federal search returned live exact marks in unrelated medical-information and religious-newsletter categories; it did not remove the common-law software collisions.",
+        "queries": [
+          "Plumbline",
+          "Plumb Line"
+        ],
+        "result_count": 36,
+        "reviewed_at": "2026-08-29T00:48:52Z"
+      },
+      "findings": [
+        {
+          "category_overlap": "unrelated",
+          "first_public_use": null,
+          "name": "PLUMBLINE \u2014 serial 98893951",
+          "relationship": "exact",
+          "url": "https://tsdr.uspto.gov/#caseNumber=98893951&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch"
+        },
+        {
+          "category_overlap": "unrelated",
+          "first_public_use": "1982-12-31",
+          "name": "PLUMBLINE \u2014 serial 73365485",
+          "relationship": "exact",
+          "url": "https://tsdr.uspto.gov/#caseNumber=73365485&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch"
+        }
+      ],
+      "id": "uspto",
+      "mode": "human_review",
+      "queries": {
+        "exact": [
+          "Plumbline"
+        ],
+        "similar": [
+          "Plumb Line"
+        ]
+      },
+      "response_sha256": "fe20759a3bf8285acacfd50983ef7c9f9d1a71e5cad951c972e31b1e5be84306",
+      "reviewed_by": "HLLMR, Owner",
+      "reviewer_kind": "human",
+      "status": "finding",
+      "url": "https://tmsearch.uspto.gov/search/search-results"
+    }
+  ]
+}

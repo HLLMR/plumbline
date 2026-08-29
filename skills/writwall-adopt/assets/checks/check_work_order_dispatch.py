@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 HLLMR Ventures LLC
 # SPDX-License-Identifier: Apache-2.0
-"""Deterministic pre-dispatch validator for Plumbline work-order state.
+"""Deterministic pre-dispatch validator for Writwall work-order state.
 
 Standard library only. Read-only: this checker never repairs, creates, or
 removes the activation pointer, never edits a work order, and never infers
@@ -1481,7 +1481,7 @@ def run_emit_boundaries(repo_root: Path, work_order_arg: str) -> tuple[Failures,
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Deterministic pre-dispatch validator for Plumbline work-order state.")
+        description="Deterministic pre-dispatch validator for Writwall work-order state.")
     parser.add_argument("--lockout", action="store_true",
                         help="validate the intentional between-work-order lockout state")
     parser.add_argument("--active", action="store_true",

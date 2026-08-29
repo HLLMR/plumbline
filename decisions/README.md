@@ -10,7 +10,7 @@ project decision `governance/decisions/DR-002.md`; that record is not a
 methodology decision and is not carried by public candidates.
 
 `DR-003` recorded HLLMR Ventures LLC's copyright ownership and ratified the
-Plumbline license map on 2026-08-20. It resolves RFI-03.
+the project's license map on 2026-08-20. It resolves RFI-03.
 
 `DR-004` ratified Doctrine revision 0.7 on 2026-08-20, superseding 0.6.
 

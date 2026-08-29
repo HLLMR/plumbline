@@ -111,8 +111,8 @@ class PublicProjectionProcessTests(unittest.TestCase):
         ])
 
     def test_binary_readme_asset_is_projected_byte_identically(self) -> None:
-        relative = "docs/assets/plumbline-og.png"
-        payload = b"\x89PNG\r\n\x1a\nplumbline"
+        relative = "docs/assets/writwall-og.png"
+        payload = b"\x89PNG\r\n\x1a\nwritwall"
         self.allow_bytes(relative, payload)
 
         result = self.run_builder()
@@ -286,7 +286,7 @@ class PublicProjectionProcessTests(unittest.TestCase):
         self.allow(
             "NOTES.md",
             "See archive/private/README.md, governance/history/WO-OLD.md, "
-            "and dist/plumbline.zip for detail.\n",
+            "and dist/writwall.zip for detail.\n",
         )
         self.assertEqual(self.run_builder().returncode, 0)
         checked = self.run_checker()
@@ -300,7 +300,7 @@ class PublicProjectionProcessTests(unittest.TestCase):
             "NOTES.md",
             "See [archive](archive/private/README.md), "
             "[history](governance/history/WO-OLD.md), and "
-            "[bundle](dist/plumbline.zip).\n",
+            "[bundle](dist/writwall.zip).\n",
         )
         self.assertEqual(self.run_builder().returncode, 0)
         checked = self.run_checker()
@@ -313,7 +313,7 @@ class PublicProjectionProcessTests(unittest.TestCase):
             "nested/NOTES.md",
             "See [archive](../archive/private/README.md), "
             "[history](../../governance/history/WO-OLD.md), "
-            "[bundle](./dist/plumbline.zip), and "
+            "[bundle](./dist/writwall.zip), and "
             "[root](/archive/old.md).\n",
         )
         self.assertEqual(self.run_builder().returncode, 0)
@@ -555,6 +555,44 @@ class PublicProjectionProcessTests(unittest.TestCase):
         self.assertIn("private disclosure", combined.lower())
         self.assertNotIn(private_value, combined)
 
+    def test_private_pattern_is_redacted_only_from_retained_public_evidence(self) -> None:
+        private_value = self.patterns.read_text(encoding="utf-8").strip()
+        self.allow(
+            "governance/LOG.md",
+            f"Historical private source reference: {private_value}.\n",
+        )
+
+        built = self.run_builder()
+
+        self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
+        projected = (self.output / "governance" / "LOG.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn(private_value, projected)
+        self.assertIn("[private governed-source identifier omitted]", projected)
+        checked = self.run_checker()
+        self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
+
+    def test_projection_only_truth_transforms_are_idempotent(self) -> None:
+        self.allow(
+            "decisions/DR-001.md",
+            "The original remains recoverable from Git history.\n",
+        )
+        self.allow("governance/STATE.md", "# Writwall state\n")
+        first = self.run_builder()
+        self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+        second_output = self.tmp / "candidate-two"
+
+        second = self.run_builder(source=self.output, output=second_output)
+
+        self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
+        for relative in ("decisions/DR-001.md", "governance/STATE.md"):
+            self.assertEqual(
+                (self.output / relative).read_bytes(),
+                (second_output / relative).read_bytes(),
+                relative,
+            )
+
     def test_manifest_tamper_fails(self) -> None:
         self.assertEqual(self.run_builder().returncode, 0)
         (self.output / "README.md").write_text("tampered\n", encoding="utf-8")
@@ -793,7 +831,7 @@ class PublicProjectionProcessTests(unittest.TestCase):
         built = self.run_builder(source=REPO_ROOT)
         self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
         public_charter = (self.output / "CLAUDE.md").read_text(encoding="utf-8")
-        self.assertIn("not Plumbline's governed source", public_charter)
+        self.assertIn("not Writwall's governed source", public_charter)
         self.assertIn("ordinary repository changes", public_charter)
         self.assertNotIn("No mutation without an active work order", public_charter)
         self.assertFalse((self.output / ".claude" / "settings.json").exists())

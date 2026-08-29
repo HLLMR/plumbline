@@ -1,0 +1,44 @@
+name: Bug report
+description: Report behavior that is broken, misleading, or unsafe
+title: "[Bug]: "
+labels:
+  - bug
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping make Writwall more truthful. Do not include secrets,
+        private repository content, private paths, or live account data.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: List the smallest safe sequence that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Include versions, exit codes, or redacted output. Do not paste secrets or private payloads.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - Human onboarding or documentation
+        - Adoption skill or scaffolder
+        - Capability-wall adapter
+        - Checks, tests, or projection
+        - Licensing or release packaging
+        - Other
+    validations:
+      required: true

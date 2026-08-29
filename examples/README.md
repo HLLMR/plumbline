@@ -1,6 +1,7 @@
 # Examples
 
-`plumbline-self-hosting-pilot.md` is the one published example: an
+`plumbline-self-hosting-pilot.md` is the published pilot under the project's
+former identity. It is an
 evidence-backed report on this repository's own ten-work-order self-hosting
 pilot, drawn only from the aggregate records in `governance/STATE.md`,
 `governance/LOG.md`, and the ratified `governance/decisions/DR-002.md`. It

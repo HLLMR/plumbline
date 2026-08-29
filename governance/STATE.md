@@ -1,10 +1,12 @@
 > **Snapshot note: this record is a snapshot of the private governed source at the source commit named in `PROJECTION-PROVENANCE.md`. Push, publication, visibility, and queued-work statements below describe that checkpoint, not the current public copy.**
 
-# STATE — Plumbline
+# STATE — Writwall
 
 As-is, not should-be. Ratified intent lives in `governance/PLAN.md`; this file
-records the repository state observed after the Plumbline 0.8 public release
-and accepted WO-PL-034 public-front-door polish.
+records the repository state observed after the Plumbline 0.8 public release,
+accepted WO-PL-034 public-front-door polish, accepted WO-PL-035 onboarding
+repair, accepted WO-PL-036 name-clearance and replacement selection, and
+accepted WO-PL-037 controlled migration to the current **Writwall** identity.
 
 **Derived:** 2026-08-28 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
@@ -16,8 +18,10 @@ WO-PL-018 through WO-PL-023 complete; WO-PL-024 void before implementation;
 WO-PL-025 complete and the project operatively bound to Doctrine 0.8;
 WO-PL-026 complete and RFI-22 closed; WO-PL-027 through WO-PL-033 complete;
 Plumbline 0.8 publicly released from a one-commit clean-history projection;
-WO-PL-034 complete. The hash of the commit containing this file is intentionally
-recorded only externally.
+WO-PL-034 through WO-PL-037 complete; **Writwall** selected and implemented as
+the current identity; external cutover remains separately controlled.
+The hash of the commit containing this file is intentionally recorded only
+externally.
 
 ---
 
@@ -63,8 +67,11 @@ recorded only externally.
 | WO-PL-032 | **COMPLETE**, accepted 2026-08-27; post-pilot installed-hook refresh and publication gate, not counted. Installed, canonical, and bundled hook bytes match the accepted digest; native Windows and Ubuntu Sonnet sessions each produced four exact birth-test denials with zero mutation; full and focused regression gates passed; fresh read-only review returned ACCEPT/HIGH. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; publication remains a separate unmade Owner decision after the authorized post-closeout dual rebuild and review |
 | WO-PL-033 | **COMPLETE**, accepted 2026-08-28; post-pilot public front door and release hygiene, not counted. README now leads with the authority-and-enforcement layer, honest first-value route, pilot economics, and provider boundary; official CC legal text and executable license guards are present; methodology/project decision references are truthful. Final governed source and two independent 92-file candidates passed Windows and native Ubuntu; candidates and archives were byte-identical. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; publication remains a separate Owner decision using a new clean-history repository |
 | WO-PL-034 | **COMPLETE**, accepted 2026-08-28; post-publication public-front-door polish, not counted. The Owner rejected the first generated illustration and accepted the launch kit's exact regenerated type-only README/social assets plus the evidence-first tonal revision. Active minutes **NOT REPORTED**; records retained in `governance/history/` |
+| WO-PL-035 | **COMPLETE**, accepted 2026-08-28; post-publication human-onboarding and public-contribution repair, not counted. A human-first start page, coordinator prompts, safe bootstrap/recovery rules, issue/PR workflow, and deterministic cross-document checks are complete. The first fresh novice review returned six material findings; all were corrected and a different fresh Reviewer returned ACCEPT. Active minutes **NOT REPORTED**; records retained in `governance/history/` |
+| WO-PL-036 | **COMPLETE**, accepted 2026-08-28; post-publication inception name-clearance evidence and replacement selection, not counted. Public collector/checker, worked incident, four canonical ledgers, and release-disposition pins are complete. Owner rejected Plumbline, Grantcord, and Writcord and accepted **Writwall** after named-human web/common-law and USPTO review. Windows passed 638 tests, native Ubuntu passed 74 focused/integration tests, two 112-file projections reproduced byte-for-byte, and the fifth fresh Reviewer returned ACCEPT. Active minutes **NOT REPORTED**; records retained in `governance/history/`; identity migration remains unstarted |
+| WO-PL-037 | **COMPLETE**, accepted 2026-08-29; controlled identity migration from Plumbline to **Writwall**, not counted. Current product surfaces, adoption skill, code constants, repository coordinates, and visual assets are migrated; historical Plumbline facts remain pinned by `identity/legacy-references.json`. Windows and Ubuntu governed-source/candidate suites passed; two private-pattern candidates were byte-identical; live-wall canary record 310 is valid; fresh Sonnet review returned **ACCEPT WITH NON-BLOCKING POLISH**. Owner active minutes **NOT REPORTED**. The closeout records one unauthorized read-only history traversal with no implementation impact. Records retained in `governance/history/`; no push, public-repository rename, release, tag, `dist/` replacement, website edit, or external launch action occurred |
 | Pilot progress | **10 of 10 counted work orders complete; fresh-agent evaluation accepted with calibrations and disposed by DR-002** |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-034 **COMPLETE**; Plumbline 0.8 published and front-door polish accepted; no successor queued |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-037 **COMPLETE**; Plumbline 0.8 is the historical public release; **Writwall migration accepted**; external cutover pending separate authorization |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout
@@ -826,7 +833,7 @@ active minutes **NOT REPORTED**.
 
 After accepted WO-PL-033 closeout, the Owner authorized and the coordinator
 performed the separate publication lifecycle. The private governed source was
-pushed to the renamed private `HLLMR/plumbline-archive` repository at
+pushed to its renamed private archive repository at
 `e270fd3235d170a28a21fd198b88857740b74acd`. Two independent clean projections
 were byte-identical at complete-tree ledger SHA-256
 `FD04037812CF729DA180BA4B2D0BE2822E6E6985F8D78D508B712BB0C0E6F4DC`.
@@ -857,6 +864,42 @@ reported active minutes **NOT REPORTED**.
 | Reviewer | Final launch-kit reconciliation **ACCEPT** after two report-only inventory corrections; no remaining blocker |
 | Enforcement status | Codex implementation surface; no live-wall claim; the public example accurately reports separate historical provider-envelope denials |
 
+### Post-pilot verification — WO-PL-035
+
+WO-PL-035 repaired the first-adopter human ramp and established the public
+issue-to-PR maintenance path. The Owner accepted it on 2026-08-28 and reported
+active minutes **NOT REPORTED**.
+
+| Gate | Accepted result |
+|---|---|
+| Human first action | `START-HERE.md` names the coordinator/recorder, execution location, exact first prompt, and Implementer boundary before Doctrine reading |
+| Recovery and safety | No-pointer lockout and accidental overlays have explicit recovery paths; external mutation tools require pre-authorized disposable fixtures and unavailable channels remain indeterminate |
+| Public maintenance | Issue forms, state labels, agent briefs, contributor routing, DCO PR template, and private-governance projection boundary are documented and checked |
+| Focused closeout rerun | **265 tests, OK**, one intentional skip |
+| Governed-source full suite | **564 tests, OK**, two intentional skips |
+| Active source gate | Refused exactly the pointer, active work order, and active report transients |
+| Reviewer | Initial fresh review returned six material findings; all corrected; different fresh read-only Reviewer returned **ACCEPT** with no remaining blocker |
+| Cleanup | Synthetic inputs, diagnostic fixtures, Python caches, and the 103-file reviewed public candidate are absent |
+| Enforcement status | Codex implementation surface; no live-wall or external-service probe claim; denial ledger remained 309 records at SHA-256 `AE6485A2353183917397219801F8443871FE6ED59F0C3CEE27F3D8B6EAE11D85` |
+
+### Post-pilot verification — WO-PL-036
+
+WO-PL-036 converted the missed inception name search into a reproducible public
+gate and selected **Writwall** as the replacement identity. The Owner accepted
+it on 2026-08-28 and reported active minutes **NOT REPORTED**.
+
+| Gate | Accepted result |
+|---|---|
+| Owner disposition | Plumbline, Grantcord, and Writcord rejected; **Writwall accepted**; both human sources in every ledger attest `HLLMR, Owner` |
+| Evidence contract | Seven required source classes; canonical/bounded exact and similar queries; endpoint-specific request coverage; UTC/freshness chronology; explicit findings, limitations, classifications, and post-evidence disposition |
+| Focused contract | **70 tests, OK** |
+| Governed-source full suite | **638 tests, OK**, two expected skips |
+| Native Ubuntu focused/integration | **74 tests, OK** |
+| Reproducibility | Two independent 112-file projections checker-clean and byte-identical; complete-ledger SHA-256 `3E7F5AA46DBA07115D13D63A62EB071B37F835DDB5600EAAF9BEF36A4ED44240` |
+| Reviewer | Fifth fresh adversarial Reviewer returned **ACCEPT** on frozen bytes with no remaining product or governance blocker |
+| Cleanup | Synthetic screening sentinel, both candidates, caches, and temporary Ubuntu mount absent; denial ledger remained 309 records |
+| Boundary | Historical records retain Plumbline; no rename, history rewrite, publication update, tag, visibility change, or `dist/` replacement; WO-PL-037 remains inactive |
+
 ### Open decisions and release state
 
 | Item | State |
@@ -870,14 +913,14 @@ reported active minutes **NOT REPORTED**.
 | RFI-28 | **RESOLVED** at WO-PL-014 closeout under the Owner-approved parser-free design. Frontmatter is sole grant authority; B.4 is generated and unmatched B.3/B.4 paths block dispatch |
 | RFI-25 / 27 / 28 routing | The records remain separate but were implemented and disposed together by WO-PL-014; their bounded residuals remain visible in each record |
 | RFI-03 / licensing | **RESOLVED by DR-003, 2026-08-20.** License map selected; mechanization and publication remain separate gates |
-| Active work order | None; between-order lockout after closeout |
-| Queued work | None |
+| Active work order | None; intentional between-work-order lockout |
+| Queued work | No successor work order. The accepted external Writwall cutover packet remains pending a separate Owner authorization |
 | WO-PL-010 follow-up | **Complete.** The three adoption-recorder consistency findings from WO-PL-009 are closed |
 | Second-project boundary | Each adopting project maintains its own adoption and product state. No second-project source, private benchmark material, proprietary design detail, or trade-secret material is imported into Plumbline by this closeout |
 | Published / tagged / licensed | **Yes**: clean-history public repository `HLLMR/plumbline`, release tag `v0.8`; DR-003 path-based license map remains operative |
 | Push | WO-PL-034 private and public updates authorized; remote commit identities are recorded after the push completes |
 | Repository visibility | Private governed source remains private; clean-history `HLLMR/plumbline` is public |
-| Stage | **Plumbline 0.8 publicly released; WO-PL-034 accepted and closing; no successor queued** |
+| Stage | **Plumbline 0.8 remains the historical public release; Writwall migration is accepted in governed source; Tuesday promotion remains frozen pending the separately authorized external cutover** |
 
 ---
 

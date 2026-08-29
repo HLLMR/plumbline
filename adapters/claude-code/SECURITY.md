@@ -14,7 +14,7 @@ must use the native launcher for the host: `py -3` on native Windows and
 inventory are version-sensitive; re-run preflight and the birth tests after a
 provider or plugin change.
 
-Only the current adapter in the latest published Plumbline revision receives
+Only the current adapter in the latest published Writwall revision receives
 security fixes. A project remains bound to its ratified Doctrine revision until
 its Owner deliberately migrates it, but it may adopt a compatible adapter
 security repair through its own decision and installation lifecycle.
@@ -58,7 +58,7 @@ actually exposed, and execute fresh provider-level birth tests.
   Anyone with operating-system or repository-owner access can alter it outside
   the hook.
 - An Owner can replace or disable the control plane outside an Implementer
-  grant. Plumbline governs that lifecycle by explicit decision and evidence;
+  grant. Writwall governs that lifecycle by explicit decision and evidence;
   it cannot make the Owner cryptographically subordinate to the hook.
 
 The maintained operational detail and exact tool classification are in
@@ -66,7 +66,7 @@ The maintained operational detail and exact tool classification are in
 
 ## Reporting a vulnerability
 
-Use GitHub private vulnerability reporting for the Plumbline repository when
+Use GitHub private vulnerability reporting for the Writwall repository when
 it is available. If it is not available, open a minimal issue that identifies
 the affected adapter revision and requests a private contact channel; do not
 include exploit payloads, secrets, private repository paths, or third-party

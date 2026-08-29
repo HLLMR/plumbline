@@ -173,6 +173,35 @@ class InitScriptTests(unittest.TestCase):
         denials = (self.target / "governance" / "LOG-denials.jsonl").read_text(encoding="utf-8")
         self.assertEqual(denials, "")
 
+    def test_final_message_prevents_instructionless_lockout(self):
+        self.make_git_dir()
+        result = self.run_init()
+        self.assertIn("START-HERE.md", result.stdout)
+        self.assertIn("make the adoption bundle local before", result.stdout)
+        self.assertIn("Do not register the wall yet", result.stdout)
+        self.assertIn("already registered", result.stdout)
+        self.assertIn("exact recorder authority", result.stdout)
+        self.assertNotIn("needs a human", result.stdout)
+        self.assertNotIn("by hand", result.stdout)
+
+    def test_local_first_walkthrough_keeps_bundle_before_wall_registration(self):
+        self.make_git_dir()
+        bundle = self.target / ".claude" / "skills" / "writwall-adopt"
+        shutil.copytree(REPO_ROOT / "skills" / "writwall-adopt", bundle)
+
+        result = self.run_init()
+
+        self.assertTrue((bundle / "SKILL.md").is_file())
+        self.assertTrue((self.target / "governance").is_dir())
+        self.assertTrue(
+            (self.target / "checks" / "check_work_order_dispatch.py").is_file())
+        self.assertTrue(
+            (self.target / ".claude" / "hooks" /
+             "wo_capability_wall.py").is_file())
+        self.assertFalse((self.target / ".claude" / "settings.json").exists())
+        self.assertFalse((self.target / ".claude" / "active-wo.txt").exists())
+        self.assertIn("Do not register the wall yet", result.stdout)
+
     def test_second_run_is_create_only(self):
         self.make_git_dir()
         self.run_init()
@@ -187,9 +216,9 @@ class InitScriptTests(unittest.TestCase):
         self.assertIn("governance/LOG.md", result.stdout)
         self.assertIn("skipped", result.stdout)
 
-    def test_never_copies_plumbline_working_records(self):
+    def test_never_copies_writwall_working_records(self):
         """Doctrine 5.1.5: the scaffolder is an adoption route and must carry
-        none of Plumbline's own governance records into the target."""
+        none of Writwall's own governance records into the target."""
         self.make_git_dir()
         (self.target / ".claude").mkdir()
         self.run_init()
@@ -206,13 +235,13 @@ class InitScriptTests(unittest.TestCase):
         self.assertTrue((self.target / ".claude" / "hooks" /
                          "wo_capability_wall.py").is_file())
         # checks/ carries only the adopter-facing dispatch validator, never
-        # Plumbline's own internal check scripts (e.g. check_distribution.py).
+        # Writwall's own internal check scripts (e.g. check_distribution.py).
         checks_contents = sorted(p.name for p in (self.target / "checks").iterdir())
         self.assertEqual(checks_contents, ["check_work_order_dispatch.py"])
 
     def test_installed_governance_archive_is_the_targets_own(self):
         """governance/archive/ belongs to the adopting project and must not be
-        seeded with Plumbline's historical material."""
+        seeded with Writwall's historical material."""
         self.make_git_dir()
         self.run_init()
         archive = self.target / "governance" / "archive"
@@ -317,12 +346,12 @@ class InitScriptTests(unittest.TestCase):
         self.assertEqual(canonical_b.count(b"<!-- BEGIN GENERATED BOUNDARIES -->"), 1)
         self.assertEqual(canonical_b.count(b"<!-- END GENERATED BOUNDARIES -->"), 1)
 
-        bundled_b = (REPO_ROOT / "skills" / "plumbline-adopt" / "assets" /
+        bundled_b = (REPO_ROOT / "skills" / "writwall-adopt" / "assets" /
                     "templates" / "B-work-order.md").read_bytes()
         self.assertEqual(bundled_b, canonical_b)
 
         canonical_guide = REPO_ROOT / "migration-guides" / "0.6-to-0.7.md"
-        bundled_guide = (REPO_ROOT / "skills" / "plumbline-adopt" / "references" /
+        bundled_guide = (REPO_ROOT / "skills" / "writwall-adopt" / "references" /
                          "migration-guides" / "0.6-to-0.7.md")
         self.assertTrue(canonical_guide.is_file())
         self.assertTrue(bundled_guide.is_file())
@@ -330,7 +359,7 @@ class InitScriptTests(unittest.TestCase):
 
         self.assertFalse(
             (self.target / "migration-guides").exists(),
-            "init.sh must not copy Plumbline migration guides into the "
+            "init.sh must not copy Writwall migration guides into the "
             "target project (Doctrine 5.1.5)")
 
     def test_force_templates_overwrites_only_templates(self):

@@ -8,16 +8,22 @@ path = [
   ".gitignore",
   ".claude/settings.json",
   ".claude/active-wo.txt",
+  ".github/ISSUE_TEMPLATE/**",
+  ".github/pull_request_template.md",
   "PROJECTION-MANIFEST.sha256",
   "archive/**",
   "decisions/**",
   "docs/assets/**",
+  "docs/agents/**",
+  "docs/identity-migration.md",
+  "docs/name-clearance.md",
   "examples/**",
   "governance/**",
+  "identity/**",
   "migration-guides/**",
   "projection/**",
-  "skills/plumbline-adopt/*.md",
-  "skills/plumbline-adopt/references/**",
+  "skills/writwall-adopt/*.md",
+  "skills/writwall-adopt/references/**",
 ]
 SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
 SPDX-License-Identifier = "CC-BY-4.0"
@@ -25,13 +31,13 @@ SPDX-License-Identifier = "CC-BY-4.0"
 # DR-003 deliberately dual-licenses extracted appendix templates under CC0.
 # Their occurrence inside DOCTRINE.md remains CC-BY-4.0; this is not conflict.
 [[annotations]]
-path = ["templates/**", "skills/plumbline-adopt/assets/templates/**"]
+path = ["templates/**", "skills/writwall-adopt/assets/templates/**"]
 SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
 SPDX-License-Identifier = "CC0-1.0"
 
 # Adapter documentation and executable copies share the canonical MIT-0 scope.
 [[annotations]]
-path = ["adapters/**/*.md", "skills/plumbline-adopt/assets/adapters/**/*.md"]
+path = ["adapters/**/*.md", "skills/writwall-adopt/assets/adapters/**/*.md"]
 SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
 SPDX-License-Identifier = "MIT-0"
 

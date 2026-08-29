@@ -1,6 +1,6 @@
 # Security policy
 
-Plumbline's executable security boundary is its provider-specific adapter, not
+Writwall's executable security boundary is its provider-specific adapter, not
 the methodology prose by itself. The maintained Claude Code threat model,
 supported behavior, known limits, birth-test requirements, and vulnerability-
 reporting route are documented in

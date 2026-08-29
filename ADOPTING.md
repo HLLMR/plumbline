@@ -1,8 +1,14 @@
-# Adopting Plumbline
+# Adopting Writwall
 
-Plumbline is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit. This is the on-ramp. It assumes you have read `DOCTRINE.md` Parts 1 through 6 once. If you have not, the adoption prompt in section 2 will make you, gently.
+Writwall is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit. This is the complete on-ramp. If you do not yet know which agent to open, where it should run, or what to say first, begin with [`START-HERE.md`](START-HERE.md); it requires no prior Doctrine knowledge.
 
-**Before anything else: do not unpack the distribution archive into your project.** `plumbline-<revision>.zip` is a source distribution, not an overlay. Adoption instantiates a small set of project-side artifacts, listed in section 0. Plumbline's own charter, governance directory, decisions, plan, state, and work history are its working records under Doctrine 5.1.4 and 5.1.5. They are readable as an example and are never copied into your project by any route below.
+**Before anything else: do not unpack the distribution archive into your project.** `writwall-<revision>.zip` is a source distribution, not an overlay. Adoption instantiates a small set of project-side artifacts, listed in section 0. Writwall's own charter, governance directory, decisions, plan, state, and work history are its working records under Doctrine 5.1.4 and 5.1.5. They are readable as an example and are never copied into your project by any route below.
+
+If the archive may already have been unpacked into the target, stop before
+deleting or continuing. Follow `START-HERE.md`'s accidental-overlay recovery
+path with a separate clean distribution and its manifest. Exact matches are
+only proposed residue; differing or pre-existing files are unknown until the
+Owner ratifies an exact disposition.
 
 ---
 
@@ -29,10 +35,15 @@ Adoption is an Owner event with a defined boundary (Doctrine Part 6). Every rout
 
 ## 1. Choose your route
 
+Choose the human operating model in `START-HERE.md` before choosing the
+mechanical route below. In particular, make the self-contained adoption bundle
+and these instructions local **before the wall is registered**. A correctly
+locked session may deny the network request that would otherwise retrieve them.
+
 | Route | Use when | Tooling | What it produces |
 |---|---|---|---|
 | A. Chat prompt | You want to think it through with a model before touching the repo, or your project has an existing document corpus that needs mapping | Any capable chat model | Draft DR-001, draft adoption mapping, draft charter kill list, a checklist of manual steps |
-| B. Coding-agent skill | You are in Claude Code (or a coding agent that supports skills) inside the target repository | `skills/plumbline-adopt/`, a self-contained bundle | Bootstrap: inventory, scaffolded `governance/`, installed adapter, installed pre-dispatch validator, birth-test evidence, proposals for the Owner, no commits. Then, only if you explicitly direct it, an Owner-directed recorder closeout that records the decisions you have ratified and makes the one local adoption commit. |
+| B. Coding-agent skill | You are in Claude Code (or a coding agent that supports skills) inside the target repository | `skills/writwall-adopt/`, a self-contained bundle | Bootstrap: inventory, scaffolded `governance/`, installed adapter, installed pre-dispatch validator, birth-test evidence, proposals for the Owner, no commits. Then, only if you explicitly direct it, an Owner-directed recorder closeout that records the decisions you have ratified and makes the one local adoption commit. |
 | C. Scaffolder | You already know the layout and only want the directories, templates, and dispatch checker | `init.sh` | Empty `governance/` structure, template copies, and a create-only pre-dispatch validator. Nothing project-specific. |
 
 Routes combine. A common path for an existing project is A (mapping conversation) followed by B (mechanical bootstrap) followed by the Owner steps in section 5.
@@ -89,24 +100,50 @@ That conversation produces drafts and a decision packet. Move them into your rep
 
 ## 3. Route B: the coding-agent skill
 
-Copy `skills/plumbline-adopt/` from this repository into your target project's skills location (Claude Code: `.claude/skills/plumbline-adopt/`). Copy the whole directory: it is a self-contained bootstrap bundle carrying its own copy of the doctrine, the migration guides, the adapter and its README, the pre-dispatch validator, and templates A through E under `references/` and `assets/`. It reads nothing from this repository, so the target project never depends on Plumbline (Doctrine 5.1.2).
+Copy `skills/writwall-adopt/` from this repository into your target project's skills location (Claude Code: `.claude/skills/writwall-adopt/`). Copy the whole directory: it is a self-contained bootstrap bundle carrying its own copy of the doctrine, the migration guides, the adapter and its README, the pre-dispatch validator, and templates A through E under `references/` and `assets/`. It reads nothing from this repository, so the target project never depends on Writwall (Doctrine 5.1.2).
+
+Confirm that complete directory is locally readable before any project hook is
+registered. Keep it available through whichever bootstrap or recorder step
+still needs it; remove it before the adoption commit, never earlier merely
+because the wall has entered lockout.
 
 Open a fresh session in the target repository and say:
 
 ```
-Use the plumbline-adopt skill. Bootstrap this repository for Doctrine adoption.
+Use the writwall-adopt skill. Bootstrap this repository for Doctrine adoption.
 Baseline commit candidate: [hash or "determine and propose"].
 ```
 
-The skill follows the standing rules of the remediation companion (inventory first, move rather than delete, propose rather than dispose, no source changes, no commits, RFI list for unknowns). It inventories the mutation channels your installation actually exposes rather than a fixed list, installs the adapter with matcher `*`, and runs both birth-test levels. Bootstrap ends with a report and the repository in lockout, and it does not create DR-001 for you. That is yours to sign.
+The skill follows the standing rules of the remediation companion (inventory first, move rather than delete, propose rather than dispose, no source changes, no commits, RFI list for unknowns). It inventories the mutation channels your installation actually exposes rather than a fixed list, installs the adapter with matcher `*`, and runs both doctrinal birth-test levels through the adapter's more detailed procedure: Level 1 no-work-order lockout, Level 2 ordinary active scope, Level 3 protected-control-plane falsification where claimed, and the conditional Level 4 read-deny procedure. Bootstrap ends with a report and the repository in lockout, and it does not create DR-001 for you. That is yours to ratify.
 
 **The optional second step: an Owner-directed recorder closeout.** After you have read the bootstrap report, you may either finish section 5 yourself or explicitly direct the skill to record your decisions. That second mode exists because ratifying and typing are different things. You remain the only source of intent: the baseline, the plan content, the mapping dispositions, the routing, the operational definitions, your adoption reasoning and rejected alternatives, your acceptance of every unenforced surface, and the decision to adopt at all. What the recorder may do, once you have supplied those and ratified them explicitly, is the clerical remainder — materialize `PLAN.md`, archive the superseded original, finalize labels, write or rename DR-001 transcribing your words verbatim, clear the bootstrap markers, remove bootstrap-only residue, stage the adoption set, and make the one local adoption commit.
 
 It asks first. Before touching anything it hands you a decision packet: what it will record, whose words each decision came from, the exact file operations, and the exact commit message and contents. Nothing proceeds until you ratify that packet in so many words — a filename, a draft, or the state of the repository is never taken as approval. If a decision is missing it asks you for the decision, not for the edit. And a recorder closeout still cannot push, tag, publish, change visibility, select a license, weaken or skip the birth test, or start WO-001.
 
+Ratification in conversation settles the decision but is not, by itself, the
+durable lifecycle authorization required by Doctrine 8.7.6. The packet names a
+canonical lifecycle record. After you ratify, a separately authorized
+coordinator/recorder first transcribes your authorization there verbatim and
+verifies the record. Only then may it perform the protected lifecycle mechanics
+named by that record. This recording step is clerical and may be delegated; the
+decision and authority remain yours.
+
 Because bootstrap deliberately leaves the repository in lockout with no active pointer, a walled session has no grant and will be denied every mutation. Activate an uncounted bootstrap closeout work order naming exactly the closeout paths — the same instrument as `WO-000-birth-test.md` and, like it, not a counted work order under 6.1.3 — before directing the closeout.
 
-**Delete the bundle before adoption completes.** Remove `plumbline-adopt/` from the skills directory: at the end of bootstrap if you are finishing section 5 yourself, or as the last step of the recorder closeout if you direct one. It is a bootstrap tool under the narrow exception of Doctrine 1.2.3, not project context; leaving it installed would place the doctrine in the live corpus, which 1.2.4 and 8.6.1 forbid. What remains is what it installed into your project: the charter, the adapter under your tooling directory, and `governance/`. Those are yours from that moment on.
+**Delete the bundle before adoption completes.** Remove `writwall-adopt/` from the skills directory only after the final bootstrap/recorder action that needs it and before the adoption commit. It is a bootstrap tool under the narrow exception of Doctrine 1.2.3, not project context; leaving it installed would place the doctrine in the live corpus, which 1.2.4 and 8.6.1 forbid. What remains is what it installed into your project: the charter, the adapter under your tooling directory, and `governance/`. Those are yours from that moment on.
+
+### If the wall is already registered and the bundle is missing
+
+Do not ask the locked IDE session to fetch these instructions, weaken the hook,
+or manufacture an activation pointer. Treat that session as the walled
+Implementer in lockout. Use an external authorized adoption coordinator /
+recorder with a local Writwall source distribution to inventory the partial
+state and prepare the exact lifecycle packet. The copy/paste recovery prompt is
+in `START-HERE.md` under **already-installed lockout**.
+
+The no-pointer condition is reproducible, not perishable. An authorized
+lifecycle action may re-establish the no-pointer state and a fresh session may
+run Level 1. Unplanned denials are not retroactively promoted into a birth test.
 
 If your project already has partial governance artifacts from an earlier revision, tell the skill which revision they came from. It will look for a migration guide bundled under `references/migration-guides/` and follow that instead of treating the artifacts as unknowns.
 
@@ -120,9 +157,27 @@ If your project already has partial governance artifacts from an earlier revisio
 
 Creates `governance/` with its subdirectories and `.gitkeep` files, copies templates A through E into `governance/templates/`, copies the pre-dispatch validator to `checks/check_work_order_dispatch.py`, and copies the Claude Code adapter to `.claude/hooks/` if `.claude/` exists. It accepts both a normal repository and a worktree whose `.git` is a file. It prints the Doctrine 6.4.1 sequence and exits. It does not inventory, does not birth-test, and does not commit, and it makes no claim that any wall works.
 
-It is **create-only**. Every file that already exists is left untouched and reported as skipped; nothing is deleted or recursively replaced. Your charter and your `.claude/settings.json` hook registration are refused outright rather than skipped, because both carry local content or enforcement configuration that a scaffolder cannot safely merge. Register the hook by hand per `adapters/claude-code/README.md`, using `${CLAUDE_PROJECT_DIR}` rather than an absolute path.
+It is **create-only**. Every file that already exists is left untouched and reported as skipped; nothing is deleted or recursively replaced. Your charter and your `.claude/settings.json` hook registration are refused outright rather than skipped, because both carry local content or enforcement configuration that a scaffolder cannot safely merge. Have an exactly authorized coordinator/recorder perform those project-specific mechanics, or perform them yourself, using `adapters/claude-code/README.md` and `${CLAUDE_PROJECT_DIR}` rather than an absolute path.
 
 **Operating envelope.** The wall is mechanically active only in sessions launched with the target repository as the **project root** and with its project `PreToolUse` hook visibly loaded. Claude Code loads project hooks from the project root and its settings hierarchy; a repository reachable only as an *additional working directory* is writable and unwalled at the same time. The standalone adapter supports CPython 3.10 through 3.14. Register the native Windows `py -3` or native POSIX `python3` command with `${CLAUDE_PROJECT_DIR}`, matcher `*`, and an explicit timeout; never use an absolute path. Run the installed adapter's read-only `--preflight` with the exact expected digest and native platform, then confirm with `/hooks` that matcher, source, portable command, and timeout are loaded before probing anything. Startup or timeout non-invocation still cannot be represented as fail-closed by a command hook.
+
+A project used on only one native platform tests that actual Implementer
+environment. Lacking the other platform does not by itself block adoption if
+Level 1 passes on every channel available in the used environment and the Owner
+accepts the unproved surfaces under Doctrine 6.4.2 and 8.3.4. It does block a
+portable Windows-and-POSIX protected-control-plane claim: record the absent leg
+as untested/indeterminate, keep the affected whole surfaces under
+`unenforced_boundaries`, and birth-test any new native environment before its
+first mutating session.
+
+**Safe surface inventory.** Use a minimal provider profile for initial adoption:
+disable unrelated connectors, plugins, MCP servers, and delegated agents before
+the birth-test inventory. Probe an external mutation tool only against an
+explicit disposable fixture whose side effect, verification, and cleanup are
+authorized in the lifecycle packet. Authentication failure, provider rejection
+before hook dispatch, an unavailable tool, or an unprobed channel is
+indeterminate, never a pass. Do not use ordinary live account objects as
+canaries.
 
 Two narrow overrides exist, each naming its targets explicitly:
 
@@ -164,7 +219,7 @@ dispatch_validation:
 An exception is a label, not a grant. It authorizes no read, write, probe, or
 lifecycle action; use a short, specific role and validate the finished record.
 
-Doctrine 0.8 also adds Part 8.7, Protected Control Plane: no work order's or birth-test instrument's own grant, however authored, ever confers mutation authority over the active-work-order pointer, the installed enforcement configuration, the active work order/instrument's own frontmatter and body, or the denial-evidence log (8.7.1-8.7.2); activating or retiring the pointer, changing installed configuration, and the adoption-recorder lifecycle action are Owner lifecycle actions performed outside any capability grant, authorized in a durable Owner disposition before execution, never in chat alone (8.7.6). A birth-test instrument may still name an exact control-plane path as its own canary target by declaring `instrument_kind: birth-test` and labeling that path under `control_plane_probes` with role `control_plane_falsification_probe` (8.7.4.1-8.7.4.3); labeling confers no authority, and the runtime wall must still deny the probe. The shipped checker distinguishes that labeled falsification case from an invalid ordinary grant, and the shipped adapter source contains the categorical runtime floor. **Neither source fact is a live wall claim:** install only exact Owner-ratified bytes through a durable lifecycle packet, then run separate fresh native Windows and native POSIX birth tests across every exposed mutation channel. Until that succeeds, keep all eight surfaces under `unenforced_boundaries`. Plumbline's own RFI-22 tracked exactly this question for its self-hosted instance and closed only after complete Windows and native-Linux protected-control-plane birth-test matrices, at WO-PL-026 closeout; a new adopting project's equivalent question stays open until its own matrices pass.
+Doctrine 0.8 also adds Part 8.7, Protected Control Plane: no work order's or birth-test instrument's own grant, however authored, ever confers mutation authority over the active-work-order pointer, the installed enforcement configuration, the active work order/instrument's own frontmatter and body, or the denial-evidence log (8.7.1-8.7.2); activating or retiring the pointer, changing installed configuration, and the adoption-recorder lifecycle action are Owner lifecycle actions performed outside any capability grant, authorized in a durable Owner disposition before execution, never in chat alone (8.7.6). A birth-test instrument may still name an exact control-plane path as its own canary target by declaring `instrument_kind: birth-test` and labeling that path under `control_plane_probes` with role `control_plane_falsification_probe` (8.7.4.1-8.7.4.3); labeling confers no authority, and the runtime wall must still deny the probe. The shipped checker distinguishes that labeled falsification case from an invalid ordinary grant, and the shipped adapter source contains the categorical runtime floor. **Neither source fact is a live wall claim:** install only exact Owner-ratified bytes through a durable lifecycle packet. Test every native environment the project will actually use. A portable Windows-and-POSIX protected-control-plane claim requires separate fresh native sessions on both platforms across every exposed mutation channel; until both succeed, keep the affected whole surfaces under `unenforced_boundaries`. A missing unused platform does not invalidate adoption under 6.4.2, but it remains untested and may not inherit evidence from the tested host. Writwall's own RFI-22 tracked its cross-platform claim and closed only after complete Windows and native-Linux protected-control-plane matrices at WO-PL-026 closeout.
 
 5.2 Record your baseline commit hash.
 
@@ -176,7 +231,7 @@ Doctrine 0.8 also adds Part 8.7, Protected Control Plane: no work order's or bir
 
 5.6 Bootstrap `governance/STATE.md`: OBSERVED from the repository, INTERPRETED by a fresh agent, each claim with its source (7.8).
 
-5.7 Install exact ratified adapter/settings bytes through an Owner lifecycle packet and run the adapter README's birth-test sequence. Level 1 proves no-work-order lockout; Level 2 proves ordinary path scope channel by channel; Level 3 uses a separately ratified birth-test instrument to falsify the protected-control-plane floor across every exposed mutation channel on fresh native Windows and native POSIX sessions. If any work order declares `grant.filesystem.read.deny`, also run the README's supplemental read-deny procedure with Owner-private sentinel content. Keep the strict whole-surface classification honest: configuration inspection and logic tests are not provider birth tests, and a partial channel observation does not move a surface into `enforced_by`.
+5.7 Install exact ratified adapter/settings bytes through an Owner lifecycle packet and run the adapter README's birth-test sequence. Level 1 proves no-work-order lockout; Level 2 proves ordinary path scope channel by channel; Level 3 uses a separately ratified birth-test instrument to falsify the protected-control-plane floor across every exposed mutation channel. Run it on every native environment the project will use. Separate fresh Windows and POSIX sessions are required only for a portable two-platform claim; if one platform is unavailable and unused, record it as untested/indeterminate and leave the affected whole surfaces unenforced rather than blocking adoption automatically. If any work order declares `grant.filesystem.read.deny`, also run the README's supplemental read-deny procedure with Owner-private sentinel content. Keep the strict whole-surface classification honest: configuration inspection and logic tests are not provider birth tests, and a partial channel observation does not move a surface into `enforced_by`.
 
 Confirm `/hooks` before you probe: matcher, source, and a command that resolves through your provider's project-directory variable. That is **necessary configuration evidence, not proof of live enforcement** — it shows what the provider was configured to load, not that the session running your probes loaded it. Proof is local to one executing provider session and does not transfer to another session, parent or child context, UI, or provider invocation; a session that intends to mutate the repository establishes its own.
 
@@ -201,7 +256,7 @@ Nothing happens automatically (DC.4). When you decide to move a project from one
 
 ## 7. Public-source boundary
 
-Adopters consume a released clean-history projection, not Plumbline's private
+Adopters consume a released clean-history projection, not Writwall's private
 governed repository or its checked-in `dist/` archive. The projection is built
 from the exact allowlist in `projection/public-files.txt`, carries generated
 manifest and provenance records, and is checked by

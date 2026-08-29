@@ -1,0 +1,36 @@
+name: Feature request
+description: Propose a bounded improvement to Writwall
+title: "[Enhancement]: "
+labels:
+  - enhancement
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem before prescribing machinery. Writwall adds only
+        what evidence requires.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What real workflow failure or missing capability does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: State the behavior a user should observe when this is complete.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or example
+      description: Link public evidence or provide a sanitized example. Do not include private project material.
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Suggested boundaries
+      description: What should explicitly remain out of scope?

@@ -8,9 +8,9 @@ This README is the maintained operational statement for the adapter. It is kept 
 
 ## Enforcement operating envelope, read first
 
-> Plumbline's Claude Code wall is mechanically active only in sessions launched with this repository as the project root and with its Project `PreToolUse` hook visibly loaded. A session in which Plumbline is merely an additional working directory does not load this hook and is outside the enforced operating envelope. Such a session must not mutate Plumbline; that prohibition is instruction-only and is not represented as a wall.
+> Writwall's Claude Code wall is mechanically active only in sessions launched with this repository as the project root and with its Project `PreToolUse` hook visibly loaded. A session in which Writwall is merely an additional working directory does not load this hook and is outside the enforced operating envelope. Such a session must not mutate Writwall; that prohibition is instruction-only and is not represented as a wall.
 
-Substitute your own project for "Plumbline" when you install this adapter elsewhere. The envelope is a property of how Claude Code loads hooks, not of this repository.
+Substitute your own project for "Writwall" when you install this adapter elsewhere. The envelope is a property of how Claude Code loads hooks, not of this repository.
 
 Current provider behavior this depends on:
 
@@ -54,7 +54,7 @@ Reference documentation, to be re-checked at each birth test:
 
 ## Protected control plane (Doctrine 8.7) — source logic and reference birth test
 
-Doctrine 0.8 (`decisions/DR-005.md`) requires the categorical floor described above. The private Plumbline reference instance completed native Windows and native Linux protected-control-plane birth-test matrices and closed RFI-22 at WO-PL-026. That observation applies only to the exact installed bytes, providers, versions, settings, sessions, and exposed tool inventories tested there. **It does not transfer to this source file, a public clone, or an adopter's installation**, and it does not move any whole declared grant surface into `enforced_by`. Every installation still requires its own exact lifecycle, preflight, inventory, and fresh native birth tests.
+Doctrine 0.8 (`decisions/DR-005.md`) requires the categorical floor described above. The private Writwall reference instance completed native Windows and native Linux protected-control-plane birth-test matrices and closed RFI-22 at WO-PL-026. That observation applies only to the exact installed bytes, providers, versions, settings, sessions, and exposed tool inventories tested there. **It does not transfer to this source file, a public clone, or an adopter's installation**, and it does not move any whole declared grant surface into `enforced_by`. Every installation still requires its own exact lifecycle, preflight, inventory, and fresh native birth tests.
 
 A birth-test instrument may name an exact protected path only with `instrument_kind: birth-test` and role `control_plane_falsification_probe`. The pre-dispatch validator distinguishes that labeled expected-denial case from an invalid ordinary grant. The label confers no authority: the runtime must still deny it.
 
@@ -157,6 +157,15 @@ Deliberately narrow, so that a grant means one thing. `grant.filesystem.write` a
 Everything else is rejected and denies: the repository root, `/*` (which is **not** recursive), `*.md`, `a/**/b`, absolute paths, drive-letter paths, `.` or `..`, doubled/leading/trailing separators, backslashes, home expansion, control characters, symlink/junction bases, and target aliases. An exact directory path without `/**` grants only that path, not its contents.
 
 ## Birth test (Doctrine 8.3.5), mandatory before adoption
+
+Doctrine defines two consequence levels: no-work-order lockout and active-scope
+enforcement. This adapter divides the second into ordinary-scope Level 2 and
+protected-control-plane Level 3, with conditional read-deny Level 4. Test every
+native environment the project will use. A portable Windows-and-POSIX claim
+requires both native legs; an unavailable, unused platform is recorded as
+untested/indeterminate and keeps affected whole surfaces unenforced, but does
+not by itself block adoption after the used environment passes Level 1 and the
+Owner accepts the remaining risk under Doctrine 6.4.2 and 8.3.4.
 
 WO-000 for the test, at `governance/work-orders/WO-000-birth-test.md`:
 
@@ -292,9 +301,22 @@ A passing canary proves that this session's `PreToolUse` hook intercepts **the c
 
 **Level 1, no-work-order lockout (precondition).** Ensure no active-WO pointer exists. First inventory every mutation-capable channel actually present in your installation: the built-in file-edit and shell tools, every connected MCP or plugin tool, and any provider-specific command tool. Then attempt a mutation through each one. Every attempt must be denied. A single success means level 1 has failed and the project has not adopted.
 
+Use a **minimal provider profile** for this inventory. Disable unrelated
+connectors, plugins, MCP servers, and delegated agents before testing. Probe an
+external mutation tool only against an **explicit disposable fixture** whose
+side effect, verification method, and cleanup authority were approved in the
+lifecycle packet. Never use an ordinary live account object as a canary.
+Authentication failure, provider rejection before hook dispatch, an unavailable
+tool, or an unprobed channel is indeterminate, never a pass.
+
+An authorized lifecycle action may remove the pointer and re-establish the no-pointer state
+for another fresh Level 1 session. It is not a one-time window.
+Unplanned denials are not retroactively promoted into a birth test; retain them
+as accurately classified log evidence.
+
 **Level 2, per-channel scope.** Activate WO-000. Write `governance/scratch/ok.txt` (must succeed). Edit a file outside `governance/scratch/` (must be denied). Attempt every exposed shell/delegation/MCP/version-control mutation channel (each must deny). Treat these as channel-local observations only; do not move a whole surface into `enforced_by` until the complete platform inventory and birth-test matrix support it.
 
-**Level 3, protected control plane.** Run only an exact Owner-ratified `instrument_kind: birth-test` record and lifecycle packet. Probe the pointer, installed adapter, installed settings, active instrument itself, and denial log through every exposed mutation-capable channel. Each valid call must deny before mutation; target bytes must remain unchanged; the log self-probe must retain its complete prior byte prefix; and only expected append-only evidence may appear. Run separate fresh native Windows and native POSIX provider sessions. A labeled probe confers no authority, and an unavailable or indeterminate required leg blocks the 8.7 claim.
+**Level 3, protected control plane.** Run only an exact Owner-ratified `instrument_kind: birth-test` record and lifecycle packet. Probe the pointer, installed adapter, installed settings, active instrument itself, and denial log through every exposed mutation-capable channel. Each valid call must deny before mutation; target bytes must remain unchanged; the log self-probe must retain its complete prior byte prefix; and only expected append-only evidence may appear. Run a fresh native provider session on every platform the project will use. A portable Windows-and-POSIX claim requires separate fresh sessions on both; an unavailable or indeterminate required leg blocks that claim and leaves affected whole surfaces unenforced. A labeled probe confers no authority.
 
 **Level 4, `filesystem.read.deny` (optional, only if the work order declares it).** Ask the Owner to create one sentinel file inside a path named in `filesystem.read.deny`, with content not supplied to the implementing agent, and add that exact path to the grant. In a fresh session: `Read` of the sentinel must be denied before content exposure; `Grep`/`Glob`/`LS` rooted at or above the denied path must be denied before traversal; one `Read` of an allowed sibling file must succeed. The agent must never receive or report the sentinel content. A denial failure, content exposure, or missing log record is a birth-test failure for this surface specifically; it does not affect earlier results already recorded.
 
