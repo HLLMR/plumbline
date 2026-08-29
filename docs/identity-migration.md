@@ -56,3 +56,10 @@ has passed the complete release gates.
 No external surface is changed merely because this file exists. Credentials,
 private patterns, private archives, and unrelated project material never enter
 the public candidate or this record.
+
+## Current visual identity
+
+The current Writwall mark is a two-line wall placed at the `writ|wall`
+boundary. It replaces the line-and-bob device inherited during the emergency
+name migration. The former device remains legitimate historical evidence in
+accepted records and prior-release screenshots; it is not current brand art.

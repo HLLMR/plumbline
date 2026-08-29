@@ -4,15 +4,15 @@
 <text x="104.88" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">r</text>
 <text x="129.76" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">i</text>
 <text x="154.65" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">t</text>
-<text x="179.53" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">w</text>
-<text x="204.41" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">a</text>
-<text x="229.29" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">l</text>
-<text x="254.17" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">l</text>
-<line x1="144.69" y1="99.20" x2="144.69" y2="146.40" stroke="#2B5AA6" stroke-width="2.20" stroke-linecap="round"/>
-<circle cx="144.69" cy="149.80" r="3.40" fill="#2B5AA6"/>
+<text x="191.53" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">w</text>
+<text x="216.41" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">a</text>
+<text x="241.29" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">l</text>
+<text x="266.17" y="128.00" font-family="DejaVu Sans Mono" font-size="40" font-weight="normal" fill="#14171A" letter-spacing="0">l</text>
+<line x1="183.63" y1="97.60" x2="183.63" y2="128.00" stroke="#2B5AA6" stroke-width="1.80" stroke-linecap="butt"/>
+<line x1="187.43" y1="97.60" x2="187.43" y2="128.00" stroke="#2B5AA6" stroke-width="1.80" stroke-linecap="butt"/>
 <text x="80" y="278" font-family="DejaVu Sans" font-size="58" font-weight="bold" fill="#14171A">Governance for AI-assisted</text>
 <text x="80" y="346" font-family="DejaVu Sans" font-size="58" font-weight="bold" fill="#14171A">development.</text>
-<text x="80" y="430" font-family="DejaVu Sans Mono" font-size="26" fill="#6B7075">Human-ratified intent. Bounded work orders. A capability wall,</text>
-<text x="80" y="464" font-family="DejaVu Sans Mono" font-size="26" fill="#6B7075">birth-tested where installed. The pilot log ships, failing rows and all.</text>
+<text x="80" y="430" font-family="DejaVu Sans Mono" font-size="26" fill="#6B7075">Written authority before action. Bounded capability during it.</text>
+<text x="80" y="464" font-family="DejaVu Sans Mono" font-size="26" fill="#6B7075">Retained evidence before acceptance. The pilot log ships, failing rows and all.</text>
 <text x="80" y="592" font-family="DejaVu Sans Mono" font-size="25" fill="#2B5AA6">github.com/HLLMR/writwall</text>
 </svg>
