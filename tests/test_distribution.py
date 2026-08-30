@@ -3144,5 +3144,44 @@ class DocumentationTruthTests(DistributionTestCase):
         self.assertNotIn("provider envelope", combined)
 
 
+class DayZeroCoordinatorContractTests(DistributionTestCase):
+    """WO-PL-040: the executable front door and all human routes stay aligned."""
+
+    def test_clean_tree_carries_the_day_zero_contract(self):
+        result = self.check()
+        self.assertNotIn("[onboarding]", result.stdout)
+        for relpath in (
+            "docs/day-zero-coordinator.md",
+            "scripts/start_writwall.py",
+            "tests/test_start_writwall.py",
+        ):
+            self.assertTrue((self.repo / relpath).is_file(), relpath)
+
+    def test_readme_losing_single_entry_command_fails(self):
+        self.edit("README.md", "scripts/start_writwall.py", "scripts/manual-start.py",
+                  count=-1)
+        self.assert_fails(self.check(), "onboarding")
+
+    def test_start_here_losing_temporary_bundle_fails(self):
+        self.edit("START-HERE.md", ".writwall-bootstrap/", ".temporary-bootstrap/")
+        self.assert_fails(self.check(), "onboarding")
+
+    def test_skill_losing_repository_state_rule_fails(self):
+        self.edit(
+            "skills/writwall-adopt/SKILL.md",
+            "Never infer an active work order from prior chat",
+            "Use the work order remembered from prior chat",
+        )
+        self.assert_fails(self.check(), "onboarding")
+
+    def test_coordinator_reference_losing_authority_boundary_fails(self):
+        self.edit(
+            "docs/day-zero-coordinator.md",
+            "confers no authority",
+            "is an authorization",
+        )
+        self.assert_fails(self.check(), "onboarding")
+
+
 if __name__ == "__main__":
     unittest.main()

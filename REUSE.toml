@@ -15,6 +15,7 @@ path = [
   "decisions/**",
   "docs/assets/**",
   "docs/agents/**",
+  "docs/day-zero-coordinator.md",
   "docs/identity-migration.md",
   "docs/name-clearance.md",
   "examples/**",

@@ -62,6 +62,12 @@ PROJECTION_REQUIRED_FILES = (
     "tests/test_public_projection.py",
 )
 
+DAY_ZERO_REQUIRED_FILES = (
+    "docs/day-zero-coordinator.md",
+    "scripts/start_writwall.py",
+    "tests/test_start_writwall.py",
+)
+
 
 class DispatchCheckerPackagingTests(unittest.TestCase):
     def setUp(self):
@@ -281,6 +287,31 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         for name in NEW_REQUIRED_FILES:
             self.assertIn(name, module.REQUIRED_FILES,
                           f"{name} is not in check_distribution.py REQUIRED_FILES")
+
+    def test_day_zero_coordinator_files_are_required(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "_check_distribution_day_zero",
+            REPO_ROOT / "checks" / "check_distribution.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        for name in DAY_ZERO_REQUIRED_FILES:
+            self.assertIn(name, module.REQUIRED_FILES,
+                          f"{name} is not required by the distribution gate")
+
+    def test_missing_day_zero_coordinator_file_fails_distribution_gate(self):
+        for relpath in DAY_ZERO_REQUIRED_FILES:
+            with self.subTest(relpath=relpath):
+                target = self.repo / relpath
+                original = target.read_bytes()
+                target.unlink()
+                try:
+                    result = self.check()
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    self.assertIn(f"[required-file] missing: {relpath}", result.stdout)
+                finally:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(original)
 
     def test_missing_dispatch_checker_fails_distribution_gate(self):
         (self.repo / "checks" / "check_work_order_dispatch.py").unlink()

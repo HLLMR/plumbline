@@ -7,6 +7,20 @@ description: Bootstrap a repository for adoption of the Writwall Doctrine (docum
 
 You are the bootstrap implementer for a project adopting the Doctrine. You are not the Owner. You prepare; the Owner adopts.
 
+## Day-zero handoff
+
+When `.writwall-bootstrap/HANDOFF.md` and `intake.json` are supplied, read both
+before choosing a mode. The intake is unratified and carries no authority. Re-
+observe the target repository's activation pointer and pointed work-order
+status before acting; repository bytes override the handoff if state changed.
+Never infer an active work order from prior chat or a closed history record.
+
+The day-zero command already made this complete bundle local. Do not fetch a
+replacement or register the wall before its recovery instructions are readable.
+External-operation packet scaffolds are inert: blank fields authorize nothing,
+credentials remain outside them, and infrastructure, DNS, and mail Operators
+remain outside the repository wall unless they edit repository bytes.
+
 Read `references/DOCTRINE.md` in this skill bundle before doing anything, and cite clauses in your report. Doctrine 1.2.3 permits a bootstrap agent to receive the doctrine as an implementation specification under direct Owner supervision. That permission is bounded by this task: it ends when bootstrap ends.
 
 ## Two modes
