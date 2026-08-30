@@ -100,13 +100,13 @@
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "4d7bc3fd40cd48828d0afdbb761ecbdb48c50878be8ded262604c166c7e839b1"
+      "sha256": "f3d97849d8b35bd9f5c1938e5a3802b6adc574a59cbcc32e783824169685c591"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "79fcfe38728662a1bb00f03122ee2dcc6443b41a04f474f94c90b34251f60086",
-      "projection_sha256": "c80e336a75a391eec241edec2a06aaded1c7216c436fcd10579fe8b7149d34bb"
+      "sha256": "80b8a2e5e321d47cd64c9931194ee7093e750b6cb881ddf0a01ae71635955882",
+      "projection_sha256": "4aa873049c3d842f78c96ed35e7c2e1cde79f0d3227e0e4b08a6513389f3b6b8"
     },
     {
       "path": "governance/decisions/DR-001.md",
@@ -127,7 +127,7 @@
     {
       "path": "tests/test_distribution.py",
       "context": "historical_evidence_fixture",
-      "sha256": "b5949a0dbea57076a948d908f14351adeaca6bae65f35f0a4aa39cae334e8618"
+      "sha256": "dc267b7d9ea957a5a7ae7122c49455c173afdb942c44fc66381b99f26a09c2e7"
     },
     {
       "path": "tests/test_identity_migration.py",

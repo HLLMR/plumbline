@@ -416,6 +416,27 @@ increments within that series. No historical record is renamed or renumbered.
    configuration, access credentials, mutate external systems, ratify intent,
    or begin implementation.
 
+2. **WO-WW-002 — COMPLETE: deterministic build-backend provisioning and release
+   recovery.** Corrected the release-blocking ambient-tool assumption exposed by
+   public PR #9. CI must provision the build backend declared by
+   `pyproject.toml` before running the isolated-install tests; contributor
+   instructions must distinguish the build/test prerequisite from Writwall's
+   dependency-free runtime. An executable regression must bind CI setup to the
+   declared backend requirement. After private acceptance and closeout, rebuild
+   the public projection, update PR #9, and require the complete protected CI
+   matrix must pass before the PR is merge-ready. Do not patch the public branch
+   around governed source, weaken the isolated-install test, add a runtime
+   dependency, merge, release, tag, deploy, or change visibility.
+
+3. **WO-WW-003 — COMPLETE: retained-identity ledger refresh and PR #9
+   recovery.** Refreshed only the canonical source/projection digests for public retained paths changed
+   by accepted WO-WW-002. Prove the identity checker rejects the stale ledger,
+   then passes with final closed bytes. Rebuild two complete public candidates,
+   require checker-clean byte identity, update PR #9 only from that projection,
+   and require protected CI to pass. Do not weaken identity checks, alter retained
+   classifications, merge, release, tag, deploy, change visibility, or begin a
+   successor.
+
 The minimum supported topology is one human Owner, one Owner-Agent, one or more
 bounded Operators, and a fresh Reviewer. On small projects one capable agent
 may perform coordinator, dispatcher, and recorder roles sequentially, but a

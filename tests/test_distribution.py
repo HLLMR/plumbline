@@ -306,6 +306,29 @@ class CIWorkflowTests(DistributionTestCase):
             self.assertIn(required, text)
         self.assertIn("contents: read", text)
 
+    def test_ci_provisions_declared_build_requirements_before_tests(self):
+        pyproject = (self.repo / "pyproject.toml").read_text(encoding="utf-8")
+        build_system = re.search(
+            r"(?ms)^\[build-system\]\s*$.*?^requires\s*=\s*\[(.*?)\]",
+            pyproject,
+        )
+        self.assertIsNotNone(build_system, "build-system.requires is missing")
+        requirements = re.findall(r'"([^"]+)"', build_system.group(1))
+        self.assertTrue(requirements, "build-system.requires is empty")
+
+        workflow = (self.repo / ".github" / "workflows" / "ci.yml").read_text(
+            encoding="utf-8"
+        )
+        test_boundary = workflow.index("Focused capability-wall, dispatch, and init tests")
+        provisioning = workflow[:test_boundary]
+        self.assertIn("Provision declared build backend", provisioning)
+        self.assertIn("python -m pip install", provisioning)
+        self.assertIn("--no-input", provisioning)
+        self.assertIn("--only-binary=:all:", provisioning)
+        for requirement in requirements:
+            with self.subTest(requirement=requirement):
+                self.assertIn(f'"{requirement}"', provisioning)
+
 
 class CurrentDocumentationSynchronizationTests(unittest.TestCase):
     def test_adapter_readme_lists_every_reason_code_and_surface(self):
