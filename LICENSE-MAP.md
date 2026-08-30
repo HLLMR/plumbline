@@ -7,10 +7,10 @@ the root `LICENSE` for every path assigned differently below.
 
 | Scope | License | SPDX identifier |
 |---|---|---|
-| `DOCTRINE.md`, `README.md`, `START-HERE.md`, `ADOPTING.md`, `SELF-HOSTING.md`, `CLAUDE.md`, `migration-guides/**`, `decisions/**`, `governance/**`, `archive/**`, `examples/**`, `identity/**`, `docs/assets/**`, `docs/agents/**`, `docs/day-zero-coordinator.md`, `docs/name-clearance.md`, `docs/identity-migration.md`, `.github/ISSUE_TEMPLATE/**`, `.github/pull_request_template.md`, and other prose or public visual assets | Creative Commons Attribution 4.0 International | `CC-BY-4.0` |
+| `DOCTRINE.md`, `README.md`, `START-HERE.md`, `ADOPTING.md`, `SELF-HOSTING.md`, `CLAUDE.md`, `migration-guides/**`, `decisions/**`, `governance/**`, `archive/**`, `examples/**`, `identity/**`, `docs/assets/**`, `docs/agents/**`, `docs/architect-interview.md`, `docs/day-zero-coordinator.md`, `docs/name-clearance.md`, `docs/identity-migration.md`, `.github/ISSUE_TEMPLATE/**`, `.github/pull_request_template.md`, and other prose or public visual assets | Creative Commons Attribution 4.0 International | `CC-BY-4.0` |
 | `templates/**` | Creative Commons CC0 1.0 Universal | `CC0-1.0` |
 | `adapters/**`, `.claude/hooks/wo_capability_wall.py`, and `init.sh` | MIT No Attribution | `MIT-0` |
-| `scripts/**`, `checks/**`, `tests/**`, and `.github/workflows/**` | Apache License 2.0 | `Apache-2.0` |
+| `pyproject.toml`, `writwall_cli/**`, `scripts/**`, `checks/**`, `tests/**`, and `.github/workflows/**` | Apache License 2.0 | `Apache-2.0` |
 | `skills/writwall-adopt/**` | The license of each canonical source file, as listed in the bundle's own map | per canonical file |
 
 The full CC-BY-4.0 legal code is at `LICENSE` and

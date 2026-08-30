@@ -43,10 +43,13 @@ locked session may deny the network request that would otherwise retrieve them.
 For a first adoption, the default is the day-zero coordinator:
 
 ```text
-# Windows
+# Installed command
+writwall start --project-root /path/to/your-project
+
+# Source-tree fallback on Windows
 py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 
-# macOS or Linux
+# Source-tree fallback on macOS or Linux
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
@@ -56,6 +59,8 @@ prompt. It is create-only bootstrap tooling, not an authority or installer.
 Contradictory active state stops before output. Full interface and external-
 Operator packet behavior are documented in
 [`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md).
+The idea-first qualification and identity gate are documented in
+[`docs/architect-interview.md`](docs/architect-interview.md).
 
 | Route | Use when | Tooling | What it produces |
 |---|---|---|---|

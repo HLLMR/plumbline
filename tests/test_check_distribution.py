@@ -33,6 +33,15 @@ NEW_REQUIRED_FILES = (
 
 BUNDLE_CHECKER_RELPATH = "skills/writwall-adopt/assets/checks/check_work_order_dispatch.py"
 
+NAME_CLEARANCE_BUNDLE_COPIES = {
+    "skills/writwall-adopt/assets/scripts/collect_name_clearance.py":
+        "scripts/collect_name_clearance.py",
+    "skills/writwall-adopt/assets/checks/check_name_clearance.py":
+        "checks/check_name_clearance.py",
+    "skills/writwall-adopt/references/name-clearance.md":
+        "docs/name-clearance.md",
+}
+
 LICENSE_RECORDS = (
     "LICENSE",
     "LICENSES/CC-BY-4.0.txt",
@@ -64,8 +73,13 @@ PROJECTION_REQUIRED_FILES = (
 
 DAY_ZERO_REQUIRED_FILES = (
     "docs/day-zero-coordinator.md",
+    "docs/architect-interview.md",
+    "pyproject.toml",
     "scripts/start_writwall.py",
     "tests/test_start_writwall.py",
+    "writwall_cli/__init__.py",
+    "writwall_cli/__main__.py",
+    "writwall_cli/coordinator.py",
 )
 
 
@@ -364,6 +378,33 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         self.assertNotIn(f"bundle copy missing: {BUNDLE_CHECKER_RELPATH}", result.stdout)
         self.assertNotIn(f"differs in content from checks/check_work_order_dispatch.py",
                          result.stdout)
+
+    def test_name_clearance_bundle_copies_are_declared_and_drift_checked(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "_check_distribution_name_clearance",
+            REPO_ROOT / "checks" / "check_distribution.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        declared = {
+            copy.relative_to(REPO_ROOT).as_posix():
+                source.relative_to(REPO_ROOT).as_posix()
+            for copy, source in module.BUNDLE_COPIES.items()
+        }
+        for copy, source in NAME_CLEARANCE_BUNDLE_COPIES.items():
+            self.assertEqual(declared.get(copy), source, copy)
+
+            target = self.repo / copy
+            original = target.read_bytes()
+            target.unlink()
+            missing = self.check()
+            self.assertNotEqual(missing.returncode, 0, missing.stdout)
+            self.assertIn(f"bundle copy missing: {copy}", missing.stdout)
+            target.write_bytes(original + b"\n# drift\n")
+            drift = self.check()
+            self.assertNotEqual(drift.returncode, 0, drift.stdout)
+            self.assertIn(f"{copy} differs in content from {source}", drift.stdout)
+            target.write_bytes(original)
 
     def test_missing_root_license_fails_distribution_gate(self):
         (self.repo / "LICENSE").unlink()

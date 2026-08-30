@@ -633,7 +633,9 @@ class SelfHostingSegregationTests(DistributionTestCase):
             "SKILL.md",
             "assets/adapters/claude-code/README.md",
             "assets/adapters/claude-code/wo_capability_wall.py",
+            "assets/checks/check_name_clearance.py",
             "assets/checks/check_work_order_dispatch.py",
+            "assets/scripts/collect_name_clearance.py",
             "assets/templates/A-charter.md",
             "assets/templates/B-work-order.md",
             "assets/templates/C-owner-brief.md",
@@ -643,6 +645,7 @@ class SelfHostingSegregationTests(DistributionTestCase):
             "references/migration-guides/0.1-to-0.6.md",
             "references/migration-guides/0.6-to-0.7.md",
             "references/migration-guides/0.7-to-0.8.md",
+            "references/name-clearance.md",
         ])
 
 

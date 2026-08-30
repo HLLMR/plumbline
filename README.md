@@ -99,10 +99,14 @@ adoption bundle local, and writes the exact next prompt without installing the
 wall or claiming adoption:
 
 ```text
+# Installed command
+writwall start --project-root /path/to/your-project
+
+# Source-tree fallback on Windows
 # Windows
 py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 
-# macOS or Linux
+# Source-tree fallback on macOS or Linux
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
@@ -114,6 +118,8 @@ secrets; intake is stored as local plain text. See the
 [coordinator reference](docs/day-zero-coordinator.md), or use
 [START-HERE.md](START-HERE.md) for the manual and recovery routes.
 The coordinator does not register, activate, or birth-test the wall.
+For an unnamed idea and the full qualification/role-packet contract, see the
+[architect interview](docs/architect-interview.md).
 
 The lower-level `init.sh` scaffolder remains available after you understand
 the adoption sequence. It creates directories and template copies but does not

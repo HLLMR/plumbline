@@ -40,6 +40,7 @@ decisions/README.md
 docs/agents/domain.md
 docs/agents/issue-tracker.md
 docs/agents/triage-labels.md
+docs/architect-interview.md
 docs/assets/writwall-og.png
 docs/assets/writwall-og.svg
 docs/assets/writwall-readme-banner-0a5259d8.png
@@ -83,6 +84,7 @@ migration-guides/0.1-to-0.6.md
 migration-guides/0.6-to-0.7.md
 migration-guides/0.7-to-0.8.md
 projection/public-files.txt
+pyproject.toml
 scripts/build_distribution.py
 scripts/build_public_projection.py
 scripts/collect_name_clearance.py
@@ -91,7 +93,9 @@ skills/writwall-adopt/LICENSE-MAP.md
 skills/writwall-adopt/SKILL.md
 skills/writwall-adopt/assets/adapters/claude-code/README.md
 skills/writwall-adopt/assets/adapters/claude-code/wo_capability_wall.py
+skills/writwall-adopt/assets/checks/check_name_clearance.py
 skills/writwall-adopt/assets/checks/check_work_order_dispatch.py
+skills/writwall-adopt/assets/scripts/collect_name_clearance.py
 skills/writwall-adopt/assets/templates/A-charter.md
 skills/writwall-adopt/assets/templates/B-work-order.md
 skills/writwall-adopt/assets/templates/C-owner-brief.md
@@ -101,6 +105,7 @@ skills/writwall-adopt/references/DOCTRINE.md
 skills/writwall-adopt/references/migration-guides/0.1-to-0.6.md
 skills/writwall-adopt/references/migration-guides/0.6-to-0.7.md
 skills/writwall-adopt/references/migration-guides/0.7-to-0.8.md
+skills/writwall-adopt/references/name-clearance.md
 templates/A-charter.md
 templates/B-work-order.md
 templates/C-owner-brief.md
@@ -116,3 +121,6 @@ tests/test_name_clearance.py
 tests/test_public_projection.py
 tests/test_start_writwall.py
 tests/test_wo_capability_wall.py
+writwall_cli/__init__.py
+writwall_cli/__main__.py
+writwall_cli/coordinator.py

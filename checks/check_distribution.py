@@ -132,6 +132,12 @@ BUNDLE_COPIES = {
     SKILL / "assets" / "adapters" / "claude-code" / "README.md": ADAPTER_README,
     SKILL / "assets" / "adapters" / "claude-code" / "wo_capability_wall.py": ADAPTER,
     SKILL / "assets" / "checks" / "check_work_order_dispatch.py": DISPATCH_CHECKER,
+    SKILL / "assets" / "scripts" / "collect_name_clearance.py":
+        REPO_ROOT / "scripts" / "collect_name_clearance.py",
+    SKILL / "assets" / "checks" / "check_name_clearance.py":
+        REPO_ROOT / "checks" / "check_name_clearance.py",
+    SKILL / "references" / "name-clearance.md":
+        REPO_ROOT / "docs" / "name-clearance.md",
     **{
         SKILL / "assets" / "templates" / name: REPO_ROOT / "templates" / name
         for name in TEMPLATE_FILES.values()
@@ -179,6 +185,7 @@ REQUIRED_FILES = [
     "docs/agents/domain.md",
     "docs/agents/issue-tracker.md",
     "docs/agents/triage-labels.md",
+    "docs/architect-interview.md",
     "docs/day-zero-coordinator.md",
     "docs/name-clearance.md",
     "docs/identity-migration.md",
@@ -208,6 +215,10 @@ REQUIRED_FILES = [
     "tests/test_public_projection.py",
     "tests/test_start_writwall.py",
     "projection/public-files.txt",
+    "pyproject.toml",
+    "writwall_cli/__init__.py",
+    "writwall_cli/__main__.py",
+    "writwall_cli/coordinator.py",
     *[f"templates/{name}" for name in TEMPLATE_FILES.values()],
     *[str(p.relative_to(REPO_ROOT)).replace("\\", "/") for p in BUNDLE_COPIES],
 ]
