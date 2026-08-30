@@ -5,12 +5,18 @@ public candidate is derived from the exact positive allowlist in
 `projection/public-files.txt`; it is not produced by changing the visibility
 of the governed repository or copying its Git metadata.
 
-Build and verify a candidate with an Owner-controlled private pattern input:
+Build and verify a candidate with the managed project privacy screen initialized
+by `writwall start`:
 
 ```text
-python scripts/build_public_projection.py --output <empty-external-directory> --private-pattern-file <owner-private-input>
-python checks/check_public_projection.py <candidate-directory> --private-pattern-file <owner-private-input>
+python scripts/build_public_projection.py --output <empty-external-directory>
+python checks/check_public_projection.py <candidate-directory>
 ```
+
+The screen is durable per-user state outside the repository. Neither command
+prints its location, values, matches, or value-derived hashes. The explicit
+`--private-pattern-file` option remains only as a controlled compatibility
+override; it is not the ordinary human workflow. See `docs/privacy-screen.md`.
 
 The private input remains mandatory at build and check time for the local
 zero-match gate: its patterns are matched, closed, against candidate text.

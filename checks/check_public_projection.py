@@ -12,6 +12,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from scripts.privacy_screen import PrivacyScreenError, resolve_pattern_file
 ALLOWLIST = Path("projection/public-files.txt")
 MANIFEST = "PROJECTION-MANIFEST.sha256"
 PROVENANCE = "PROJECTION-PROVENANCE.md"
@@ -320,9 +323,13 @@ def private_patterns(path: Path) -> tuple[list[str], str]:
     return patterns, sha256_bytes(raw)
 
 
-def verify(root: Path, pattern_file: Path) -> None:
+def verify(root: Path, pattern_file: Path | None = None) -> None:
     root = root.resolve()
     source_root = REPO_ROOT.resolve()
+    try:
+        pattern_file = resolve_pattern_file(source_root, pattern_file)
+    except PrivacyScreenError as exc:
+        raise SystemExit(str(exc)) from None
     if not root.is_dir() or root.is_symlink():
         fail("candidate root is not a regular directory")
     if any(path.name == ".git" for path in root.rglob(".git")):
@@ -424,7 +431,7 @@ def verify(root: Path, pattern_file: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("candidate", type=Path)
-    parser.add_argument("--private-pattern-file", required=True, type=Path)
+    parser.add_argument("--private-pattern-file", type=Path)
     args = parser.parse_args()
     verify(args.candidate, args.private_pattern_file)
 

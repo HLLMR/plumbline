@@ -48,6 +48,7 @@ docs/assets/writwall-readme-banner.svg
 docs/day-zero-coordinator.md
 docs/identity-migration.md
 docs/name-clearance.md
+docs/privacy-screen.md
 examples/README.md
 examples/name-clearance-incident-2026-08.md
 examples/name-clearance-ledgers/grantcord-candidate.json
@@ -88,6 +89,7 @@ pyproject.toml
 scripts/build_distribution.py
 scripts/build_public_projection.py
 scripts/collect_name_clearance.py
+scripts/privacy_screen.py
 scripts/start_writwall.py
 skills/writwall-adopt/LICENSE-MAP.md
 skills/writwall-adopt/SKILL.md
@@ -118,6 +120,7 @@ tests/test_distribution.py
 tests/test_identity_migration.py
 tests/test_init_sh.py
 tests/test_name_clearance.py
+tests/test_privacy_screen.py
 tests/test_public_projection.py
 tests/test_start_writwall.py
 tests/test_wo_capability_wall.py

@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -27,6 +28,12 @@ class StartWritwallTests(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.temp, True)
         self.project = self.temp / "project"
         self.project.mkdir()
+        self.state = self.temp / "state"
+
+    def environment(self) -> dict[str, str]:
+        environment = os.environ.copy()
+        environment["WRITWALL_STATE_HOME"] = str(self.state)
+        return environment
 
     def run_start(self, *extra: str, project: Path | None = None):
         return subprocess.run(
@@ -53,6 +60,7 @@ class StartWritwallTests(unittest.TestCase):
                 *extra,
             ],
             cwd=REPO_ROOT,
+            env=self.environment(),
             capture_output=True,
             text=True,
             timeout=60,
@@ -83,6 +91,7 @@ class StartWritwallTests(unittest.TestCase):
                 *extra,
             ],
             cwd=REPO_ROOT,
+            env=self.environment(),
             capture_output=True,
             text=True,
             timeout=60,
@@ -151,6 +160,7 @@ class StartWritwallTests(unittest.TestCase):
         command = self.install_writwall()
         result = subprocess.run(
             [str(command), "start", "--help"],
+            env=self.environment(),
             capture_output=True,
             text=True,
             timeout=60,
@@ -172,6 +182,7 @@ class StartWritwallTests(unittest.TestCase):
                 "--owner-time", "no",
                 "--confirm-no-secrets",
             ],
+            env=self.environment(),
             capture_output=True,
             text=True,
             timeout=60,
@@ -316,6 +327,7 @@ class StartWritwallTests(unittest.TestCase):
                 "no",
             ],
             cwd=REPO_ROOT,
+            env=self.environment(),
             capture_output=True,
             text=True,
             timeout=60,
@@ -335,6 +347,7 @@ class StartWritwallTests(unittest.TestCase):
                 "--owner-time", "no", "--confirm-no-secrets",
             ],
             cwd=REPO_ROOT,
+            env=self.environment(),
             capture_output=True,
             text=True,
             timeout=60,
@@ -588,7 +601,7 @@ class StartWritwallTests(unittest.TestCase):
             side_effect=OSError("injected rename failure"),
         ):
             with self.assertRaises(starter_module.CoordinatorError) as raised:
-                starter_module.write_bootstrap(self.project, args, state, ())
+                starter_module.write_bootstrap(self.project, args, state, (), 1)
         self.assertIn("before atomic publication", str(raised.exception))
         self.assertFalse(self.output.exists())
         self.assertEqual(list(self.project.parent.glob(stage_pattern)), [])
@@ -612,7 +625,7 @@ class StartWritwallTests(unittest.TestCase):
             starter_module, "_atomic_publish", side_effect=competing_publication
         ):
             with self.assertRaises(starter_module.CoordinatorError) as raised:
-                starter_module.write_bootstrap(self.project, args, state, ())
+                starter_module.write_bootstrap(self.project, args, state, (), 1)
         self.assertIn(
             "Writwall published no target; an independently existing destination may remain",
             str(raised.exception),
@@ -662,6 +675,7 @@ class StartWritwallTests(unittest.TestCase):
                 "--project-name", "Interactive project",
             ],
             cwd=REPO_ROOT,
+            env=self.environment(),
             input=(
                 "yes\n"  # Owner-time choice
                 "yes\n"  # no-secret confirmation
@@ -703,6 +717,7 @@ class StartWritwallTests(unittest.TestCase):
             [sys.executable, "-B", "-m", "writwall_cli", "start",
              "--project-root", str(self.project)],
             cwd=REPO_ROOT,
+            env=self.environment(),
             input=answers,
             capture_output=True,
             text=True,
@@ -769,6 +784,40 @@ class StartWritwallTests(unittest.TestCase):
             self.handoff(),
         )
         self.assertEqual(self.intake()["authority"], "unratified_intake_only")
+
+    def test_start_initializes_privacy_without_disclosing_its_location(self):
+        result = self.run_idea_start()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        intake = self.intake()
+        self.assertTrue(intake["privacy_screen"]["ready"])
+        self.assertGreater(intake["privacy_screen"]["entry_count"], 0)
+        combined = result.stdout + result.stderr + self.handoff()
+        self.assertNotIn(str(self.state), combined)
+        self.assertNotIn(str(self.project.resolve()), self.handoff())
+        self.assertEqual(len(list(self.state.rglob("private-patterns.txt"))), 1)
+
+    def test_start_preserves_local_private_identifiers_without_copying_them_to_bootstrap(self):
+        private_identifier = "CLIENT-CODENAME-EMBER"
+        added = subprocess.run(
+            [sys.executable, "-B", "-m", "writwall_cli", "privacy", "add",
+             "--project-root", str(self.project), "--identifier-stdin",
+             "--confirm-no-secrets"],
+            cwd=REPO_ROOT, env=self.environment(), input=private_identifier + "\n",
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(added.returncode, 0, added.stdout + added.stderr)
+        result = self.run_idea_start()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        bootstrap_text = "\n".join(
+            path.read_text(encoding="utf-8", errors="ignore")
+            for path in self.output.rglob("*") if path.is_file()
+        )
+        self.assertNotIn(private_identifier, result.stdout + result.stderr)
+        self.assertNotIn(private_identifier, bootstrap_text)
+        profile = next(self.state.rglob("private-patterns.txt"))
+        self.assertIn(private_identifier, profile.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
