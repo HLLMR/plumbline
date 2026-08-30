@@ -125,6 +125,20 @@ After adoption, no Dispatcher, Implementer, or Reviewer invocation receives the 
 
 ## Procedure (Mode 1: bootstrap)
 
+**Inception identity gate.** Treat every supplied project, package, repository,
+domain, product, or command name as a `working_candidate`. Before any such name
+becomes canonical or public, use `assets/scripts/collect_name_clearance.py` to
+create the seven-source evidence ledger, complete the named-human
+web/common-law and USPTO reviews described in
+`references/name-clearance.md`, and run the offline
+`assets/checks/check_name_clearance.py`. Do not represent an unavailable source
+as clear and do not run network searches merely because this bundle is local.
+Return checker-clean evidence to the Owner for an explicit later disposition.
+If identity is deferred or internal-only, record the future trigger: repeat the
+gate before the first public repository slug, package name, domain, logo,
+announcement, customer-facing use, or launch route. Command aliases are identity
+surfaces and follow the same collision check.
+
 **Phase A: Inventory.** Run `git log --oneline -20`, `git status --short`, list the agent tooling directory, and find any existing governance-like artifacts (charter files, hooks, work orders, governance directories, prior-revision templates). Identify the baseline commit candidate: the parent of the first commit that introduced any doctrine artifact, or HEAD if none. If the full Writwall distribution may have been overlaid into the target, stop ordinary bootstrap and use a separate clean distribution plus its `PROJECTION-MANIFEST.sha256`: classify byte-identical matches only as proposed overlay residue and every differing or pre-existing path as unknown. Propose an exact keep/remove/move disposition; delete nothing before the Owner ratifies it. Write `REMEDIATION-INVENTORY.md` at the repo root. Stop and present it.
 
 **Phase B: Layout.** Create `governance/` per Doctrine 5.2 (`PLAN.md` is NOT created by you; `STATE.md` OBSERVED only; `ROUTING.md` proposed only; `decisions/`, `work-orders/`, `reports/`, `briefs/`, `rfis/`, `history/`, `archive/`, `LOG.md` with the 9.2 column header, `LOG-denials.jsonl` empty). Copy the templates from `assets/templates/` into `governance/templates/`. Move any prior-revision artifacts to `history/` or `archive/` with headers.

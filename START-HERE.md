@@ -64,10 +64,13 @@ not clear results.
 2. From that distribution, run one command:
 
    ```text
-   # Windows
+   # Installed command
+   writwall start --project-root /path/to/your-project
+
+   # Source-tree fallback on Windows
    py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 
-   # macOS or Linux
+   # Source-tree fallback on macOS or Linux
    python3 scripts/start_writwall.py --project-root /path/to/your-project
    ```
 
@@ -88,6 +91,9 @@ create an activation pointer, contact an external system, or replace the
 Owner-Agent. It stops on contradictory state instead of guessing from prior
 chat. See [`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md) for
 the complete contract.
+It may start with an unnamed idea; see
+[`docs/architect-interview.md`](docs/architect-interview.md) for qualification,
+identity, topology, and role-packet behavior.
 
 ### Manual fallback
 

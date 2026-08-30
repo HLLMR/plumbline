@@ -63,6 +63,15 @@ accepted under the license assigned to their destination path in
 The complete repository test suite supports CPython 3.11 through 3.14. The
 standalone Claude Code adapter has a narrower standard-library contract and is
 also tested on CPython 3.10. Run the same scopes as CI from the repository root.
+Before running the suite, provision the build backend declared by
+`pyproject.toml`:
+
+```text
+python -m pip install --disable-pip-version-check --no-input --only-binary=:all: "setuptools>=77"
+```
+
+This is a build/test prerequisite, not a Writwall runtime dependency. The
+installed coordinator and adapter remain standard-library-only.
 The distribution command shown below is the governed-source form; the public
 projection deterministically substitutes `--projection` because it deliberately
 omits private governed-source evidence:

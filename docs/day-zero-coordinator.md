@@ -12,13 +12,17 @@ human which agent to open next and what to paste.
 
 ## Run it
 
-From the unpacked Writwall source directory, not from inside an overlaid target:
+Use the installed command, or run the preserved fallback from an unpacked
+Writwall source directory rather than an overlaid target:
 
 ```text
-# Windows
+# Installed command
+writwall start --project-root /path/to/your-project
+
+# Source-tree fallback on Windows
 py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 
-# macOS or Linux
+# Source-tree fallback on macOS or Linux
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
@@ -30,12 +34,20 @@ assigned. Do not enter passwords, API tokens, private keys, mailbox contents,
 DNS record values, or other secrets. The answers are stored as ordinary local
 text.
 
-For deterministic automation or testing, use `--non-interactive` together
-with `--project-name`, either `--purpose` or `--brief-file`, `--agent`,
+For deterministic automation or testing of an existing brief, use
+`--non-interactive` together with `--project-name`, either `--purpose` or
+`--brief-file`, `--agent`,
 `--location`, `--environment`, `--owner-time yes|no`, and
 `--confirm-no-secrets`. Repeat
 `--external-operator` for each separately governed external function. Run
 `--help` for the complete interface.
+
+For an unnamed idea, omit `--project-name` and supply `--problem`,
+`--intended-user`, `--why-matters`, `--evidence`, `--smallest-outcome`,
+`--success-signal`, at least one each of `--constraint`, `--non-goal`, `--risk`,
+`--kill-condition`, and `--asset`, plus the environment/interface fields above.
+Interactive use asks these one at a time. See
+[`architect-interview.md`](architect-interview.md).
 
 `--scenario dns-mail-migration` provides a sanitized five-packet starting
 shape: move authoritative DNS for eight domains first, verify it, then change
@@ -72,6 +84,10 @@ On success that temporary, create-only directory contains:
 - `HANDOFF.md`: observed state, role routing, exact next prompt, authority
   boundaries, and optional Owner-time instructions;
 - `intake.json`: machine-readable, explicitly unratified answers;
+- `discovery.json`: complete idea qualification and deterministic unratified topology;
+- `OWNER-AGENT.md`, `REPOSITORY-OPERATOR.md`, and `REVIEWER.md`: exact,
+  separately bounded role prompts;
+- `NAME-CLEARANCE.md` and `OWNER-RATIFICATION.md`: identity and Owner gates;
 - `writwall-adopt/`: the complete local adoption skill bundle;
 - `operations/*.md`: inert packet scaffolds for separately named external
   Operator functions.

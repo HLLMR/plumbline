@@ -13,6 +13,9 @@ under CC-BY-4.0.
 | `assets/adapters/claude-code/README.md` | `adapters/claude-code/README.md` | `MIT-0` |
 | `assets/adapters/claude-code/wo_capability_wall.py` | `adapters/claude-code/wo_capability_wall.py` | `MIT-0` |
 | `assets/checks/check_work_order_dispatch.py` | `checks/check_work_order_dispatch.py` | `Apache-2.0` |
+| `assets/scripts/collect_name_clearance.py` | `scripts/collect_name_clearance.py` | `Apache-2.0` |
+| `assets/checks/check_name_clearance.py` | `checks/check_name_clearance.py` | `Apache-2.0` |
+| `references/name-clearance.md` | `docs/name-clearance.md` | `CC-BY-4.0` |
 | `SKILL.md` | bundle instructions | `CC-BY-4.0` |
 | `LICENSE-MAP.md` | this bundle map | `CC-BY-4.0` |
 

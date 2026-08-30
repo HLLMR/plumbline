@@ -5,6 +5,8 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
+import errno
 import json
 import os
 import re
@@ -17,7 +19,9 @@ from pathlib import Path
 
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
-BUNDLE_SOURCE = SOURCE_ROOT / "skills" / "writwall-adopt"
+SOURCE_BUNDLE = SOURCE_ROOT / "skills" / "writwall-adopt"
+INSTALLED_BUNDLE = Path(sys.prefix) / "share" / "writwall" / "writwall-adopt"
+BUNDLE_SOURCE = INSTALLED_BUNDLE if INSTALLED_BUNDLE.is_dir() else SOURCE_BUNDLE
 OUTPUT_NAME = ".writwall-bootstrap"
 SECRET_WARNING = (
     "Do not enter passwords, API tokens, private keys, mail contents, DNS "
@@ -375,6 +379,58 @@ def role_split_recommendation(functions: tuple[str, ...]) -> str:
     )
 
 
+def topology_recommendation(
+    args: argparse.Namespace, functions: tuple[str, ...]
+) -> dict:
+    observed_stakes = (
+        args.environment,
+        getattr(args, "problem", None),
+        getattr(args, "why_matters", None),
+        getattr(args, "smallest_outcome", None),
+        *getattr(args, "constraint", ()),
+        *getattr(args, "risk", ()),
+        *functions,
+    )
+    high_impact = args.scenario == "dns-mail-migration" or any(
+        token in observation.lower()
+        for observation in observed_stakes if observation
+        for token in ("production", "identity", "dns", "mail")
+    )
+    if high_impact:
+        tier = "high_impact"
+        reason = (
+            "Observed production, identity, DNS, or mail boundaries require "
+            "separately ratified and verified operation packets."
+        )
+    elif functions:
+        tier = "repository_plus_external"
+        reason = (
+            "Observed external account boundaries require bounded external "
+            "Operators in addition to repository work."
+        )
+    else:
+        tier = "local_only"
+        reason = "Only local repository work is currently observed."
+    return {
+        "tier": tier,
+        "authority": "unratified_recommendation",
+        "reason": reason,
+        "roles": [
+            "human Owner", "Owner-Agent architect/coordinator",
+            "repository Operator", "fresh Reviewer", *functions,
+        ],
+        "sequential_combination": (
+            "On a small project, one agent may act as Owner-Agent and later as "
+            "repository Operator only in separate sessions after Owner ratification."
+        ),
+        "mandatory_separation": (
+            "The human Owner remains the source of ratification; the fresh Reviewer "
+            "does not implement corrections; each high-impact external function keeps "
+            "its own preconditions, authority, verification, and rollback packet."
+        ),
+    }
+
+
 def next_prompt(state: ObservedState) -> tuple[str, str]:
     if state.name == "clean_new":
         return (
@@ -513,6 +569,155 @@ them into one broad infrastructure authorization.
 """
 
 
+def discovery_record(args: argparse.Namespace, functions: tuple[str, ...]) -> dict:
+    candidate = args.project_name if args.project_name != "Unnamed idea" else None
+    return {
+        "schema": 1,
+        "authority": "unratified_discovery_only",
+        "identity": {
+            "state": "working_candidate" if candidate else "unnamed",
+            "working_candidate": candidate,
+            "canonical_name": None,
+        },
+        "topology": topology_recommendation(args, functions),
+        "qualification": {
+            "problem_or_opportunity": getattr(args, "problem", None) or args.purpose,
+            "intended_user": getattr(args, "intended_user", None),
+            "why_outcome_matters": getattr(args, "why_matters", None),
+            "evidence_and_assumptions": getattr(args, "evidence", None),
+            "smallest_useful_outcome": getattr(args, "smallest_outcome", None),
+            "success_signal": getattr(args, "success_signal", None),
+            "constraints": list(getattr(args, "constraint", ())),
+            "non_goals": list(getattr(args, "non_goal", ())),
+            "material_risks": list(getattr(args, "risk", ())),
+            "stop_kill_conditions": list(getattr(args, "kill_condition", ())),
+            "existing_assets": list(getattr(args, "asset", ())),
+            "repository_runtime_deployment_environment": args.environment,
+            "preferred_agent_interface": args.agent,
+            "external_systems_and_operators": list(functions),
+            "owner_time_capture": args.owner_time == "yes",
+        },
+    }
+
+
+def architect_packets(args: argparse.Namespace, functions: tuple[str, ...]) -> dict[str, str]:
+    common = (
+        "This packet is unratified discovery. It confers no authority to implement, "
+        "install, publish, configure, or operate an external system.\n"
+    )
+    return {
+        "OWNER-AGENT.md": f"""# Owner-Agent architect packet
+
+{common}
+Paste exactly into the preferred frontier Owner-Agent session:
+
+```text
+Act as the Owner-Agent architect/coordinator. Read discovery.json and every
+packet in this directory. Continue qualification one question at a time where
+evidence is incomplete or contradictory. Recommend the smallest credible
+project and role topology, label every recommendation unratified, prepare the
+exact Owner ratification choices, and stop. Do not implement the project,
+canonicalize its identity, install tooling, or operate any external system.
+```
+""",
+        "REPOSITORY-OPERATOR.md": f"""# Repository Operator packet
+
+{common}
+## Preconditions
+- An Owner-ratified plan and active bounded work order exist.
+## Permitted actions
+- Only paths and commands granted by that work order.
+## Prohibited actions
+- No external-system operation or inferred identity decision.
+## Verification
+- Return exact checks and observed results.
+## Evidence to return
+- Changed paths, reasons, failures, and remaining boundaries.
+""",
+        "REVIEWER.md": f"""# Fresh Reviewer packet
+
+{common}
+## Preconditions
+- Review only after the Owner-Agent returns a ratifiable packet or an Operator returns evidence.
+## Review
+- Challenge intent traceability, boundary fit, name state, topology, failure safety, and evidence.
+## Prohibited actions
+- Do not implement corrections in the same context.
+## Evidence to return
+- ACCEPT, ACCEPT WITH NON-BLOCKING POLISH, or RETURN with concrete findings.
+""",
+        "NAME-CLEARANCE.md": f"""# Name-clearance packet
+
+{common}
+No name is canonical, available, cleared, or accepted. A supplied name is only
+a `working_candidate`. Before any repository slug, package, domain, logo, or
+launch route hardens identity, use
+`writwall-adopt/assets/scripts/collect_name_clearance.py` to collect the
+canonical ledger, then run the offline
+`writwall-adopt/assets/checks/check_name_clearance.py`. The seven required
+sources are `github`, `pypi`, `npm`, `crates_io`, `com_rdap`,
+`web_common_law`, and `uspto`. Obtain named-human web/common-law and USPTO
+review, follow `writwall-adopt/references/name-clearance.md`, and return the
+checker-clean evidence to the Owner for an explicit later Owner disposition.
+
+If identity remains internal-only or deferred, the future trigger is exact:
+run name clearance before the first public repository slug, package name,
+domain, logo, public announcement, customer-facing use, or launch route.
+""",
+        "OWNER-RATIFICATION.md": f"""# Owner ratification gate
+
+{common}
+The Owner must explicitly accept, reject, or revise the qualified problem,
+smallest useful outcome, success signal, constraints, non-goals, risks, kill
+conditions, role topology, external boundaries, and identity disposition.
+Silence, generated files, and repository state are not ratification. Stop here
+until the Owner supplies that disposition; no implementation packet is active.
+""",
+    }
+
+
+def _atomic_publish(stage: Path, output: Path) -> None:
+    """Atomically publish a directory without replacing any destination."""
+    if os.name == "nt":
+        os.rename(stage, output)
+        return
+
+    library = ctypes.CDLL(None, use_errno=True)
+    source_bytes = os.fsencode(stage)
+    output_bytes = os.fsencode(output)
+    if sys.platform.startswith("linux"):
+        rename = getattr(library, "renameat2", None)
+        if rename is None:
+            raise OSError(
+                errno.ENOTSUP,
+                "atomic no-replace directory publication is unavailable",
+            )
+        rename.argtypes = (
+            ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p,
+            ctypes.c_uint,
+        )
+        rename.restype = ctypes.c_int
+        result = rename(-100, source_bytes, -100, output_bytes, 1)
+    elif sys.platform == "darwin":
+        rename = getattr(library, "renamex_np", None)
+        if rename is None:
+            raise OSError(
+                errno.ENOTSUP,
+                "atomic no-replace directory publication is unavailable",
+            )
+        rename.argtypes = (ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint)
+        rename.restype = ctypes.c_int
+        result = rename(source_bytes, output_bytes, 0x00000004)
+    else:
+        raise OSError(
+            errno.ENOTSUP,
+            "atomic no-replace directory publication is unavailable",
+        )
+    if result != 0:
+        error = ctypes.get_errno()
+        raise OSError(error, os.strerror(error), output)
+
+
 def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedState,
                     functions: tuple[str, ...]) -> Path:
     output = project / OUTPUT_NAME
@@ -586,6 +791,14 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
             encoding="utf-8",
             newline="\n",
         )
+        (stage / "discovery.json").write_text(
+            json.dumps(discovery_record(args, functions), indent=2,
+                       ensure_ascii=False) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        for name, content in architect_packets(args, functions).items():
+            (stage / name).write_text(content, encoding="utf-8", newline="\n")
         if functions:
             operations = stage / "operations"
             operations.mkdir()
@@ -597,7 +810,7 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
             raise CoordinatorError(
                 f"create-only stop: {OUTPUT_NAME} appeared during creation; nothing was overwritten"
             )
-        os.rename(stage, output)
+        _atomic_publish(stage, output)
     except Exception as exc:
         cleanup_error = None
         if _entry_exists(stage):
@@ -611,8 +824,9 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
                 f"could not be removed: {stage} ({cleanup_error})"
             ) from exc
         raise CoordinatorError(
-            f"bootstrap creation stopped before atomic publication; no target "
-            f"output was created: {exc}"
+            "bootstrap creation stopped before atomic publication; Writwall "
+            "published no target; an independently existing destination may "
+            f"remain: {exc}"
         ) from exc
     return output
 
@@ -640,15 +854,28 @@ def interactive_args(args: argparse.Namespace) -> argparse.Namespace:
         raise CoordinatorError("stopped before reading project intake")
     args.confirm_no_secrets = True
     args.project_root = args.project_root or ask("Target project directory", ".")
-    args.project_name = args.project_name or ask("Project name")
-    if not args.brief_file and not args.purpose:
+    if not args.project_name:
+        args.project_name = ask("Working candidate name, or blank for an unnamed idea", "")
+    if not args.brief_file and not args.purpose and not args.problem:
         supplied_brief = ask("Existing project brief file path, or blank", "")
         if supplied_brief:
             args.brief_file = supplied_brief
     if args.brief_file:
         args.purpose = ""
     else:
-        args.purpose = args.purpose or ask("Explain the project purpose in your own words")
+        if not args.purpose:
+            args.problem = args.problem or ask("Problem or opportunity")
+            args.intended_user = args.intended_user or ask("Intended user")
+            args.why_matters = args.why_matters or ask("Why the outcome matters")
+            args.evidence = args.evidence or ask("Current evidence and assumptions")
+            args.smallest_outcome = args.smallest_outcome or ask("Smallest useful outcome")
+            args.success_signal = args.success_signal or ask("Success signal")
+            args.constraint = args.constraint or [ask("Constraints")]
+            args.non_goal = args.non_goal or [ask("Non-goals")]
+            args.risk = args.risk or [ask("Material risks")]
+            args.kill_condition = args.kill_condition or [ask("Stop or kill conditions")]
+            args.asset = args.asset or [ask("Existing assets")]
+            args.purpose = args.problem
     args.agent = args.agent or ask(
         "Preferred primary agent and interface", "Claude Code in VS Code"
     )
@@ -676,13 +903,25 @@ def interactive_args(args: argparse.Namespace) -> argparse.Namespace:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Prepare a create-only, project-local Writwall adoption handoff. "
+            "Start with an idea and prepare a create-only, project-local "
+            "Writwall adoption handoff. "
             "This does not install or adopt Writwall."
         )
     )
     parser.add_argument("--project-root")
     parser.add_argument("--project-name")
     parser.add_argument("--purpose")
+    parser.add_argument("--problem")
+    parser.add_argument("--intended-user")
+    parser.add_argument("--why-matters")
+    parser.add_argument("--evidence")
+    parser.add_argument("--smallest-outcome")
+    parser.add_argument("--success-signal")
+    parser.add_argument("--constraint", action="append", default=[])
+    parser.add_argument("--non-goal", action="append", default=[])
+    parser.add_argument("--risk", action="append", default=[])
+    parser.add_argument("--kill-condition", action="append", default=[])
+    parser.add_argument("--asset", action="append", default=[])
     parser.add_argument("--brief-file")
     parser.add_argument("--agent")
     parser.add_argument("--location")
@@ -698,6 +937,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def normalize_args(args: argparse.Namespace) -> tuple[argparse.Namespace, Path, tuple[str, ...]]:
     if not args.non_interactive:
         args = interactive_args(args)
+    idea_mode = bool(args.problem)
+    if idea_mode:
+        args.project_name = args.project_name or "Unnamed idea"
+        args.purpose = args.purpose or args.problem
     required = {
         "project root": args.project_root,
         "project name": args.project_name,
@@ -713,6 +956,50 @@ def normalize_args(args: argparse.Namespace) -> tuple[argparse.Namespace, Path, 
         )
     if missing:
         raise CoordinatorError("missing required intake: " + ", ".join(missing))
+    if idea_mode:
+        qualification = {
+            "problem or opportunity": args.problem,
+            "intended user": args.intended_user,
+            "why the outcome matters": args.why_matters,
+            "evidence and assumptions": args.evidence,
+            "smallest useful outcome": args.smallest_outcome,
+            "success signal": args.success_signal,
+            "constraints": args.constraint,
+            "non-goals": args.non_goal,
+            "material risks": args.risk,
+            "stop or kill conditions": args.kill_condition,
+            "existing assets": args.asset,
+        }
+        def complete_answer(value: object) -> bool:
+            if isinstance(value, str):
+                return bool(value.strip())
+            if isinstance(value, list):
+                return bool(value) and all(
+                    isinstance(item, str) and bool(item.strip()) for item in value
+                )
+            return False
+
+        missing_qualification = [
+            name for name, value in qualification.items()
+            if not complete_answer(value)
+        ]
+        if missing_qualification:
+            raise CoordinatorError(
+                "missing idea qualification: " + ", ".join(missing_qualification)
+            )
+        normalized_constraints = {
+            re.sub(r"\s+", " ", value).strip().casefold()
+            for value in args.constraint if value.strip()
+        }
+        normalized_non_goals = {
+            re.sub(r"\s+", " ", value).strip().casefold()
+            for value in args.non_goal if value.strip()
+        }
+        if normalized_constraints & normalized_non_goals:
+            raise CoordinatorError(
+                "contradictory idea qualification: the same statement cannot "
+                "be both a constraint and a non-goal"
+            )
 
     supplied_project = Path(args.project_root).expanduser()
     if supplied_project.is_symlink():

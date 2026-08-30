@@ -8,13 +8,16 @@ accepted WO-PL-034 public-front-door polish, accepted WO-PL-035 onboarding
 repair, accepted WO-PL-036 name-clearance and replacement selection, and
 accepted WO-PL-037 controlled migration to the current **Writwall** identity,
 accepted WO-PL-038 wall-glyph identity correction, accepted WO-PL-039
-cache-safe public-identity and repository hardening, and accepted WO-PL-040
-executable day-zero coordination.
+cache-safe public-identity and repository hardening, accepted WO-PL-040
+executable day-zero coordination, accepted WO-WW-001 architect-interview and
+inception evidence, accepted WO-WW-002 build-backend provisioning recovery, and
+accepted WO-WW-003 retained-identity ledger refresh.
 
-**Derived:** 2026-08-29 from the ten accepted pilot records, the Doctrine 9.3.1
+**Derived:** 2026-08-30 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
 accepted WO-PL-017 through WO-PL-023 and WO-PL-025 through WO-PL-033 records,
-the WO-PL-024 sequencing recovery, and the verified public-release event.
+the WO-PL-024 sequencing recovery, the verified public-release event, and the
+accepted WO-WW-001 through WO-WW-003 closeout records.
 **Boundary:** post-adoption, all 10 counted pilot work orders and their
 evaluation complete; WO-PL-017 remediation complete; DR-003 ratified;
 WO-PL-018 through WO-PL-023 complete; WO-PL-024 void before implementation;
@@ -24,7 +27,10 @@ Plumbline 0.8 publicly released from a one-commit clean-history projection;
 WO-PL-034 through WO-PL-038 complete; **Writwall** selected and implemented as
 the current identity with the two-line wall glyph; WO-PL-039 complete and
 accepted, with public PR #5 merged after the required CI passed and issue #4
-closed; WO-PL-040 complete and accepted; WO-PL-041 authorized but not active.
+closed; WO-PL-040 complete and accepted; public PR #8 merged and issue #1
+closed; the historical `WO-PL` series ends at 040; **WO-WW-001 and WO-WW-002
+through WO-WW-003 are COMPLETE and accepted**; the authorized projection refresh
+and protected-CI verification for public PR #9 remain an external closeout tail.
 The hash of the commit containing this file is intentionally recorded only
 externally.
 
@@ -78,8 +84,11 @@ externally.
 | WO-PL-038 | **COMPLETE**, accepted 2026-08-29; post-migration wall-glyph identity correction, not counted. The Owner rejected the inherited plumb-line/bob device and accepted the two-line wall at the `writ|wall` boundary. Focused and complete tests, identity, licensing, dispatch, and whitespace checks passed; fresh review returned **ACCEPT** after one report-only transient-count correction. Active minutes **NOT REPORTED**. Public issue #2 projection/PR update merged as public PR #3; the merged bytes were correct, but GitHub continued serving the retired banner from its unchanged published image URL, now recorded as public issue #4 |
 | WO-PL-039 | **COMPLETE**, accepted 2026-08-29; post-migration cache-safe public identity and repository hardening, not counted. README now uses a digest-bound wall-glyph banner path; the live GitHub social preview is byte-identical to the accepted wall source; CI actions are full-SHA pinned behind one stable required check; supported repository rules, merge hygiene, Actions restrictions, vulnerability reporting, scanning, push protection, and topics are active. Windows passed 657 tests with two skips; the native Ubuntu candidate passed 657 with three skips; two 117-file candidates were checker-clean and byte-identical; corrected fresh re-review returned **ACCEPT**. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; post-closeout public PR #5 merged only after both live `CI required` checks passed and public issue #4 closed |
 | WO-PL-040 | **COMPLETE**, accepted 2026-08-29; executable day-zero coordinator, lifecycle-state routing, atomic create-only bootstrap handoff, external-Operator packet model, and sanitized eight-domain DNS/mail walkthrough. Three fresh reviews drove fail-closed multi-ACTIVE/link handling, complete scenario/intake coverage, and atomic publication. Final suite 687 OK with two skips; two 120-file candidates checker-clean and byte-identical; final review ACCEPT WITH NON-BLOCKING POLISH. Owner active minutes **NOT REPORTED**; records retained in `governance/history/` |
+| WO-WW-001 | **COMPLETE**, accepted 2026-08-30; first Writwall-native work order. Standard-setuptools isolated installation exposes canonical `writwall start` while preserving the source fallback; architect intake emits unratified discovery, bounded role packets, topology, ratification, and seven-source name-clearance evidence. Final suite 701 OK with two skips; two independent 128-file projections were checker-clean and byte-identical; final fresh review returned **ACCEPT**. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; no commit, push, projection publication, release, tag, visibility change, successor activation, or real DNS/mail operation occurred |
+| WO-WW-002 | **COMPLETE**, accepted 2026-08-30; deterministic build-backend provisioning and public PR #9 recovery. A clean venv and 11 of 15 required CI jobs reproduced `BackendUnavailable` because the isolated-install test disabled build isolation while CI did not provision the declared setuptools backend. CI now provisions the exact declared backend requirement before tests; the regression and real isolated coordinator installs pass from a clean provisioned environment; fresh review returned ACCEPT. Owner active minutes **NOT REPORTED**. Public PR #9 refresh and protected-CI verification remain authorized post-closeout work; merge, release, tag, deploy, and visibility change are excluded |
+| WO-WW-003 | **COMPLETE**, accepted 2026-08-30 under the Owner-approved complete PR #9 correction lifecycle. Two first post-WO-WW-002 projections failed closed on stale retained digests; both candidates were deleted. Exactly four digest fields for `governance/PLAN.md`, `governance/STATE.md`, and `tests/test_distribution.py` were refreshed without changing classification, context, transform, or enforcement. Source identity and 17 focused tests passed; corrected fresh review returned ACCEPT. Owner active minutes **NOT REPORTED**. Public PR #9 refresh and protected-CI verification remain an external closeout tail; merge, release, tag, deploy, and visibility change are excluded |
 | Pilot progress | **10 of 10 counted work orders complete; fresh-agent evaluation accepted with calibrations and disposed by DR-002** |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; Plumbline 0.8 is the historical public release; **Writwall migration, repository hardening, and executable day-zero coordination accepted**; WO-PL-041 authorized but inactive pending closeout/public issue #1 sequence |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; public PR #8 merged and issue #1 closed; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-003 COMPLETE and accepted**; public PR #9 refresh is the authorized external closeout tail |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout

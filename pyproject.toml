@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "writwall"
+version = "0.0.0"
+description = "Start governed project work from an idea."
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSES/Apache-2.0.txt"]
+
+[project.scripts]
+writwall = "writwall_cli.__main__:main"
+
+[tool.setuptools]
+packages = ["writwall_cli", "scripts"]
+include-package-data = false
+
+[tool.setuptools.data-files]
+"share/writwall/writwall-adopt" = [
+  "skills/writwall-adopt/SKILL.md",
+  "skills/writwall-adopt/LICENSE-MAP.md",
+]
+"share/writwall/writwall-adopt/references" = [
+  "skills/writwall-adopt/references/DOCTRINE.md",
+  "skills/writwall-adopt/references/name-clearance.md",
+]
+"share/writwall/writwall-adopt/references/migration-guides" = [
+  "skills/writwall-adopt/references/migration-guides/0.1-to-0.6.md",
+  "skills/writwall-adopt/references/migration-guides/0.6-to-0.7.md",
+  "skills/writwall-adopt/references/migration-guides/0.7-to-0.8.md",
+]
+"share/writwall/writwall-adopt/assets/adapters/claude-code" = [
+  "skills/writwall-adopt/assets/adapters/claude-code/README.md",
+  "skills/writwall-adopt/assets/adapters/claude-code/wo_capability_wall.py",
+]
+"share/writwall/writwall-adopt/assets/checks" = [
+  "skills/writwall-adopt/assets/checks/check_name_clearance.py",
+  "skills/writwall-adopt/assets/checks/check_work_order_dispatch.py",
+]
+"share/writwall/writwall-adopt/assets/scripts" = [
+  "skills/writwall-adopt/assets/scripts/collect_name_clearance.py",
+]
+"share/writwall/writwall-adopt/assets/templates" = [
+  "skills/writwall-adopt/assets/templates/A-charter.md",
+  "skills/writwall-adopt/assets/templates/B-work-order.md",
+  "skills/writwall-adopt/assets/templates/C-owner-brief.md",
+  "skills/writwall-adopt/assets/templates/D-adoption-record.md",
+  "skills/writwall-adopt/assets/templates/E-adoption-mapping.md",
+]

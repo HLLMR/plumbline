@@ -306,6 +306,29 @@ class CIWorkflowTests(DistributionTestCase):
             self.assertIn(required, text)
         self.assertIn("contents: read", text)
 
+    def test_ci_provisions_declared_build_requirements_before_tests(self):
+        pyproject = (self.repo / "pyproject.toml").read_text(encoding="utf-8")
+        build_system = re.search(
+            r"(?ms)^\[build-system\]\s*$.*?^requires\s*=\s*\[(.*?)\]",
+            pyproject,
+        )
+        self.assertIsNotNone(build_system, "build-system.requires is missing")
+        requirements = re.findall(r'"([^"]+)"', build_system.group(1))
+        self.assertTrue(requirements, "build-system.requires is empty")
+
+        workflow = (self.repo / ".github" / "workflows" / "ci.yml").read_text(
+            encoding="utf-8"
+        )
+        test_boundary = workflow.index("Focused capability-wall, dispatch, and init tests")
+        provisioning = workflow[:test_boundary]
+        self.assertIn("Provision declared build backend", provisioning)
+        self.assertIn("python -m pip install", provisioning)
+        self.assertIn("--no-input", provisioning)
+        self.assertIn("--only-binary=:all:", provisioning)
+        for requirement in requirements:
+            with self.subTest(requirement=requirement):
+                self.assertIn(f'"{requirement}"', provisioning)
+
 
 class CurrentDocumentationSynchronizationTests(unittest.TestCase):
     def test_adapter_readme_lists_every_reason_code_and_surface(self):
@@ -633,7 +656,9 @@ class SelfHostingSegregationTests(DistributionTestCase):
             "SKILL.md",
             "assets/adapters/claude-code/README.md",
             "assets/adapters/claude-code/wo_capability_wall.py",
+            "assets/checks/check_name_clearance.py",
             "assets/checks/check_work_order_dispatch.py",
+            "assets/scripts/collect_name_clearance.py",
             "assets/templates/A-charter.md",
             "assets/templates/B-work-order.md",
             "assets/templates/C-owner-brief.md",
@@ -643,6 +668,7 @@ class SelfHostingSegregationTests(DistributionTestCase):
             "references/migration-guides/0.1-to-0.6.md",
             "references/migration-guides/0.6-to-0.7.md",
             "references/migration-guides/0.7-to-0.8.md",
+            "references/name-clearance.md",
         ])
 
 

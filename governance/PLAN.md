@@ -393,3 +393,53 @@ not simultaneous authority. An infrastructure agent that only changes DNS,
 containers, hosts, or proxies is outside the repository's capability wall; it
 receives a bounded external-operations packet and returns evidence. If it edits
 repository bytes, it enters the repository as an Operator under a work order.
+
+## 16. Writwall-native series and architect interview — 2026-08-29
+
+The Owner corrected the post-migration identifier boundary before issuing the
+next order. `WO-PL-001` through `WO-PL-040` remain immutable identifiers in the
+historical Plumbline series. Current Writwall work begins at `WO-WW-001` and
+increments within that series. No historical record is renamed or renumbered.
+
+1. **WO-WW-001 — Architect interview and inception evidence.** Extend the
+   accepted day-zero coordinator into the promised “I have an idea” front
+   door. Qualify the idea before treating it as a project; capture the problem,
+   intended user, value, evidence, constraints, risks, success and stop
+   conditions; inventory the human/agent/operator environment; recommend the
+   smallest credible role topology; and emit bounded setup packets. A public
+   identity remains a working candidate until the existing evidenced
+   name-clearance process and explicit Owner disposition complete. Name
+   research therefore precedes repository/package/domain/logo/launch identity,
+   not follows it. The deterministic CLI may collect, validate, package, and
+   route intake; a frontier Owner-Agent performs the adaptive architect
+   interview. It must not silently install extensions, modify IDE or host
+   configuration, access credentials, mutate external systems, ratify intent,
+   or begin implementation.
+
+2. **WO-WW-002 — COMPLETE: deterministic build-backend provisioning and release
+   recovery.** Corrected the release-blocking ambient-tool assumption exposed by
+   public PR #9. CI must provision the build backend declared by
+   `pyproject.toml` before running the isolated-install tests; contributor
+   instructions must distinguish the build/test prerequisite from Writwall's
+   dependency-free runtime. An executable regression must bind CI setup to the
+   declared backend requirement. After private acceptance and closeout, rebuild
+   the public projection, update PR #9, and require the complete protected CI
+   matrix must pass before the PR is merge-ready. Do not patch the public branch
+   around governed source, weaken the isolated-install test, add a runtime
+   dependency, merge, release, tag, deploy, or change visibility.
+
+3. **WO-WW-003 — COMPLETE: retained-identity ledger refresh and PR #9
+   recovery.** Refreshed only the canonical source/projection digests for public retained paths changed
+   by accepted WO-WW-002. Prove the identity checker rejects the stale ledger,
+   then passes with final closed bytes. Rebuild two complete public candidates,
+   require checker-clean byte identity, update PR #9 only from that projection,
+   and require protected CI to pass. Do not weaken identity checks, alter retained
+   classifications, merge, release, tag, deploy, change visibility, or begin a
+   successor.
+
+The minimum supported topology is one human Owner, one Owner-Agent, one or more
+bounded Operators, and a fresh Reviewer. On small projects one capable agent
+may perform coordinator, dispatcher, and recorder roles sequentially, but a
+Reviewer remains a distinct fresh context and no agent receives simultaneous
+unbounded authority. External infrastructure, DNS, mail, hosting, and similar
+Operators receive inert packets; repository mutation remains work-order bound.

@@ -15,6 +15,7 @@ path = [
   "decisions/**",
   "docs/assets/**",
   "docs/agents/**",
+  "docs/architect-interview.md",
   "docs/day-zero-coordinator.md",
   "docs/identity-migration.md",
   "docs/name-clearance.md",
@@ -28,6 +29,12 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
 SPDX-License-Identifier = "CC-BY-4.0"
+
+# The install metadata and standard-library CLI are Apache-2.0 software.
+[[annotations]]
+path = ["pyproject.toml", "writwall_cli/**"]
+SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"
+SPDX-License-Identifier = "Apache-2.0"
 
 # DR-003 deliberately dual-licenses extracted appendix templates under CC0.
 # Their occurrence inside DOCTRINE.md remains CC-BY-4.0; this is not conflict.
