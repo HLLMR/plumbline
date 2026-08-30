@@ -44,6 +44,7 @@ docs/assets/writwall-og.png
 docs/assets/writwall-og.svg
 docs/assets/writwall-readme-banner-0a5259d8.png
 docs/assets/writwall-readme-banner.svg
+docs/day-zero-coordinator.md
 docs/identity-migration.md
 docs/name-clearance.md
 examples/README.md
@@ -85,6 +86,7 @@ projection/public-files.txt
 scripts/build_distribution.py
 scripts/build_public_projection.py
 scripts/collect_name_clearance.py
+scripts/start_writwall.py
 skills/writwall-adopt/LICENSE-MAP.md
 skills/writwall-adopt/SKILL.md
 skills/writwall-adopt/assets/adapters/claude-code/README.md
@@ -112,4 +114,5 @@ tests/test_identity_migration.py
 tests/test_init_sh.py
 tests/test_name_clearance.py
 tests/test_public_projection.py
+tests/test_start_writwall.py
 tests/test_wo_capability_wall.py

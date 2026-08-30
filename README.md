@@ -93,23 +93,31 @@ actually blocks the current session before real work begins.
 
 ## Try it in five minutes
 
-If you are new to Writwall, begin with [START-HERE.md](START-HERE.md). It tells
-you which role to engage, whether that agent belongs inside or outside the IDE,
-and gives you the exact first prompt. The create-only scaffolder is useful only
-after you understand that it does not complete adoption:
+If you are new to Writwall, run the day-zero coordinator from this clean source
+distribution. It inspects the target before assigning a role, makes the complete
+adoption bundle local, and writes the exact next prompt without installing the
+wall or claiming adoption:
 
 ```text
-./init.sh /absolute/path/to/your-project
-python3 /absolute/path/to/your-project/checks/check_work_order_dispatch.py --lockout
+# Windows
+py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
+
+# macOS or Linux
+python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
-This creates the governance directories, copies the templates, and installs
-the pre-dispatch validator. If the target already has a `.claude/` directory,
-it also copies the adapter file; it **does not register, activate, or birth-test**
-that hook, inventory existing project authority, ratify adoption, or make a commit.
-Read [ADOPTING.md](ADOPTING.md) next for the complete adoption sequence. Make
-the bundled adoption skill local before registering a wall that may deny the
-agent's network access.
+The command asks one question at a time and creates only
+`.writwall-bootstrap/` in the target. Read its `HANDOFF.md`, open the named
+agent in the named location, and paste the supplied prompt. Do not enter
+passwords, API tokens, private keys, mailbox contents, DNS values, or other
+secrets; intake is stored as local plain text. See the
+[coordinator reference](docs/day-zero-coordinator.md), or use
+[START-HERE.md](START-HERE.md) for the manual and recovery routes.
+The coordinator does not register, activate, or birth-test the wall.
+
+The lower-level `init.sh` scaffolder remains available after you understand
+the adoption sequence. It creates directories and template copies but does not
+inventory authority, register or birth-test a hook, ratify adoption, or commit.
 
 If the project does not yet have a settled public identity, stop before naming
 packages, repositories, domains, or launch assets. Run the evidence-producing

@@ -59,16 +59,44 @@ names, repository slugs, domains, logos, or launch copy. The coordinator may
 collect evidence, but the Owner chooses the identity; unavailable sources are
 not clear results.
 
-1. Obtain the Writwall source distribution. Do not unpack it over your project.
-2. Copy the complete `skills/writwall-adopt/` directory into the target
-   provider's temporary skill location. For Claude Code, use
-   `.claude/skills/writwall-adopt/`.
-3. Confirm the bundle is locally readable. It contains the Doctrine, adapter,
-   checker, templates, and migration guides it needs.
-4. Start the adoption coordinator. The bundle stays available until recorder
-   closeout no longer needs it and is removed before the adoption commit.
-5. Register and birth-test the wall only through the exact lifecycle the
-   coordinator prepares and you ratify.
+1. Obtain a clean Writwall source distribution. Do not unpack it over your
+   project.
+2. From that distribution, run one command:
+
+   ```text
+   # Windows
+   py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
+
+   # macOS or Linux
+   python3 scripts/start_writwall.py --project-root /path/to/your-project
+   ```
+
+3. If you choose to track Owner active minutes, start the timer when the first
+   question tells you to; do not reconstruct time later. Answer one question at
+   a time without entering secrets. You may point it at an existing brief. The
+   command observes actual repository lifecycle state and creates only
+   `<project>/.writwall-bootstrap/`.
+4. Open its `HANDOFF.md`. Start the agent and location it names and paste the
+   exact prompt. The complete local `writwall-adopt` bundle is already beside
+   the handoff.
+5. Keep that temporary directory until recorder closeout no longer needs it;
+   remove it before the adoption commit. Register and birth-test the wall only
+   through the exact lifecycle the coordinator prepares and you ratify.
+
+The command does not install Writwall, interpret intake as ratified intent,
+create an activation pointer, contact an external system, or replace the
+Owner-Agent. It stops on contradictory state instead of guessing from prior
+chat. See [`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md) for
+the complete contract.
+
+### Manual fallback
+
+If Python is unavailable, copy the complete `skills/writwall-adopt/` directory
+into a temporary project-local location before registering any wall, confirm
+it is readable, then use the prompt below. For Claude Code, a temporary
+`.claude/skills/writwall-adopt/` location is supported. Keep the bundle until
+the final authorized recorder action that needs it and remove it before the
+adoption commit.
 
 Paste this first:
 

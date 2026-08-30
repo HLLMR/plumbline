@@ -563,6 +563,39 @@ acceptance. The Owner authorized ordinary closeout/private commit and the
 post-closeout issue #4 projection PR, with merge only after live `CI required`
 passes; WO-PL-040 remains inactive.
 
+### Post-pilot WO-PL-040 completed record
+
+WO-PL-040 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-29 and reported
+active minutes **NOT REPORTED**.
+
+The order adds the standard-library `writwall start` bootstrap kernel. It
+classifies actual lifecycle bytes before routing, makes the complete adoption
+bundle local, records unratified intake, emits an exact next-agent prompt, and
+separates repository and external-Operator packets. The sanitized reference
+walkthrough preserves eight-domain DNS authority migration, DNS-before-mail
+ordering, and separate historical-mail inventory, cleanup, and migration
+without accessing any live provider, account, record, mailbox, credential,
+server, website, or other project.
+
+Three fresh reviews materially improved the result. The first found
+contradictory ACTIVE-state, link/path, scenario, intake, and coverage defects.
+The second verified those corrections and found non-atomic publication. The
+final implementation uses a complete same-filesystem sibling stage and one
+atomic rename with verified failure cleanup; fault injection proves no target
+output or stage survives a caught publication failure. The final fresh review
+returned **ACCEPT WITH NON-BLOCKING POLISH**.
+
+The atomic-final suite passed 687 tests with two skips. Two independent
+120-file projections were checker-clean and byte-identical at complete
+projection-manifest SHA-256
+`F08B7CB5ED00006B8F525BA210D525E556FA135084401AD72CBE6FC1513A8D1F`.
+The original command-mediated archive/history fixture-read departure and the
+identity-ledger grant omission remain disclosed under Owner-approved Amendment
+1. The denial log remained 310 records and byte-unchanged. No external system,
+production operation, release, tag, or successor implementation occurred
+before acceptance.
+
 ---
 
 ## Column definitions

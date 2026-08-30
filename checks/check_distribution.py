@@ -81,6 +81,7 @@ CURRENT_DOCUMENTS = (
     "decisions/README.md",
     "decisions/DR-001.md",
     "decisions/DR-003.md",
+    "docs/day-zero-coordinator.md",
     "skills/writwall-adopt/LICENSE-MAP.md",
 )
 
@@ -178,6 +179,7 @@ REQUIRED_FILES = [
     "docs/agents/domain.md",
     "docs/agents/issue-tracker.md",
     "docs/agents/triage-labels.md",
+    "docs/day-zero-coordinator.md",
     "docs/name-clearance.md",
     "docs/identity-migration.md",
     "examples/README.md",
@@ -193,6 +195,7 @@ REQUIRED_FILES = [
     "scripts/build_distribution.py",
     "scripts/build_public_projection.py",
     "scripts/collect_name_clearance.py",
+    "scripts/start_writwall.py",
     "skills/writwall-adopt/SKILL.md",
     "skills/writwall-adopt/LICENSE-MAP.md",
     "tests/test_init_sh.py",
@@ -203,6 +206,7 @@ REQUIRED_FILES = [
     "tests/test_wo_capability_wall.py",
     "tests/test_check_work_order_dispatch.py",
     "tests/test_public_projection.py",
+    "tests/test_start_writwall.py",
     "projection/public-files.txt",
     *[f"templates/{name}" for name in TEMPLATE_FILES.values()],
     *[str(p.relative_to(REPO_ROOT)).replace("\\", "/") for p in BUNDLE_COPIES],
@@ -1098,6 +1102,7 @@ def check_onboarding_contract(failures: Failures) -> None:
         "README.md": REPO_ROOT / "README.md",
         "START-HERE.md": REPO_ROOT / "START-HERE.md",
         "ADOPTING.md": REPO_ROOT / "ADOPTING.md",
+        "docs/day-zero-coordinator.md": REPO_ROOT / "docs" / "day-zero-coordinator.md",
         "skills/writwall-adopt/SKILL.md": SKILL / "SKILL.md",
         "adapters/claude-code/README.md": ADAPTER_README,
         "init.sh": REPO_ROOT / "init.sh",
@@ -1111,8 +1116,9 @@ def check_onboarding_contract(failures: Failures) -> None:
         "README.md": (
             "START-HERE.md",
             "docs/name-clearance.md",
-            "does not register, activate, or birth-test",
-            "final recorder action",
+            "scripts/start_writwall.py",
+            ".writwall-bootstrap/",
+            "wall or claiming adoption",
         ),
         "START-HERE.md": (
             "Small project",
@@ -1124,6 +1130,8 @@ def check_onboarding_contract(failures: Failures) -> None:
             "fresh Reviewer",
             "chat exchange alone is not lifecycle authorization",
             "docs/name-clearance.md",
+            "scripts/start_writwall.py",
+            ".writwall-bootstrap/",
         ),
         "ADOPTING.md": (
             "before the wall is registered",
@@ -1133,6 +1141,15 @@ def check_onboarding_contract(failures: Failures) -> None:
             "both doctrinal birth-test levels",
             "does not by itself block adoption",
             "durable lifecycle authorization",
+            "scripts/start_writwall.py",
+            "create-only bootstrap tooling",
+        ),
+        "docs/day-zero-coordinator.md": (
+            "single human entry point",
+            "repository bytes",
+            ".writwall-bootstrap/",
+            "confers no authority",
+            "NOT REPORTED",
         ),
         "skills/writwall-adopt/SKILL.md": (
             "before the wall is registered",
@@ -1142,6 +1159,8 @@ def check_onboarding_contract(failures: Failures) -> None:
             "chat alone is not the",
             "portable Windows-and-POSIX claim",
             "PROJECTION-MANIFEST.sha256",
+            ".writwall-bootstrap/HANDOFF.md",
+            "Never infer an active work order from prior chat",
         ),
         "adapters/claude-code/README.md": (
             "minimal provider profile",

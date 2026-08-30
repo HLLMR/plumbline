@@ -40,6 +40,23 @@ mechanical route below. In particular, make the self-contained adoption bundle
 and these instructions local **before the wall is registered**. A correctly
 locked session may deny the network request that would otherwise retrieve them.
 
+For a first adoption, the default is the day-zero coordinator:
+
+```text
+# Windows
+py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
+
+# macOS or Linux
+python3 scripts/start_writwall.py --project-root /path/to/your-project
+```
+
+It classifies the target from repository bytes, copies the complete skill bundle
+into a temporary `.writwall-bootstrap/` directory, and emits the exact next
+prompt. It is create-only bootstrap tooling, not an authority or installer.
+Contradictory active state stops before output. Full interface and external-
+Operator packet behavior are documented in
+[`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md).
+
 | Route | Use when | Tooling | What it produces |
 |---|---|---|---|
 | A. Chat prompt | You want to think it through with a model before touching the repo, or your project has an existing document corpus that needs mapping | Any capable chat model | Draft DR-001, draft adoption mapping, draft charter kill list, a checklist of manual steps |
@@ -47,6 +64,9 @@ locked session may deny the network request that would otherwise retrieve them.
 | C. Scaffolder | You already know the layout and only want the directories, templates, and dispatch checker | `init.sh` | Empty `governance/` structure, template copies, and a create-only pre-dispatch validator. Nothing project-specific. |
 
 Routes combine. A common path for an existing project is A (mapping conversation) followed by B (mechanical bootstrap) followed by the Owner steps in section 5.
+
+The coordinator selects among these routes; it does not replace them. Its
+handoff is temporary and must be removed before the adoption commit.
 
 ---
 
