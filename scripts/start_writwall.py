@@ -19,6 +19,8 @@ from pathlib import Path
 
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
+if str(SOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOURCE_ROOT))
 SOURCE_BUNDLE = SOURCE_ROOT / "skills" / "writwall-adopt"
 INSTALLED_BUNDLE = Path(sys.prefix) / "share" / "writwall" / "writwall-adopt"
 BUNDLE_SOURCE = INSTALLED_BUNDLE if INSTALLED_BUNDLE.is_dir() else SOURCE_BUNDLE
@@ -484,7 +486,7 @@ bootstrap. Do not infer or reconstruct a value."""
 
 
 def render_handoff(args: argparse.Namespace, state: ObservedState,
-                   functions: tuple[str, ...]) -> str:
+                   functions: tuple[str, ...], privacy_count: int) -> str:
     role, prompt = next_prompt(state)
     evidence = "\n".join(f"- {item}" for item in state.evidence)
     operator_rows = "\n".join(
@@ -528,6 +530,14 @@ if those bytes change before acting.
 - Repository and external environment: {args.environment}
 
 These answers are unratified intake. The Owner must approve material intent.
+
+## Local privacy screen
+
+**Ready ({privacy_count} entries).** Writwall created or refreshed the durable,
+project-specific screen outside the repository. Its location and values are
+intentionally omitted. Temporary bootstrap or projection cleanup must not
+delete it. Add human-known names, codenames, client identifiers, or domains
+with `writwall privacy add`; never add credentials or secret values.
 {scenario}
 ## Recommended smallest credible role split
 
@@ -719,7 +729,7 @@ def _atomic_publish(stage: Path, output: Path) -> None:
 
 
 def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedState,
-                    functions: tuple[str, ...]) -> Path:
+                    functions: tuple[str, ...], privacy_count: int) -> Path:
     output = project / OUTPUT_NAME
     if _entry_exists(output):
         raise CoordinatorError(
@@ -780,6 +790,11 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
             "owner_time_capture": args.owner_time == "yes",
             "project_root": ".",
             "authority": "unratified_intake_only",
+            "privacy_screen": {
+                "ready": True,
+                "entry_count": privacy_count,
+                "location_disclosed": False,
+            },
         }
         (stage / "intake.json").write_text(
             json.dumps(intake, indent=2, ensure_ascii=False) + "\n",
@@ -787,7 +802,7 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
             newline="\n",
         )
         (stage / "HANDOFF.md").write_text(
-            render_handoff(args, state, functions),
+            render_handoff(args, state, functions, privacy_count),
             encoding="utf-8",
             newline="\n",
         )
@@ -897,6 +912,18 @@ def interactive_args(args: argparse.Namespace) -> argparse.Namespace:
             "",
         )
         args.external_operator = [part.strip() for part in external.split(",") if part.strip()]
+    print(
+        "Optional privacy screen: add private names, codenames, client identifiers, "
+        "or domains. Never enter passwords, tokens, keys, recovery codes, or secret values."
+    )
+    while True:
+        try:
+            identifier = ask("Private identifier (blank to finish)", "")
+        except EOFError:
+            identifier = ""
+        if not identifier:
+            break
+        args.private_identifier.append(identifier)
     return args
 
 
@@ -927,6 +954,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--location")
     parser.add_argument("--environment")
     parser.add_argument("--external-operator", action="append", default=[])
+    parser.set_defaults(private_identifier=[])
     parser.add_argument("--scenario", choices=("dns-mail-migration",))
     parser.add_argument("--owner-time", choices=("yes", "no"))
     parser.add_argument("--confirm-no-secrets", action="store_true")
@@ -1032,13 +1060,23 @@ def normalize_args(args: argparse.Namespace) -> tuple[argparse.Namespace, Path, 
 
 def main(argv: list[str] | None = None) -> int:
     try:
+        from scripts.privacy_screen import (
+            PrivacyScreenError, add_identifier, initialize,
+        )
+
         args, project, functions = normalize_args(parse_args(argv))
         if _entry_exists(project / OUTPUT_NAME):
             raise CoordinatorError(
                 f"create-only stop: {OUTPUT_NAME} already exists; nothing was overwritten"
             )
         state = classify_project(project)
-        output = write_bootstrap(project, args, state, functions)
+        try:
+            privacy_count = initialize(project)
+            for identifier in args.private_identifier:
+                privacy_count = add_identifier(project, identifier)
+        except PrivacyScreenError as exc:
+            raise CoordinatorError(str(exc)) from exc
+        output = write_bootstrap(project, args, state, functions, privacy_count)
     except CoordinatorError as exc:
         print(f"STOP: {exc}", file=sys.stderr)
         return 2

@@ -596,6 +596,37 @@ identity-ledger grant omission remain disclosed under Owner-approved Amendment
 production operation, release, tag, or successor implementation occurred
 before acceptance.
 
+### Post-pilot WO-WW-004 completed record
+
+WO-WW-004 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-30 and reported
+active minutes **NOT REPORTED**.
+
+The order replaced the mandatory absolute-path private-pattern file with a
+durable, project-specific OS-local profile initialized by `writwall start` and
+resolved automatically by projection build/check commands. Normal output and
+repository records contain only readiness and entry count; the explicit file
+override remains for controlled compatibility. Temporary candidate cleanup
+does not delete the durable profile.
+
+The first fresh review returned four same-work-order findings: ancestor-link
+redirection, concurrent lost updates, private values in command arguments, and
+an absolute credential-rejection claim the implementation could not prove.
+The correction rejects owned-component links/reparse entries, serializes
+updates with a per-profile lock, uses hidden input or controlled stdin, rejects
+common credential-shaped forms, and states the residual human boundary
+plainly. Fresh re-review returned **ACCEPT**. No later-detected drift or RFI was
+recorded.
+
+Windows passed 715 tests with two skips; the focused suite passed 109 tests.
+Native Ubuntu passed the eight-test privacy suite and created the profile at
+mode `0600`; its two unavailable isolated-install tests required absent `pip`,
+which was not installed. Two independent 131-file no-path candidates were
+checker-clean and byte-identical, then deleted while the profile remained.
+Codex was outside the installed Claude Code hook, so the strict classification
+remained **8 / 0 / 8** and no denial was generated. Issue #10 proceeds through
+the separately authorized post-closeout public PR; issue #11 remains separate.
+
 ---
 
 ## Column definitions

@@ -7,10 +7,14 @@ import argparse
 import hashlib
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from scripts.privacy_screen import PrivacyScreenError, resolve_pattern_file
 ALLOWLIST = Path("projection/public-files.txt")
 MANIFEST = Path("PROJECTION-MANIFEST.sha256")
 PROVENANCE = Path("PROJECTION-PROVENANCE.md")
@@ -238,10 +242,15 @@ def provenance_bytes(source_root: Path, output: Path, entries: list[str],
     return ("\n".join(lines) + "\n").encode("utf-8")
 
 
-def build(source_root: Path, output: Path, private_pattern_file: Path) -> None:
+def build(source_root: Path, output: Path,
+          private_pattern_file: Path | None = None) -> None:
     source_root = source_root.resolve()
     output = output.resolve()
-    private_raw = read_private_input(private_pattern_file)
+    try:
+        resolved_patterns = resolve_pattern_file(source_root, private_pattern_file)
+    except PrivacyScreenError as exc:
+        raise SystemExit(str(exc)) from None
+    private_raw = read_private_input(resolved_patterns)
     private_patterns = parse_private_patterns(private_raw)
     if output == source_root or source_root in output.parents:
         raise SystemExit("output must be outside the source root")
@@ -288,7 +297,7 @@ def build(source_root: Path, output: Path, private_pattern_file: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
-    parser.add_argument("--private-pattern-file", required=True, type=Path)
+    parser.add_argument("--private-pattern-file", type=Path)
     parser.add_argument("--source-root", type=Path, default=REPO_ROOT)
     args = parser.parse_args()
     build(args.source_root, args.output, args.private_pattern_file)

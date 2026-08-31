@@ -77,8 +77,11 @@ not clear results.
 3. If you choose to track Owner active minutes, start the timer when the first
    question tells you to; do not reconstruct time later. Answer one question at
    a time without entering secrets. You may point it at an existing brief. The
-   command observes actual repository lifecycle state and creates only
-   `<project>/.writwall-bootstrap/`.
+   command observes actual repository lifecycle state, creates
+   `<project>/.writwall-bootstrap/`, and initializes a durable local privacy
+   screen outside the repository. Add only private names, codenames, client
+   identifiers, or domains; never add credentials or secret values. See
+   [`docs/privacy-screen.md`](docs/privacy-screen.md).
 4. Open its `HANDOFF.md`. Start the agent and location it names and paste the
    exact prompt. The complete local `writwall-adopt` bundle is already beside
    the handoff.

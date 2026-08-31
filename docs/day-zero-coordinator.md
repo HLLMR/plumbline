@@ -34,6 +34,15 @@ assigned. Do not enter passwords, API tokens, private keys, mailbox contents,
 DNS record values, or other secrets. The answers are stored as ordinary local
 text.
 
+Before publishing the bootstrap handoff, the coordinator creates or refreshes
+the target's managed privacy screen outside the repository. It seeds exact
+machine-path sentinels automatically and offers optional private
+name/codename/client/domain collection. It requires an explicit no-secrets
+confirmation and rejects common credential-shaped assignments and private-key
+headers, but it cannot recognize every arbitrary secret. It writes only screen
+readiness and entry count into the handoff.
+See [`privacy-screen.md`](privacy-screen.md).
+
 For deterministic automation or testing of an existing brief, use
 `--non-interactive` together with `--project-name`, either `--purpose` or
 `--brief-file`, `--agent`,

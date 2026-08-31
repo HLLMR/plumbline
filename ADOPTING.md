@@ -56,6 +56,10 @@ python3 scripts/start_writwall.py --project-root /path/to/your-project
 It classifies the target from repository bytes, copies the complete skill bundle
 into a temporary `.writwall-bootstrap/` directory, and emits the exact next
 prompt. It is create-only bootstrap tooling, not an authority or installer.
+It also initializes a durable project-specific privacy screen in per-user local
+state outside the repository. The handoff records only ready status and entry
+count, never its location or contents. See
+[`docs/privacy-screen.md`](docs/privacy-screen.md).
 Contradictory active state stops before output. Full interface and external-
 Operator packet behavior are documented in
 [`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md).

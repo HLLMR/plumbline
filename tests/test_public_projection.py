@@ -9,6 +9,7 @@ import tempfile
 import unittest
 import hashlib
 import importlib.util
+import os
 import shutil
 from pathlib import Path
 
@@ -33,6 +34,7 @@ class PublicProjectionProcessTests(unittest.TestCase):
         self.source = self.tmp / "source"
         self.output = self.tmp / "candidate"
         self.patterns = self.tmp / "private-patterns.txt"
+        self.state = self.tmp / "state"
         (self.source / "projection").mkdir(parents=True)
         (self.source / "README.md").write_text("# Public fixture\n", encoding="utf-8")
         (self.source / "projection" / "public-files.txt").write_text(
@@ -59,10 +61,91 @@ class PublicProjectionProcessTests(unittest.TestCase):
             checker = source_root / "checks" / "check_public_projection.py"
             checker.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(CHECKER, checker)
+            privacy_module = source_root / "scripts" / "privacy_screen.py"
+            privacy_module.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(REPO_ROOT / "scripts" / "privacy_screen.py", privacy_module)
         return subprocess.run(
             [sys.executable, "-B", str(checker), str(output or self.output),
              "--private-pattern-file", str(patterns or self.patterns)],
             cwd=source_root, capture_output=True, text=True, timeout=60)
+
+    def managed_environment(self) -> dict[str, str]:
+        environment = os.environ.copy()
+        environment["WRITWALL_STATE_HOME"] = str(self.state)
+        return environment
+
+    def test_builder_and_checker_use_the_managed_project_profile_by_default(self) -> None:
+        initialized = subprocess.run(
+            [sys.executable, "-B", "-m", "writwall_cli", "privacy", "init",
+             "--project-root", str(self.source)],
+            cwd=REPO_ROOT, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=30,
+        )
+        self.assertEqual(initialized.returncode, 0, initialized.stderr)
+
+        built = subprocess.run(
+            [sys.executable, "-B", str(BUILDER), "--source-root", str(self.source),
+             "--output", str(self.output)],
+            cwd=REPO_ROOT, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=60,
+        )
+        checker = self.source / "checks" / "check_public_projection.py"
+        checker.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(CHECKER, checker)
+        privacy_module = self.source / "scripts" / "privacy_screen.py"
+        privacy_module.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO_ROOT / "scripts" / "privacy_screen.py", privacy_module)
+        checked = subprocess.run(
+            [sys.executable, "-B", str(checker), str(self.output)],
+            cwd=self.source, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=60,
+        )
+
+        self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
+        self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
+        combined = built.stdout + built.stderr + checked.stdout + checked.stderr
+        self.assertNotIn(str(self.state), combined)
+
+    def test_missing_managed_profile_fails_closed_without_disclosing_location(self) -> None:
+        built = subprocess.run(
+            [sys.executable, "-B", str(BUILDER), "--source-root", str(self.source),
+             "--output", str(self.output)],
+            cwd=REPO_ROOT, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=60,
+        )
+
+        self.assertNotEqual(built.returncode, 0)
+        self.assertIn("writwall privacy init", built.stdout + built.stderr)
+        self.assertNotIn(str(self.state), built.stdout + built.stderr)
+        self.assertNotIn("Traceback", built.stdout + built.stderr)
+
+    def test_candidate_cleanup_does_not_delete_the_managed_profile(self) -> None:
+        initialized = subprocess.run(
+            [sys.executable, "-B", "-m", "writwall_cli", "privacy", "init",
+             "--project-root", str(self.source)],
+            cwd=REPO_ROOT, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=30,
+        )
+        self.assertEqual(initialized.returncode, 0, initialized.stderr)
+        built = subprocess.run(
+            [sys.executable, "-B", str(BUILDER), "--source-root", str(self.source),
+             "--output", str(self.output)],
+            cwd=REPO_ROOT, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=60,
+        )
+        self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
+
+        shutil.rmtree(self.output)
+
+        profiles = list(self.state.rglob("private-patterns.txt"))
+        self.assertEqual(len(profiles), 1)
+        status = subprocess.run(
+            [sys.executable, "-B", "-m", "writwall_cli", "privacy", "status",
+             "--project-root", str(self.source)],
+            cwd=REPO_ROOT, env=self.managed_environment(), capture_output=True,
+            text=True, timeout=30,
+        )
+        self.assertEqual(status.returncode, 0, status.stdout + status.stderr)
 
     def allow(self, relative: str, content: str) -> None:
         path = self.source / relative

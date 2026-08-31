@@ -110,8 +110,10 @@ py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
-The command asks one question at a time and creates only
-`.writwall-bootstrap/` in the target. Read its `HANDOFF.md`, open the named
+The command asks one question at a time, creates `.writwall-bootstrap/` in the
+target, and initializes a durable project-specific privacy screen in your
+operating system's local user state outside the repository. Read its
+`HANDOFF.md`, open the named
 agent in the named location, and paste the supplied prompt. Do not enter
 passwords, API tokens, private keys, mailbox contents, DNS values, or other
 secrets; intake is stored as local plain text. See the
@@ -120,6 +122,10 @@ secrets; intake is stored as local plain text. See the
 The coordinator does not register, activate, or birth-test the wall.
 For an unnamed idea and the full qualification/role-packet contract, see the
 [architect interview](docs/architect-interview.md).
+The privacy screen automatically carries machine-path sentinels and may also
+hold private names, codenames, client identifiers, or domains. It never belongs
+in the repository and must never contain credentials. See the
+[privacy-screen guide](docs/privacy-screen.md).
 
 The lower-level `init.sh` scaffolder remains available after you understand
 the adoption sequence. It creates directories and template copies but does not
@@ -372,19 +378,21 @@ The Writwall name and revision designations are not licensed; see
 
 The governed repository and its checked-in `dist/` archive are not publication
 artifacts. `scripts/build_public_projection.py` instead derives a fresh,
-positive-allowlist candidate in an empty directory outside this repository. A
-private, Owner-controlled newline-delimited pattern file is supplied at build
-and check time; its values are never copied into the candidate or printed by
-the tools.
+positive-allowlist candidate in an empty directory outside this repository.
+The builder and checker automatically use the project-specific local privacy
+screen initialized by `writwall start`; its location, values, matches, and
+value-derived hashes are never copied into the candidate or printed.
 
 ```bash
 python scripts/build_public_projection.py \
-  --output /absolute/empty/candidate \
-  --private-pattern-file /absolute/private/patterns.txt
+  --output /absolute/empty/candidate
 python checks/check_public_projection.py \
-  /absolute/empty/candidate \
-  --private-pattern-file /absolute/private/patterns.txt
+  /absolute/empty/candidate
 ```
+
+For controlled compatibility automation, both commands retain an explicit
+`--private-pattern-file` override. Ordinary users should not create or
+repeatedly reconstruct one. See [managed local privacy screening](docs/privacy-screen.md).
 
 The candidate contains a deterministic hash manifest and a provenance record
 that classifies source-repository commit identifiers without pretending they

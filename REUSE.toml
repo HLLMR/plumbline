@@ -19,6 +19,7 @@ path = [
   "docs/day-zero-coordinator.md",
   "docs/identity-migration.md",
   "docs/name-clearance.md",
+  "docs/privacy-screen.md",
   "examples/**",
   "governance/**",
   "identity/**",

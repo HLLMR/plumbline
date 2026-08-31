@@ -437,6 +437,20 @@ increments within that series. No historical record is renamed or renumbered.
    classifications, merge, release, tag, deploy, change visibility, or begin a
    successor.
 
+4. **WO-WW-004 — COMPLETE: managed day-zero privacy screening.** Replaced the
+   manual absolute-path private-pattern-file ritual with a durable OS-local,
+   repository-external profile created by `writwall start`, keyed to the
+   canonical project root, and consumed automatically by projection build and
+   check commands. The compatibility override remains; normal commands expose
+   no profile paths, values, matches, or value-derived hashes and candidate
+   cleanup preserves the durable profile. Link redirection, concurrent update,
+   command-argument disclosure, obvious credential-shaped input, absent/empty
+   state, and POSIX permissions have executable coverage. Windows passed 715
+   tests with two skips; two 131-file no-path candidates were checker-clean and
+   byte-identical; corrected fresh review returned ACCEPT. Public issue #10 is
+   the defect record and proceeds through a post-closeout projection PR. GitHub
+   Actions runtime maintenance remains separately tracked by issue #11.
+
 The minimum supported topology is one human Owner, one Owner-Agent, one or more
 bounded Operators, and a fresh Reviewer. On small projects one capable agent
 may perform coordinator, dispatcher, and recorder roles sequentially, but a
