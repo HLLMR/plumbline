@@ -14,13 +14,18 @@ inception evidence, accepted WO-WW-002 build-backend provisioning recovery, and
 accepted WO-WW-003 retained-identity ledger refresh, accepted WO-WW-004
 managed day-zero privacy screening, accepted WO-WW-005 GitHub Actions Node 24
 refresh, and accepted WO-WW-006 coordinator release readiness and external
-smoke work.
+smoke work, accepted WO-WW-007 first-use bytecode-residue correction, and
+accepted WO-WW-008 State derivation endpoint correction.
+Release `v0.9.0` is public. External Pilot A reached an unratified bootstrap
+handoff and exposed public issue #16: normal first use could copy Python
+bytecode residue into coordinator output. The private correction is complete;
+public projection, patch release, and pilot regeneration remain unstarted.
 
 **Derived:** 2026-08-31 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
 accepted WO-PL-017 through WO-PL-023 and WO-PL-025 through WO-PL-033 records,
 the WO-PL-024 sequencing recovery, the verified public-release event, and the
-accepted WO-WW-001 through WO-WW-006 closeout records.
+accepted WO-WW-001 through WO-WW-008 closeout records.
 **Boundary:** post-adoption, all 10 counted pilot work orders and their
 evaluation complete; WO-PL-017 remediation complete; DR-003 ratified;
 WO-PL-018 through WO-PL-023 complete; WO-PL-024 void before implementation;
@@ -32,10 +37,12 @@ the current identity with the two-line wall glyph; WO-PL-039 complete and
 accepted, with public PR #5 merged after the required CI passed and issue #4
 closed; WO-PL-040 complete and accepted; public PR #8 merged and issue #1
 closed; the historical `WO-PL` series ends at 040; **WO-WW-001 through
-WO-WW-006 are COMPLETE and accepted**; public PR #9, #12, and #13 merged with
+WO-WW-008 are COMPLETE and accepted**; public PR #9, #12, and #13 merged with
 protected CI green; public issue #11 is closed; public issue #14 records the
-coordinator release gate. No external media, website, DNS, or mail pilot is
-active, and release `v0.9.0` remains an unmade Owner decision.
+coordinator release gate; release `v0.9.0` is published; public issue #16
+records the corrected cache-residue defect found by the first unratified
+external media bootstrap. No external media content, website, DNS, or mail
+mutation is active.
 The hash of the commit containing this file is intentionally recorded only
 externally.
 
@@ -96,7 +103,9 @@ externally.
 | Pilot progress | **10 of 10 counted work orders complete; fresh-agent evaluation accepted with calibrations and disposed by DR-002** |
 | WO-WW-005 | **COMPLETE**, accepted 2026-08-31; official Node-24-native checkout `v7.0.1` and setup-python `v7.0.0` revisions are full-SHA pinned. The 3-OS by 5-Python matrix, permissions, full-history checkout, build provisioning, test split, and stable required check are unchanged. Windows passed 715 tests with two skips; corrected fresh record re-review returned ACCEPT. Owner active minutes **NOT REPORTED**. Public issue #11 proceeds through the authorized post-closeout public PR; merge awaits a completely green live matrix and further Owner disposition |
 | WO-WW-006 | **COMPLETE**, accepted 2026-08-31; reusable external-candidate coordinator release gate. Final Windows and native Ubuntu suites each passed 723 tests; two independent 133-file public candidates passed installed help, real intake, complete handoff, mutation detection, and authoritative projection checks and were byte-identical; final fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; `v0.9.0` publication and every external pilot remain separately unauthorized |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-006 COMPLETE and accepted**; public PR #9, #12, and #13 merged with protected CI green; public issues #1, #4, #10, and #11 closed; public issue #14 records the accepted release gate; `v0.9.0` release decision and external media, website, DNS, and mail pilots queued but inactive |
+| WO-WW-007 | **COMPLETE**, accepted 2026-08-31; first-use bytecode-residue correction. Installed wheel evidence proved 3 cache directories and 4 `.pyc` files existed before first start and were copied into the handoff. Two public-interface RED/GREEN cycles made output intrinsically cache-free and made the release gate run normal bytecode behavior and reject residue. Windows passed 725 tests with two skips; native Ubuntu external-candidate verification passed; fresh review returned **ACCEPT WITH NON-BLOCKING NOTE/HIGH confidence**. Owner active minutes **NOT REPORTED**. Public issue #16 remains open pending the separately authorized projection PR and patch release; the unratified external bootstrap remains preserved pending published correction |
+| WO-WW-008 | **COMPLETE**, accepted 2026-08-31; record-only State derivation endpoint correction. The accepted State snapshot endpoint now includes WO-WW-007, and ordinary closeout advances the derivation endpoint through WO-WW-008. The State correction changed only its two mechanically dependent identity digests; closeout also refreshed the retained LOG source digest after appending this completion record. Focused regression passed 462 tests with two skips; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Public issue #16 remains open pending the separately authorized projection PR; merge and release remain unauthorized |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-008 COMPLETE and accepted**; public PR #9, #12, and #13 merged with protected CI green; public issues #1, #4, #10, and #11 closed; public issue #14 records the accepted release gate; `v0.9.0` is published; issue #16 awaits the cache-fix projection PR; external media regeneration, website, DNS, and mail pilots remain queued |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout

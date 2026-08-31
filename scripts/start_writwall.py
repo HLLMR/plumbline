@@ -88,6 +88,15 @@ def _entry_exists(path: Path) -> bool:
         return True
 
 
+def _is_python_bytecode_residue(path: Path, root: Path) -> bool:
+    """Identify interpreter-created files that are not canonical bundle assets."""
+    relative = path.relative_to(root)
+    return (
+        any(part.casefold() == "__pycache__" for part in relative.parts)
+        or path.suffix.casefold() == ".pyc"
+    )
+
+
 def _safe_project_path(project: Path, path: Path, label: str) -> Path:
     """Reject linklike components and containment escapes before any read."""
     try:
@@ -737,7 +746,11 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
         )
     if _is_linklike(BUNDLE_SOURCE) or not BUNDLE_SOURCE.is_dir():
         raise CoordinatorError("Writwall adoption bundle is missing from this distribution")
-    bundle_files = sorted(path for path in BUNDLE_SOURCE.rglob("*") if path.is_file())
+    bundle_files = sorted(
+        path for path in BUNDLE_SOURCE.rglob("*")
+        if path.is_file()
+        and not _is_python_bytecode_residue(path, BUNDLE_SOURCE)
+    )
     if not bundle_files:
         raise CoordinatorError("Writwall adoption bundle is empty")
     for source in bundle_files:
@@ -821,6 +834,16 @@ def write_bootstrap(project: Path, args: argparse.Namespace, state: ObservedStat
                 (operations / f"{slug}.md").write_text(
                     operation_packet(name), encoding="utf-8", newline="\n"
                 )
+        residue = sorted(
+            path.relative_to(stage).as_posix()
+            for path in stage.rglob("*")
+            if _is_python_bytecode_residue(path, stage)
+        )
+        if residue:
+            raise CoordinatorError(
+                "bootstrap stage contains non-canonical Python bytecode residue: "
+                + ", ".join(residue)
+            )
         if _entry_exists(output):
             raise CoordinatorError(
                 f"create-only stop: {OUTPUT_NAME} appeared during creation; nothing was overwritten"

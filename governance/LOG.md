@@ -687,6 +687,29 @@ projection mutation, tag, GitHub release, deployment, or external media,
 website, DNS, or mail operation occurred. Publication of `v0.9.0` remains a
 separate unmade Owner decision.
 
+### Post-pilot WO-WW-008 completed record
+
+WO-WW-008 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-31 and reported
+active minutes **NOT REPORTED**.
+
+The order corrected one record-only publication blocker returned after
+WO-WW-007: the State snapshot incorporated accepted WO-WW-007 while its Derived
+sentence ended at WO-WW-006. The accepted implementation changed exactly that
+endpoint and the two mechanically dependent State identity digests. Ordinary
+closeout then advanced the final State endpoint through WO-WW-008 and re-derived
+the same two State digest fields on the closeout bytes. Appending this completion
+record also refreshed the retained LOG source digest; no identity classification,
+context, or transform changed.
+
+Identity, licensing, dispatch, and whitespace gates passed. Distribution
+reported exactly the three expected live-work transients. The focused identity,
+projection, distribution, dispatch, and licensing suite passed 462 tests with
+two skips. Fresh review returned one report-only reproducibility correction;
+corrected re-review returned **ACCEPT — HIGH confidence**. No denial, RFI,
+product change, release change, public mutation, or external-project mutation
+occurred before acceptance.
+
 ---
 
 ## Column definitions

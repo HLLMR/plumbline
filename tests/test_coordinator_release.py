@@ -142,6 +142,25 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("complete handoff failed", result.stdout + result.stderr)
 
+    def test_emitted_bytecode_residue_fails_with_diagnostic(self):
+        candidate = self.make_candidate()
+        start = candidate / "scripts" / "start_writwall.py"
+        start.write_text(
+            start.read_text(encoding="utf-8").replace(
+                "        _atomic_publish(stage, output)\n",
+                "        _atomic_publish(stage, output)\n"
+                "        residue = output / 'writwall-adopt' / 'assets' / "
+                "'scripts' / '__pycache__' / 'planted.pyc'\n"
+                "        residue.parent.mkdir(parents=True, exist_ok=True)\n"
+                "        residue.write_bytes(b'planted regression residue')\n",
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        result = self.run_checker(candidate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("bytecode residue", result.stdout + result.stderr)
+
     def test_version_mismatch_is_rejected(self):
         checker = load_checker()
         with self.assertRaisesRegex(checker.ReleaseCheckError, "does not match"):
