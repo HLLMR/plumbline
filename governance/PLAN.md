@@ -451,6 +451,17 @@ increments within that series. No historical record is renamed or renumbered.
    the defect record and proceeds through a post-closeout projection PR. GitHub
    Actions runtime maintenance remains separately tracked by issue #11.
 
+5. **WO-WW-005 — COMPLETE: GitHub Actions Node 24 refresh.** Replaced the exact
+   full-SHA checkout v4 and setup-python v5 pins with verified official
+   Node-24-native `v7.0.1` and `v7.0.0` releases. The 3-OS by 5-Python matrix,
+   full-history checkout, read-only permissions, declared build-backend
+   provisioning, focused/full test split, and stable `CI required` check remain
+   unchanged and executable-test protected. Windows passed 715 tests with two
+   skips; corrected fresh record review returned ACCEPT. Public issue #11 is
+   the defect record and proceeds through the authorized post-closeout
+   projection PR. Dependency maintenance entered through governed source, not
+   by directly merging Dependabot PRs into the public projection.
+
 The minimum supported topology is one human Owner, one Owner-Agent, one or more
 bounded Operators, and a fresh Reviewer. On small projects one capable agent
 may perform coordinator, dispatcher, and recorder roles sequentially, but a
