@@ -197,6 +197,39 @@ class StartWritwallTests(unittest.TestCase):
         ):
             self.assertTrue((self.output / "writwall-adopt" / relative).is_file(), relative)
 
+    def test_isolated_install_emits_no_bytecode_residue_under_normal_environment(self):
+        command = self.install_writwall()
+        environment = self.environment()
+        environment.pop("PYTHONDONTWRITEBYTECODE", None)
+        result = subprocess.run(
+            [
+                str(command), "start", "--non-interactive",
+                "--project-root", str(self.project),
+                "--project-name", "Example project",
+                "--purpose", "Build a small, governed project.",
+                "--agent", "Codex",
+                "--location", "local workstation",
+                "--environment", "local repository only",
+                "--owner-time", "no",
+                "--confirm-no-secrets",
+            ],
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        cache_dirs = sorted(
+            path.relative_to(self.output).as_posix()
+            for path in self.output.rglob("__pycache__") if path.is_dir()
+        )
+        bytecode_files = sorted(
+            path.relative_to(self.output).as_posix()
+            for path in self.output.rglob("*.pyc") if path.is_file()
+        )
+        self.assertEqual(cache_dirs, [])
+        self.assertEqual(bytecode_files, [])
+
     def test_unnamed_idea_emits_complete_unratified_architect_packet_set(self):
         result = self.run_idea_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

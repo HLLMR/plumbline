@@ -500,7 +500,30 @@ the Writwall migration. The remaining sequence is:
    Show HN copy to Writwall and to the evidence actually observed. Publication
    promotion does not precede that truth pass.
 
-No work order or external pilot is active after WO-WW-006 closeout. The next
-decision is whether to publish/tag the accepted coordinator-bearing `v0.9.0`;
-the external pilots remain queued intent, not active authority over their
-repositories or services.
+Release `v0.9.0` was published after WO-WW-006 closeout. External Pilot A then
+began and stopped at its unratified handoff after exposing the bytecode-residue
+defect governed by section 18. External Pilot B and the private DNS/mail pilot
+remain queued intent, not active authority over their repositories or services.
+
+## 18. First-use bytecode-residue correction — 2026-08-31
+
+Release `v0.9.0` and External Pilot A exposed a first-use packaging defect:
+under an ordinary Python environment, installation-created `__pycache__`
+directories and `.pyc` files can be copied from the installed adoption bundle
+into the generated bootstrap. The accepted release gate had masked this by
+setting `PYTHONDONTWRITEBYTECODE=1` for the complete smoke environment.
+
+**WO-WW-007 is COMPLETE and accepted 2026-08-31.** Public issue #16 records the
+sanitized defect. The work order reproduced it through the installed public
+command, added public-interface regressions before each correction, made
+coordinator output intrinsically cache-free, and made the external release gate
+exercise ordinary user bytecode behavior on Windows and native Ubuntu. Fresh
+review returned ACCEPT WITH NON-BLOCKING NOTE/HIGH confidence; the Owner accepted
+that note and reported active minutes as NOT REPORTED.
+
+The correction must now pass through the public projection/PR workflow and a
+patch release before External Pilot A is regenerated from published bytes. The
+regenerated topology keeps the human as Owner, the Owner-Agent as coordinator
+and dispatcher, the repository agent as bounded Operator, and the existing
+infrastructure agent behind a separate inert operations packet. Adoption of the
+external project and content mutation remain separate decisions.

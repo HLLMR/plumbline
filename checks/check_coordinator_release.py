@@ -89,6 +89,18 @@ def verify_candidate_unchanged(candidate: Path, before: str) -> None:
         raise ReleaseCheckError("candidate changed during the release check")
 
 
+def python_bytecode_residue(root: Path) -> list[str]:
+    """Return non-canonical interpreter residue from a generated handoff."""
+    return sorted(
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if (
+            any(part.casefold() == "__pycache__" for part in path.relative_to(root).parts)
+            or path.suffix.casefold() == ".pyc"
+        )
+    )
+
+
 def check_candidate(candidate: Path) -> None:
     candidate = candidate.resolve()
     if not candidate.is_dir():
@@ -118,9 +130,9 @@ def check_candidate(candidate: Path) -> None:
         environment.update({
             "PIP_DISABLE_PIP_VERSION_CHECK": "1",
             "PIP_NO_INDEX": "1",
-            "PYTHONDONTWRITEBYTECODE": "1",
             "WRITWALL_STATE_HOME": str(state),
         })
+        environment.pop("PYTHONDONTWRITEBYTECODE", None)
         run(
             [
                 sys.executable, "-m", "pip", "wheel", "--no-deps",
@@ -205,13 +217,19 @@ def check_candidate(candidate: Path) -> None:
             raise ReleaseCheckError(
                 "complete handoff failed; missing: " + ", ".join(missing_handoff)
             )
+        residue = python_bytecode_residue(output)
+        if residue:
+            raise ReleaseCheckError(
+                "complete handoff contains Python bytecode residue: "
+                + ", ".join(residue)
+            )
 
     verify_candidate_unchanged(candidate, before)
 
     print("OK: coordinator release candidate passed")
     print(f"  installed version : {expected_version}")
-    print("  installed command : help and real start passed")
-    print("  complete handoff  : all required packets present")
+    print("  installed command : help and real start passed under normal bytecode behavior")
+    print("  complete handoff  : all required packets present; no bytecode residue")
     print("  candidate unchanged: complete-tree digest preserved")
 
 
