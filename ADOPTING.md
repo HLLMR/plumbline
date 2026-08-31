@@ -43,6 +43,9 @@ locked session may deny the network request that would otherwise retrieve them.
 For a first adoption, the default is the day-zero coordinator:
 
 ```text
+# Obtainable now; use tags/v0.9.0.zip only after that release exists.
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/heads/main.zip"
+
 # Installed command
 writwall start --project-root /path/to/your-project
 

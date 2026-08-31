@@ -650,6 +650,43 @@ same-work-order implementation drift, later-detected drift, dependency change,
 or public mutation occurred before acceptance. The public issue #11 PR and its
 live complete matrix remain the separately authorized closeout tail.
 
+### Post-pilot WO-WW-006 completed record
+
+WO-WW-006 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-31, accepted the
+disclosed deviations, and reported active minutes **NOT REPORTED**.
+
+The order adds a reusable no-network external-candidate gate for the day-zero
+coordinator and proposes package version `0.9.0` as the first release that
+contains `writwall start`. The gate builds a wheel, installs it into a
+disposable environment, verifies installed version and help, runs a real
+non-interactive architect intake, checks every promised handoff packet, and
+proves the input candidate remained unchanged.
+
+The first fresh review returned three material gaps: an install route pointed
+to an unpublished tag, negative tests covered only a missing contract, and the
+report omitted reproducible commands. The correction uses obtainable public
+`main` until the tag exists, covers six material failure classes, and records
+the exact command interfaces. A distinct final fresh review returned
+**ACCEPT — HIGH confidence** with no actionable finding.
+
+Final Windows and native Ubuntu suites each passed 723 tests, with two and
+three expected skips respectively. Two independent 133-file Windows
+projections passed the installed release and authoritative privacy/projection
+gates and were byte-identical at manifest SHA-256
+`19435E0CD341F1EB73E8F32932F72E07C616D6E88ED1352D16CA53829DA07A6D`;
+the same final candidate passed both gates natively on Ubuntu. The denial log
+remained 310 records and byte-unchanged. Temporary candidates, Ubuntu state,
+sentinel, and mount were removed and proven absent.
+
+Accepted deviations are the omitted test path in the initial grant, the
+temporary-install grant contradiction, exact WSL residue and recovery, one
+unnecessary pre-activation closed-record formatting read, one wrong-context
+checker diagnostic, and the first-review correction cycle. No push, public
+projection mutation, tag, GitHub release, deployment, or external media,
+website, DNS, or mail operation occurred. Publication of `v0.9.0` remains a
+separate unmade Owner decision.
+
 ---
 
 ## Column definitions

@@ -72,11 +72,13 @@ PROJECTION_REQUIRED_FILES = (
 )
 
 DAY_ZERO_REQUIRED_FILES = (
+    "checks/check_coordinator_release.py",
     "docs/day-zero-coordinator.md",
     "docs/architect-interview.md",
     "pyproject.toml",
     "scripts/start_writwall.py",
     "tests/test_start_writwall.py",
+    "tests/test_coordinator_release.py",
     "writwall_cli/__init__.py",
     "writwall_cli/__main__.py",
     "writwall_cli/coordinator.py",

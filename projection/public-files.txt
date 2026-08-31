@@ -25,6 +25,7 @@ START-HERE.md
 adapters/claude-code/README.md
 adapters/claude-code/SECURITY.md
 adapters/claude-code/wo_capability_wall.py
+checks/check_coordinator_release.py
 checks/check_distribution.py
 checks/check_identity.py
 checks/check_licenses.py
@@ -116,6 +117,7 @@ templates/E-adoption-mapping.md
 tests/test_check_distribution.py
 tests/test_check_licenses.py
 tests/test_check_work_order_dispatch.py
+tests/test_coordinator_release.py
 tests/test_distribution.py
 tests/test_identity_migration.py
 tests/test_init_sh.py

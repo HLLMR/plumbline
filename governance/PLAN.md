@@ -468,3 +468,39 @@ may perform coordinator, dispatcher, and recorder roles sequentially, but a
 Reviewer remains a distinct fresh context and no agent receives simultaneous
 unbounded authority. External infrastructure, DNS, mail, hosting, and similar
 Operators receive inert packets; repository mutation remains work-order bound.
+
+## 17. Owner-authorized coordinator release and external-pilot sequence — 2026-08-31
+
+The Owner rejected the inference that merging the coordinator's implementation
+and maintenance PRs completed the roadmap. Public source now contains the
+coordinator, but release `v0.8.1` predates it, no real external project has
+completed the day-zero handoff, and the media/launch corpus remains stale after
+the Writwall migration. The remaining sequence is:
+
+1. **WO-WW-006 — COMPLETE: coordinator release readiness and external smoke
+   gate.** Two independent 133-file public candidates reproduced byte-for-byte
+   and passed the installed coordinator gate; the final Windows and native
+   Ubuntu suites each passed 723 tests. Fresh review returned ACCEPT/HIGH and
+   the Owner accepted the disclosed deviations. The separate `v0.9.0`
+   publication decision remains unmade.
+2. **External pilot A — `hllmr-media`.** After the release gate is accepted,
+   move the current unversioned `F:\Projects\LinkedIn` corpus to the truthful
+   broader project identity, run `writwall start`, and exercise the complete
+   handoff and adoption path on low-risk content operations.
+3. **External pilot B — `hllmr-site`.** Recover from the abandoned partial
+   bootstrap using a fresh session and the accepted coordinator packet. The
+   repository Operator handles site bytes; the infrastructure Operator handles
+   container, proxy, and deployment work only through a bounded external packet.
+4. **Private infrastructure pilot — DNS and mail.** Create a private project for
+   the eight-domain DNS move and Fastmail-to-Proton migration. Inventory and
+   rollback design precede all external mutation; registrar, DNS, Proton, and
+   mail-cleanup actions are separately dispatched and accepted.
+5. **Post-pilot remediation and launch refresh.** Correct defects forced by the
+   three external pilots, then update the media plan, launch kit, website, and
+   Show HN copy to Writwall and to the evidence actually observed. Publication
+   promotion does not precede that truth pass.
+
+No work order or external pilot is active after WO-WW-006 closeout. The next
+decision is whether to publish/tag the accepted coordinator-bearing `v0.9.0`;
+the external pilots remain queued intent, not active authority over their
+repositories or services.

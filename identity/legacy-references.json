@@ -16,7 +16,7 @@
     {
       "path": "README.md",
       "context": "migration_provenance",
-      "sha256": "51a221bad955b1172104340edaa2579c72901df75ab4fd453ee997c9738d1aca"
+      "sha256": "78680bd6ab27f4b786124b4d049671e7e721c60d1b389fbe42f7cdd6cdd8cd7b"
     },
     {
       "path": "SELF-HOSTING.md",
@@ -31,7 +31,7 @@
     {
       "path": "checks/check_distribution.py",
       "context": "historical_evidence_path",
-      "sha256": "da617dfd018a6f215829e7f54d587da1336933ffc868fb1b28b136c955439d25"
+      "sha256": "d1622d215a079a83156213ca5dd8e814308d1012421bc82b7490e2137360c504"
     },
     {
       "path": "checks/check_identity.py",
@@ -94,19 +94,19 @@
     {
       "path": "governance/LOG.md",
       "context": "historical_pilot_summary",
-      "sha256": "963eed17b25be834f2a2258da6f4f4a47fa8d4d13be671636a0a4065224ad2cf",
+      "sha256": "8b4eb76ceed2cd39d53f300b26f56abdefbdd91565d8ff9edb6b603717b0bb87",
       "projection_transform": "private_evidence_redaction"
     },
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "85d0b38aab88e5241ecb6af2962a3496cb71079d74e6c21be9590ab502f851ad"
+      "sha256": "f8a789c11a48ba20fd004424e5f9d6a2b8c8bef32d711325cf3c285d4f1e2147"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "16392d93a738a2a9959daec90e26e8c8035324eb316abbc6867e7251bdbbd370",
-      "projection_sha256": "6b4fce32eed7eacf82eb2b498e29e9b6ad6d895a138979ea8215520994deb497"
+      "sha256": "9fed386de5a554e6a619286cd624cea5e9cb5141999be0e1bf242e9d62e7166c",
+      "projection_sha256": "f5a549a6cc13156e36c1e7ea4e0696c80cf8dbf111c9e887950f4668fd23aed9"
     },
     {
       "path": "governance/decisions/DR-001.md",
@@ -122,7 +122,7 @@
     {
       "path": "projection/public-files.txt",
       "context": "historical_path_index",
-      "sha256": "69b9e56d0d121ea9ae9a9100891a51a5a60c8990f87b4b869691b09184b854fa"
+      "sha256": "393e7582af9d4ffa3bc8f574c179f8d4234f3a05b1416152c3bb0551855e7d97"
     },
     {
       "path": "tests/test_distribution.py",
