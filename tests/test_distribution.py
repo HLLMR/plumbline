@@ -1160,12 +1160,14 @@ class PublicFrontDoorTests(unittest.TestCase):
 
         self.assertRegex(
             workflow,
-            r"(?m)uses: actions/checkout@[0-9a-f]{40}  # v4$",
+            r"(?m)uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7\.0\.1$",
         )
         self.assertRegex(
             workflow,
-            r"(?m)uses: actions/setup-python@[0-9a-f]{40}  # v5$",
+            r"(?m)uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7\.0\.0$",
         )
+        self.assertNotIn("11d5960a326750d5838078e36cf38b85af677262", workflow)
+        self.assertNotIn("a26af69be951a213d495a4c3e4e4022e16d87065", workflow)
         self.assertIn("required:", workflow)
         self.assertIn("name: CI required", workflow)
         self.assertIn("needs: test", workflow)

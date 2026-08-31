@@ -627,6 +627,29 @@ Codex was outside the installed Claude Code hook, so the strict classification
 remained **8 / 0 / 8** and no denial was generated. Issue #10 proceeds through
 the separately authorized post-closeout public PR; issue #11 remains separate.
 
+### Post-pilot WO-WW-005 completed record
+
+WO-WW-005 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-31 and reported
+active minutes **NOT REPORTED**.
+
+The order replaced the exact-SHA checkout v4 and setup-python v5 pins with the
+official Node-24-native checkout `v7.0.1` and setup-python `v7.0.0` revisions.
+Official release metadata and action manifests established the release tags,
+commit SHAs, and `node24` runtime before dispatch. The 3-OS by 5-Python matrix,
+read-only permission, full-history checkout, declared build-backend
+provisioning, focused/full test split, and stable `CI required` job are
+unchanged.
+
+The exact-pin public-interface regression failed on the old checkout pin, then
+passed after only the two workflow references changed. Three focused contract
+tests and the complete 715-test Windows suite passed, with two skips. Fresh
+review found no implementation defect and returned one report-only command-
+evidence omission; corrected re-review returned **ACCEPT**. No denial, RFI,
+same-work-order implementation drift, later-detected drift, dependency change,
+or public mutation occurred before acceptance. The public issue #11 PR and its
+live complete matrix remain the separately authorized closeout tail.
+
 ---
 
 ## Column definitions
