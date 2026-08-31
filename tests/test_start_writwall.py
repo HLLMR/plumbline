@@ -135,7 +135,7 @@ class StartWritwallTests(unittest.TestCase):
 
         venv = self.temp / "venv"
         subprocess.run(
-            [sys.executable, "-m", "venv", str(venv)],
+            [sys.executable, "-m", "venv", "--without-pip", str(venv)],
             check=True,
             capture_output=True,
             text=True,
@@ -145,8 +145,8 @@ class StartWritwallTests(unittest.TestCase):
                          else "bin/python")
         install = subprocess.run(
             [
-                str(python), "-m", "pip", "install", "--no-deps",
-                str(wheels[0]),
+                sys.executable, "-m", "pip", "--python", str(python),
+                "install", "--no-deps", str(wheels[0]),
             ],
             capture_output=True,
             text=True,

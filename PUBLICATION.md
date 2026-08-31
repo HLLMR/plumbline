@@ -5,6 +5,27 @@ public candidate is derived from the exact positive allowlist in
 `projection/public-files.txt`; it is not produced by changing the visibility
 of the governed repository or copying its Git metadata.
 
+## Coordinator-bearing release gate
+
+The day-zero coordinator first ships in proposed release `v0.9.0`; `v0.8.1`
+predates `pyproject.toml`, `writwall_cli/**`, and the installed `writwall start`
+entry point. Before creating or moving the `v0.9.0` tag, run this gate against
+the final external candidate on native Windows and native Ubuntu:
+
+```text
+python checks/check_coordinator_release.py <candidate-directory>
+```
+
+The command is network-free. It copies the candidate into temporary build
+space, builds a wheel using the already-provisioned backend declared in
+`pyproject.toml`, creates a fresh virtual environment without assuming the
+host can bootstrap `pip` inside it, installs through the already-provisioned
+host `pip`, checks
+the installed version and help interface, runs the coordinator against a
+disposable external project, verifies the complete create-only handoff, and
+then verifies that the input candidate tree did not change. A pass is release
+readiness evidence; it does not create a tag, GitHub release, or publication.
+
 Build and verify a candidate with the managed project privacy screen initialized
 by `writwall start`:
 

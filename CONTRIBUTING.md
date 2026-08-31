@@ -72,6 +72,19 @@ python -m pip install --disable-pip-version-check --no-input --only-binary=:all:
 
 This is a build/test prerequisite, not a Writwall runtime dependency. The
 installed coordinator and adapter remain standard-library-only.
+
+Before proposing a coordinator-bearing release, run the reusable external-tree
+gate against the final checked public candidate on native Windows and native
+Ubuntu:
+
+```text
+python checks/check_coordinator_release.py <external-candidate-directory>
+```
+
+The gate copies the candidate to temporary build space, builds and installs the
+declared package without network access or an `ensurepip` assumption, runs the installed coordinator against
+a disposable project, verifies the complete handoff, and proves the candidate
+tree remained byte-identical.
 The distribution command shown below is the governed-source form; the public
 projection deterministically substitutes `--projection` because it deliberately
 omits private governed-source evidence:
