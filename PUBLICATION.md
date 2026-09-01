@@ -7,16 +7,17 @@ of the governed repository or copying its Git metadata.
 
 ## Coordinator-bearing release gate
 
-The day-zero coordinator first ships in proposed release `v0.9.0`; `v0.8.1`
-predates `pyproject.toml`, `writwall_cli/**`, and the installed `writwall start`
-entry point. Before creating or moving the `v0.9.0` tag, run this gate against
-the final external candidate on native Windows and native Ubuntu:
+The day-zero coordinator first shipped in `v0.9.0`; `v0.8.1` predates
+`pyproject.toml`, `writwall_cli/**`, and the installed `writwall start` entry
+point. Before creating a release tag, run this gate against the final external
+candidate on native Windows and native Ubuntu, naming the exact intended tag:
 
 ```text
-python checks/check_coordinator_release.py <candidate-directory>
+python checks/check_coordinator_release.py <candidate-directory> --expected-tag v0.9.1
 ```
 
-The command is network-free. It copies the candidate into temporary build
+The command fails before building unless the canonical intended tag matches
+the candidate's package version. It is network-free. It copies the candidate into temporary build
 space, builds a wheel using the already-provisioned backend declared in
 `pyproject.toml`, creates a fresh virtual environment without assuming the
 host can bootstrap `pip` inside it, installs through the already-provisioned

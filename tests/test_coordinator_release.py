@@ -50,9 +50,12 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.temp = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(shutil.rmtree, self.temp, True)
 
-    def run_checker(self, candidate: Path):
+    def run_checker(self, candidate: Path, *extra: str):
+        arguments = [str(candidate), *extra]
+        if "--expected-tag" not in extra:
+            arguments.extend(("--expected-tag", "v0.9.1"))
         return subprocess.run(
-            [sys.executable, "-B", str(CHECKER), str(candidate)],
+            [sys.executable, "-B", str(CHECKER), *arguments],
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
@@ -79,6 +82,19 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("candidate contract", result.stdout + result.stderr)
         self.assertIn("pyproject.toml", result.stdout + result.stderr)
+
+    def test_release_check_requires_an_intended_tag(self):
+        candidate = self.make_candidate()
+        result = subprocess.run(
+            [sys.executable, "-B", str(CHECKER), str(candidate)],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("--expected-tag", result.stdout + result.stderr)
+        self.assertIn("required", result.stdout + result.stderr)
 
     def test_complete_external_candidate_installs_and_emits_full_handoff(self):
         candidate = self.make_candidate()
@@ -166,6 +182,40 @@ class CoordinatorReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(checker.ReleaseCheckError, "does not match"):
             checker.verify_installed_version("9.9.9", "0.9.0")
 
+    def test_intended_release_tag_must_match_candidate_metadata(self):
+        candidate = self.make_candidate()
+        pyproject = candidate / "pyproject.toml"
+        pyproject.write_text(
+            pyproject.read_text(encoding="utf-8").replace(
+                'version = "0.9.1"', 'version = "0.9.0"'
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        result = self.run_checker(candidate, "--expected-tag", "v0.9.1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(
+            "candidate version '0.9.0' does not match intended tag 'v0.9.1'",
+            result.stdout + result.stderr,
+        )
+
+    def test_intended_release_tag_must_be_canonical_semver(self):
+        candidate = self.make_candidate()
+        result = self.run_checker(candidate, "--expected-tag", "v0.9.0-extra")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("canonical vMAJOR.MINOR.PATCH", result.stdout + result.stderr)
+
+    def test_intended_release_tag_rejects_non_ascii_digits(self):
+        candidate = self.make_candidate()
+        for tag in ("v1\u0661.2.3", "v1.2\u0662.3", "v1.2.3\u0663"):
+            with self.subTest(tag=tag):
+                result = self.run_checker(candidate, "--expected-tag", tag)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(
+                    "canonical vMAJOR.MINOR.PATCH",
+                    result.stdout + result.stderr,
+                )
+
     def test_candidate_mutation_is_rejected(self):
         checker = load_checker()
         candidate = self.make_candidate()
@@ -179,12 +229,18 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def test_release_identity_and_public_payload_are_coherent(self):
         with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
             project = tomllib.load(handle)["project"]
-        self.assertEqual(project["version"], "0.9.0")
+        self.assertEqual(project["version"], "0.9.1")
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
+        contributing = (REPO_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
         publication = (REPO_ROOT / "PUBLICATION.md").read_text(encoding="utf-8")
         start = (REPO_ROOT / "START-HERE.md").read_text(encoding="utf-8")
-        self.assertIn("v0.9.0", publication)
-        self.assertIn("v0.9.0", start)
-        self.assertIn("archive/refs/heads/main.zip", start)
+        tagged_archive = "archive/refs/tags/v0.9.1.zip"
+        self.assertIn(tagged_archive, readme)
+        self.assertIn(tagged_archive, adopting)
+        self.assertIn(tagged_archive, start)
+        self.assertIn("--expected-tag v0.9.1", publication)
+        self.assertIn("--expected-tag v0.9.1", contributing)
         public_files = PUBLIC_FILES.read_text(encoding="utf-8").splitlines()
         self.assertIn("checks/check_coordinator_release.py", public_files)
         self.assertIn("tests/test_coordinator_release.py", public_files)

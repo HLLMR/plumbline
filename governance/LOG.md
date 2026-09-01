@@ -710,6 +710,35 @@ corrected re-review returned **ACCEPT — HIGH confidence**. No denial, RFI,
 product change, release change, public mutation, or external-project mutation
 occurred before acceptance.
 
+### Post-pilot WO-WW-009 completed record
+
+WO-WW-009 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-08-31 and reported
+active minutes **NOT REPORTED**.
+
+The authorized `v0.9.1` release stopped before tagging when the coordinator
+found that merged public bytes still declared package version `0.9.0`. The work
+order added a mandatory intended-tag input to the external release gate and
+requires canonical ASCII `vMAJOR.MINOR.PATCH` syntax plus exact equality with
+candidate metadata before any build. Package metadata and current README,
+adoption, start, publication, and contribution instructions now agree on
+`v0.9.1`; truthful historical `v0.9.0` statements remain.
+
+Four vertical RED/GREEN cycles covered mismatched, malformed, omitted, and
+coherent release identity. Fresh review returned two bounded corrections: the
+current State aggregate still described already-merged PR #17 as pending, and
+Python's Unicode-aware `\d` admitted non-ASCII version digits. Corrected State
+records merged PR #17 and closed issue #16; explicit ASCII `[0-9]` plus a new
+public-interface regression rejects Arabic-Indic digits. Re-review returned
+**ACCEPT — HIGH confidence**.
+
+The affected Windows suite passed 44 tests; the complete Windows suite passed
+729 with two expected skips; native Ubuntu passed 13 affected tests using only
+process-local bundled build dependencies. Identity, licensing, active dispatch,
+and whitespace passed; distribution reported exactly the three expected active
+records. No tag, release, public issue #20 PR, pilot regeneration, adoption, or
+external-project mutation occurred before acceptance.
+
 ---
 
 ## Column definitions
