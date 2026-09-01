@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -84,6 +85,21 @@ def verify_installed_version(installed: str, expected: str) -> None:
         )
 
 
+def verify_expected_tag(candidate_version: str, expected_tag: str) -> None:
+    if re.fullmatch(
+        r"v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)",
+        expected_tag,
+    ) is None:
+        raise ReleaseCheckError(
+            "intended tag is not canonical vMAJOR.MINOR.PATCH"
+        )
+    if expected_tag.removeprefix("v") != candidate_version:
+        raise ReleaseCheckError(
+            f"candidate version {candidate_version!r} does not match intended "
+            f"tag {expected_tag!r}"
+        )
+
+
 def verify_candidate_unchanged(candidate: Path, before: str) -> None:
     if tree_digest(candidate) != before:
         raise ReleaseCheckError("candidate changed during the release check")
@@ -101,7 +117,7 @@ def python_bytecode_residue(root: Path) -> list[str]:
     )
 
 
-def check_candidate(candidate: Path) -> None:
+def check_candidate(candidate: Path, expected_tag: str) -> None:
     candidate = candidate.resolve()
     if not candidate.is_dir():
         raise ReleaseCheckError("candidate contract failed: directory is absent")
@@ -113,6 +129,7 @@ def check_candidate(candidate: Path) -> None:
         )
     with (candidate / "pyproject.toml").open("rb") as handle:
         expected_version = tomllib.load(handle)["project"]["version"]
+    verify_expected_tag(expected_version, expected_tag)
 
     before = tree_digest(candidate)
     with tempfile.TemporaryDirectory(prefix="writwall-release-check-") as raw:
@@ -241,13 +258,18 @@ def parser() -> argparse.ArgumentParser:
         )
     )
     value.add_argument("candidate", type=Path)
+    value.add_argument(
+        "--expected-tag",
+        required=True,
+        help="canonical release tag that must match candidate package metadata",
+    )
     return value
 
 
 def main(argv: list[str] | None = None) -> int:
     arguments = parser().parse_args(argv)
     try:
-        check_candidate(arguments.candidate)
+        check_candidate(arguments.candidate, arguments.expected_tag)
     except (OSError, ReleaseCheckError, subprocess.SubprocessError) as exc:
         print(f"FAIL: coordinator release candidate: {exc}")
         return 1

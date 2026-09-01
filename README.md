@@ -99,8 +99,8 @@ adoption bundle local, and writes the exact next prompt without installing the
 wall or claiming adoption:
 
 ```text
-# Obtainable now; use tags/v0.9.0.zip only after that release exists.
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/heads/main.zip"
+# Install the current tagged release.
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.1.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project

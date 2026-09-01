@@ -59,18 +59,17 @@ names, repository slugs, domains, logos, or launch copy. The coordinator may
 collect evidence, but the Owner chooses the identity; unavailable sources are
 not clear results.
 
-1. Install the obtainable public coordinator without unpacking it over your
-   project. Until `v0.9.0` is actually published, use public `main`:
+1. Install the current public coordinator without unpacking it over your
+   project:
 
    ```text
-   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/heads/main.zip"
+   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.1.zip"
    ```
 
-   Release `v0.8.1` does not contain the coordinator. Proposed `v0.9.0` is the
-   first tagged release intended to contain it; only switch the URL from
-   `heads/main.zip` to `tags/v0.9.0.zip` after that tag exists. If you are
-   testing an unpublished release candidate, use its checked external candidate
-   tree and the release gate in `PUBLICATION.md`.
+   Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrects
+   first-use bytecode residue and is the minimum recommended coordinator
+   release. If you are testing an unpublished release candidate, use its checked
+   external candidate tree and the release gate in `PUBLICATION.md`.
 2. Run one command:
 
    ```text
