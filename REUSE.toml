@@ -16,6 +16,7 @@ path = [
   "docs/assets/**",
   "docs/agents/**",
   "docs/architect-interview.md",
+  "docs/bootstrap-charter-addendum.md",
   "docs/day-zero-coordinator.md",
   "docs/identity-migration.md",
   "docs/name-clearance.md",
@@ -26,6 +27,7 @@ path = [
   "migration-guides/**",
   "projection/**",
   "skills/writwall-adopt/*.md",
+  "skills/writwall-adopt/assets/bootstrap-charter-addendum.md",
   "skills/writwall-adopt/references/**",
 ]
 SPDX-FileCopyrightText = "2026 HLLMR Ventures LLC"

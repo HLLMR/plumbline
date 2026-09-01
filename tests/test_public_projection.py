@@ -549,6 +549,57 @@ class PublicProjectionProcessTests(unittest.TestCase):
         self.assertIn("host-specific", combined.lower())
         self.assertNotIn(needle, combined)
 
+    def test_concrete_foreign_windows_path_in_current_plan_fails_without_echoing_it(self) -> None:
+        needle = r"Z:\client\media"
+        self.allow("governance/PLAN.md", f"Current corpus: `{needle}`.\n")
+        self.assertEqual(self.run_builder().returncode, 0)
+        checked = self.run_checker()
+        combined = checked.stdout + checked.stderr
+        self.assertNotEqual(checked.returncode, 0)
+        self.assertIn("host-specific", combined.lower())
+        self.assertNotIn(needle, combined)
+
+    def test_concrete_foreign_posix_home_path_in_current_state_fails_without_echoing_it(self) -> None:
+        needle = "/home/alice/client-media"
+        self.allow("governance/STATE.md", f"Current corpus: `{needle}`.\n")
+        self.assertEqual(self.run_builder().returncode, 0)
+        checked = self.run_checker()
+        combined = checked.stdout + checked.stderr
+        self.assertNotEqual(checked.returncode, 0)
+        self.assertIn("host-specific", combined.lower())
+        self.assertNotIn(needle, combined)
+
+    def test_concrete_foreign_macos_path_in_current_plan_fails_without_echoing_it(self) -> None:
+        needle = "/Users/alice/client-media"
+        self.allow("governance/PLAN.md", f"Current corpus: `{needle}`.\n")
+        self.assertEqual(self.run_builder().returncode, 0)
+        checked = self.run_checker()
+        combined = checked.stdout + checked.stderr
+        self.assertNotEqual(checked.returncode, 0)
+        self.assertIn("host-specific", combined.lower())
+        self.assertNotIn(needle, combined)
+
+    def test_concrete_foreign_mounted_drive_path_in_current_plan_fails_without_echoing_it(self) -> None:
+        needle = "/mnt/z/client-media"
+        self.allow("governance/PLAN.md", f"Current corpus: `{needle}`.\n")
+        self.assertEqual(self.run_builder().returncode, 0)
+        checked = self.run_checker()
+        combined = checked.stdout + checked.stderr
+        self.assertNotEqual(checked.returncode, 0)
+        self.assertIn("host-specific", combined.lower())
+        self.assertNotIn(needle, combined)
+
+    def test_canonical_windows_and_posix_placeholders_remain_allowed(self) -> None:
+        (self.source / "README.md").write_text(
+            "Windows: `C:\\path\\to\\your-project`\n"
+            "POSIX: `/path/to/your-project`\n",
+            encoding="utf-8",
+        )
+        built = self.run_builder()
+        self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
+        checked = self.run_checker()
+        self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
+
     def test_empty_inherited_git_directory_fails(self) -> None:
         self.assertEqual(self.run_builder().returncode, 0)
         (self.output / ".git").mkdir()

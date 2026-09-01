@@ -44,7 +44,7 @@ For a first adoption, the default is the day-zero coordinator:
 
 ```text
 # Install the current tagged release.
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.1.zip"
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.2.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project
@@ -147,6 +147,14 @@ Baseline commit candidate: [hash or "determine and propose"].
 ```
 
 The skill follows the standing rules of the remediation companion (inventory first, move rather than delete, propose rather than dispose, no source changes, no commits, RFI list for unknowns). It inventories the mutation channels your installation actually exposes rather than a fixed list, installs the adapter with matcher `*`, and runs both doctrinal birth-test levels through the adapter's more detailed procedure: Level 1 no-work-order lockout, Level 2 ordinary active scope, Level 3 protected-control-plane falsification where claimed, and the conditional Level 4 read-deny procedure. Bootstrap ends with a report and the repository in lockout, and it does not create DR-001 for you. That is yours to ratify.
+
+Before registration or Level 1, the coordinator must copy
+`assets/bootstrap-charter-addendum.md` verbatim into the
+engine-visible pre-adoption charter. Ordinary no-pointer work remains forbidden.
+The addendum permits only exact calls named by a durably Owner-ratified
+birth-test lifecycle, solely so the installed wall can deny them; it confers no
+mutation authority, denial is the only valid outcome, and any success stops
+adoption. Remove the temporary addendum before the adoption commit.
 
 **The optional second step: an Owner-directed recorder closeout.** After you have read the bootstrap report, you may either finish section 5 yourself or explicitly direct the skill to record your decisions. That second mode exists because ratifying and typing are different things. You remain the only source of intent: the baseline, the plan content, the mapping dispositions, the routing, the operational definitions, your adoption reasoning and rejected alternatives, your acceptance of every unenforced surface, and the decision to adopt at all. What the recorder may do, once you have supplied those and ratified them explicitly, is the clerical remainder — materialize `PLAN.md`, archive the superseded original, finalize labels, write or rename DR-001 transcribing your words verbatim, clear the bootstrap markers, remove bootstrap-only residue, stage the adoption set, and make the one local adoption commit.
 

@@ -63,13 +63,14 @@ not clear results.
    project:
 
    ```text
-   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.1.zip"
+   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.2.zip"
    ```
 
-   Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrects
-   first-use bytecode residue and is the minimum recommended coordinator
-   release. If you are testing an unpublished release candidate, use its checked
-   external candidate tree and the release gate in `PUBLICATION.md`.
+   Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrected
+   first-use bytecode residue. Release `v0.9.2` corrects the bootstrap
+   expected-denial contract and is the minimum recommended coordinator release.
+   If you are testing an unpublished release candidate, use its checked external
+   candidate tree and the release gate in `PUBLICATION.md`.
 2. Run one command:
 
    ```text
@@ -191,6 +192,15 @@ window. Unplanned denials remain honest log evidence, but unplanned denials are
 not retroactively promoted into a birth test.
 
 ## Make the birth test safe
+
+Before registering the wall or starting Level 1, confirm the provider's
+engine-visible pre-adoption charter contains the complete text of
+`assets/bootstrap-charter-addendum.md` from the local adoption bundle. That temporary
+rule resolves the bootstrap boundary without weakening it: ordinary no-pointer
+work remains forbidden, while exact calls named by a durably Owner-ratified
+birth-test lifecycle may be dispatched solely so the wall can deny them. The
+attempt confers no mutation authority; denial is the only valid outcome, and
+any success stops adoption. Remove the addendum before the adoption commit.
 
 Start with a **minimal provider profile**. Disable unrelated plugins,
 connectors, MCP servers, and delegated agents before inventorying the mutation

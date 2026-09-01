@@ -100,7 +100,7 @@ wall or claiming adoption:
 
 ```text
 # Install the current tagged release.
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.1.zip"
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.2.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project

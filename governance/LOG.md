@@ -739,6 +739,139 @@ and whitespace passed; distribution reported exactly the three expected active
 records. No tag, release, public issue #20 PR, pilot regeneration, adoption, or
 external-project mutation occurred before acceptance.
 
+### Post-pilot WO-WW-010 completed record
+
+WO-WW-010 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-01 and reported
+active minutes **NOT REPORTED**.
+
+External Pilot A exposed public issue #22 when the generated pre-adoption
+charter's ordinary no-pointer prohibition also caused a conforming provider to
+refuse the exact Level 1 probes before hook dispatch. No forbidden mutation
+succeeded and no adoption was claimed. The accepted correction adds one
+temporary engine-visible bootstrap contract: ordinary no-pointer work remains
+forbidden; only exact calls named by a durably Owner-ratified lifecycle may be
+attempted solely so the wall can deny them; denial is the only valid outcome;
+and any success or missing evidence stops adoption.
+
+The first fresh review returned four blockers in contract-test strength, the
+permanent-template negative assertion, record truth, and the missing final
+governed-source Windows rerun. All were corrected. The same Reviewer returned
+**ACCEPT — HIGH confidence** after independently confirming the corrected
+contract tests, permanent-template exclusion, active dispatch, identity, three
+expected release transients, and byte-identical bundle pairs.
+
+Final governed-source Windows passed 735 tests with two skips; native Ubuntu
+passed 735 with three. Two independent 136-file public candidates were
+checker-clean and byte-identical at complete-ledger SHA-256
+`D14629AE590B8E1DC556D428B0B06F6EC4EAAA07F4146E374654815C9BEA800F`.
+Identity, licensing, dispatch, and whitespace passed. Disclosed deviations were
+environment-only Python/Git diagnostics, test-mediated and one coordinator
+read-boundary departure with no implementation impact, and detected/removed
+bytecode residue. No commit, push, public projection mutation, release, or
+external-project mutation occurred before acceptance.
+
+### Post-pilot WO-WW-011 completed record
+
+WO-WW-011 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-01 and reported
+active minutes **NOT REPORTED**.
+
+The first authorized post-WO-WW-010 public candidates were projection-clean and
+byte-identical but correctly failed the existing intended-tag gate because
+current metadata still declared `0.9.1`. Both candidates were deleted. A narrow
+RED/GREEN release-identity order advanced package metadata, current install URLs,
+publication/contribution commands, and executable tests to exact `0.9.2` /
+`v0.9.2` while preserving historical `v0.9.0` and `v0.9.1` facts. The release
+checker itself remained byte-unchanged.
+
+Windows passed the complete 735-test suite with two skips; native Ubuntu passed
+all 13 release-gate tests. Two independent 136-file candidates passed projection
+and installed-release gates and were byte-identical at manifest SHA-256
+`DAF33DFC8CFF973B2590B4A2D591C1A61596BF2AEFAB3EC2FC2762EEB11E0514`.
+Fresh review returned one report-only distribution-evidence omission; after
+correction and exact rerun, re-review returned **ACCEPT — HIGH confidence**.
+
+One Ubuntu test trap left its temporary F: mount busy because the shell still
+occupied the mounted working directory; a separate command from `/` removed the
+mount and empty mountpoint and verified absence. No persistent environment,
+repository, public, or external-project mutation occurred before acceptance.
+
+### Post-pilot WO-WW-012 completed record
+
+WO-WW-012 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-01 and reported
+active minutes **NOT REPORTED**.
+
+Fresh publication review of the otherwise valid post-WO-WW-011 candidates found
+that the wheel's exhaustive installed-file map omitted the canonical bootstrap
+charter addendum and that the release gate did not require it while claiming a
+complete handoff. Both invalid candidates were deleted before this order began.
+RED tests proved the missing required inventory, missing packaging entry, and
+fail-open omission path. GREEN added the exact existing asset to the wheel map
+and mandatory handoff inventory without broad discovery or another source copy.
+
+Windows passed 738 tests with two skips; native Ubuntu passed all 16 release
+tests. Two independent 136-file candidates passed projection and installed
+`v0.9.2` release gates and were byte-identical at manifest SHA-256
+`56F9B5F262A399642ECC098329312C0BA75A6B962884CDDEC4C2ECC89178E724`.
+Fresh review returned one record-only wording correction; corrected re-review
+returned **ACCEPT — HIGH confidence**. Temporary candidates, cache residue, and
+the Ubuntu mount were deleted and verified absent. No public mutation, release,
+tag, deployment, visibility change, or External Pilot A mutation occurred before
+acceptance. The unrelated Owner deletion of `dist/plumbline-0.6.zip` (private governed-source reference, not present in this candidate) remained outside this
+work order.
+
+### Post-pilot WO-WW-013 completed record
+
+WO-WW-013 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-01 and reported
+active minutes **NOT REPORTED**.
+
+The first post-WO-WW-012 projection pair failed closed because that completed
+record named an omitted private distribution path without the exact same-line
+private-source qualifier. Both candidates were deleted. The first correction
+wrapped the qualifier onto the next physical line and remained RED; the next
+pair exposed the same literal unnecessarily repeated in the newly issued Plan.
+That pair was also deleted. The LOG qualifier was kept on the path's physical
+line and the Plan was rewritten without the literal; no checker was weakened.
+
+Two final 136-file candidates passed projection and installed `v0.9.2` release
+gates and were byte-identical at manifest SHA-256
+`0ED0848BDF05F56B9564D9904B3A4711DEEC15BCFA918F928B57C5C13DF7B07B`.
+The unchanged governed-source release suite passed 16/16. Identity, licensing,
+dispatch, and whitespace passed. Fresh review returned **ACCEPT — HIGH
+confidence**. All temporary candidates were deleted and verified absent. No
+product, checker, public, release, tag, deployment, visibility, or External
+Pilot A mutation occurred before acceptance.
+
+### Post-pilot WO-WW-014 completed record
+
+WO-WW-014 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-01 and reported
+active minutes **NOT REPORTED**.
+
+Fresh final publication review blocked an otherwise valid `v0.9.2` candidate
+pair because an earlier current-use Plan section retained a concrete sibling
+project path. The Plan reference is now host-neutral, and the independent
+projection checker rejects concrete Windows, macOS, Linux-home, and mounted-drive
+paths in current public records without echoing their values. Canonical path
+placeholders and historical evidence remain permitted.
+
+Windows passed 743 tests with two skips; the Windows and Ubuntu projection suites
+each passed 68 tests. Two 136-file candidates passed projection and installed
+`v0.9.2` release gates and were byte-identical at manifest SHA-256
+`6B0B72CDBA64CDA7BA684BCFAE7139AE185C965BBE5FCE0066B22C28DFC744E5`.
+Fresh review initially blocked on missing replay commands. The source gate then
+rejected the first corrected record for embedding concrete local command paths;
+environment-derived commands resolved both findings, and corrected re-review
+returned **ACCEPT — HIGH confidence**. The order's candidates were deleted. One
+inaccessible invalid candidate from the preceding publication review remains
+isolated under the OS temporary area after ordinary and native-Ubuntu cleanup
+were denied by its ACL; it contains no accepted release bytes or private input.
+No public mutation, release, tag, deployment, visibility change, or External
+Pilot A mutation occurred before acceptance.
+
 ---
 
 ## Column definitions

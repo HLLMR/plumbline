@@ -484,8 +484,8 @@ the Writwall migration. The remaining sequence is:
    the Owner accepted the disclosed deviations. The separate `v0.9.0`
    publication decision remains unmade.
 2. **External pilot A — `hllmr-media`.** After the release gate is accepted,
-   move the current unversioned `F:\Projects\LinkedIn` corpus to the truthful
-   broader project identity, run `writwall start`, and exercise the complete
+   move the current unversioned external media corpus to the truthful broader
+   project identity, run `writwall start`, and exercise the complete
    handoff and adoption path on low-risk content operations.
 3. **External pilot B — `hllmr-site`.** Recover from the abandoned partial
    bootstrap using a fresh session and the accepted coordinator packet. The
@@ -527,3 +527,106 @@ regenerated topology keeps the human as Owner, the Owner-Agent as coordinator
 and dispatcher, the repository agent as bounded Operator, and the existing
 infrastructure agent behind a separate inert operations packet. Adoption of the
 external project and content mutation remain separate decisions.
+
+## 19. External Pilot A bootstrap-contract correction — 2026-08-31
+
+External Pilot A reached the installed v0.9.1 birth test and exposed public
+issue #22. The generated pre-adoption charter correctly forbids ordinary
+mutation without an active work order, but the same absolute instruction made
+a conforming provider refuse the exact Owner-ratified Level 1 expected-denial
+probes before the installed hook could inspect them. Three provider sessions
+were consumed without a complete birth test; no forbidden mutation succeeded
+and no birth certificate is claimed.
+
+**WO-WW-010 — COMPLETE, accepted 2026-09-01: bootstrap expected-denial probe
+contract.** Preserve the
+ordinary no-pointer prohibition while defining one narrow engine-visible
+bootstrap exception: an exact Owner-ratified birth-test lifecycle may direct
+named probe attempts solely to falsify the wall, the attempts confer no
+mutation authority, every valid outcome is denial, and any success stops the
+adoption. Bind the coordinator handoff, adoption skill, adopter documentation,
+adapter README copies, and executable generated-text regressions to the same
+contract. After acceptance and publication through a separately authorized
+patch release, regenerate only External Pilot A's affected bootstrap/adoption
+material and repeat one fresh native Windows birth test. Media-content work,
+website work, DNS/mail work, and other external mutation remain unauthorized.
+Final governed-source Windows and Ubuntu suites each passed 735 tests; two
+136-file public candidates were byte-identical; corrected fresh review returned
+ACCEPT/HIGH.
+
+## 20. v0.9.2 release identity — 2026-09-01
+
+WO-WW-010 closed the bootstrap expected-denial contract and its private
+closeout commit was pushed. The first authorized post-closeout public candidates
+were independently checker-clean and byte-identical, but the executable release
+gate correctly refused intended tag `v0.9.2` because package metadata and current
+install/publication guidance still declared `v0.9.1`. Those invalid candidates
+were deleted.
+
+**WO-WW-011 — COMPLETE, accepted 2026-09-01: v0.9.2 release identity.** Advance only the current
+release identity across package metadata, installation and publication guidance,
+and the executable release contract. Preserve truthful historical `v0.9.0` and
+`v0.9.1` statements. After verification and acceptance, resume the already
+authorized dual projection, fresh publication review, issue #22 PR, protected-CI
+merge, `v0.9.2` release, and exactly one regenerated External Pilot A native
+Windows birth test. No media-content, website, DNS, mail, or unrelated product
+work is authorized.
+Final Windows passed 735 tests; native Ubuntu passed the complete 13-test release
+file; two 136-file candidates passed projection and installed-release checks and
+were byte-identical; corrected fresh review returned ACCEPT/HIGH.
+
+## 21. Installed bootstrap-bundle completeness — 2026-09-01
+
+After WO-WW-011 closeout, two final 136-file public candidates passed the
+existing projection and release gates and were byte-identical. Fresh publication
+review blocked release: the wheel's exhaustive data-file map omitted
+`skills/writwall-adopt/assets/bootstrap-charter-addendum.md`, and the release
+gate did not enumerate that file while claiming a complete installed handoff.
+Both invalid candidates were deleted; no public branch, PR, tag, release, or
+pilot rerun occurred.
+
+**WO-WW-012 — COMPLETE, accepted 2026-09-01: installed bootstrap-bundle
+completeness.** The existing canonical addendum is now packaged at the installed
+path named by generated guidance, the release gate requires that exact path, and
+executable tests prove both the complete installed handoff and deterministic
+failure when the packaging entry is removed. Windows passed 738 tests with two
+skips; Ubuntu passed the complete 16-test release file; two 136-file candidates
+were projection/release-clean and byte-identical; corrected fresh review returned
+ACCEPT/HIGH. Resume the authorized dual post-closeout projection, fresh
+publication review, issue #22 PR, protected-CI merge, `v0.9.2` release, and one
+External Pilot A Windows birth test. No other feature, media, website, DNS, mail,
+or external work is active.
+
+## 22. Post-closeout projection-reference truth — 2026-09-01
+
+The first post-WO-WW-012 projection pair failed closed before release because
+the new completed LOG record named an omitted private distribution path without
+the required private-governed-source retained-reference qualifier. Both invalid
+candidates were deleted and no public state changed.
+
+**WO-WW-013 — COMPLETE, accepted 2026-09-01: post-closeout
+projection-reference truth.** The completed WO-WW-012 LOG record now carries the
+exact same-line private-source qualifier required for its omitted path. The
+unchanged checker also caught and removed an unnecessary repetition of that
+literal from the issued Plan. Two final 136-file candidates passed projection
+and installed `v0.9.2` release gates and were byte-identical; fresh review
+returned ACCEPT/HIGH. Resume the authorized public release and External Pilot A
+tail without changing product or checker bytes.
+
+## 23. Public current-record host-path privacy — 2026-09-01
+
+Fresh final publication review blocked the otherwise valid v0.9.2 candidate pair
+because an earlier current-use Plan section retained a concrete host path to the
+external media corpus. Existing gates rejected this machine's repository root
+and human-supplied private patterns but did not reject a concrete sibling-project
+path when the private profile omitted it. No public state changed.
+
+**WO-WW-014 — COMPLETE, accepted 2026-09-01: public current-record host-path
+privacy.** The current-use Plan reference is host-neutral, and the independent
+projection checker now rejects concrete Windows, macOS, Linux-home, and
+mounted-drive paths in current public-facing records while preserving canonical
+placeholders and historical evidence. Windows passed 743 tests with two skips;
+the Windows and Ubuntu projection suites each passed 68 tests; two 136-file
+candidates passed projection and installed `v0.9.2` release gates and were
+byte-identical. Fresh corrected-record review returned ACCEPT/HIGH. Resume the
+authorized public release and External Pilot A tail.

@@ -272,7 +272,13 @@ The birth test is worthless if run outside the operating envelope. Establish the
 4. **Confirm the displayed command resolves through `${CLAUDE_PROJECT_DIR}`.**
 5. **Run `--preflight`** with the exact installed digest, settings path, and native platform. It must pass without a denial-log change.
 6. **Confirm no active-WO pointer exists** (`.claude/active-wo.txt` absent).
-7. **Only then begin real provider-level mutation probes.**
+7. **Confirm the engine-visible pre-adoption charter contains the complete
+   `assets/bootstrap-charter-addendum.md` text from the local adoption bundle.**
+   Ordinary no-pointer work remains forbidden; only exact calls named by a
+   durably Owner-ratified lifecycle may be dispatched solely to test denial.
+   The attempt confers no mutation authority, denial is the only valid outcome,
+   and any success stops adoption.
+8. **Only then begin real provider-level mutation probes.**
 
 **The `/hooks` inspection is necessary configuration evidence, not proof of live enforcement.** It shows what Claude Code believes it has loaded. It does not show that the session executing your probes actually loaded it. Only observed denial of real tool calls constitutes the birth test (8.3.5). Invoking the adapter directly with a synthetic payload verifies its logic and nothing else; it must never be recorded as a passing birth test.
 

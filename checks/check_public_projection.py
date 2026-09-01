@@ -105,10 +105,37 @@ STATE_SNAPSHOT_NOTE = (
     "at the source commit named in `PROJECTION-PROVENANCE.md`. Push, "
     "publication, visibility, and queued-work statements below describe that "
     "checkpoint, not the current public copy.")
+CURRENT_PUBLIC_RECORDS = frozenset({
+    "README.md",
+    "ADOPTING.md",
+    "START-HERE.md",
+    "PUBLICATION.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "governance/PLAN.md",
+    "governance/STATE.md",
+})
+WINDOWS_ABSOLUTE_PATH = re.compile(
+    r"(?<![A-Za-z0-9_])([A-Za-z]:\\+[^\s`\"'<>|]+)")
+WINDOWS_PATH_PLACEHOLDER = re.compile(
+    r"^[A-Za-z]:\\+path\\+to\\+your-project(?:[\\/]|$)", re.IGNORECASE)
+POSIX_CONCRETE_HOST_PATH = re.compile(
+    r"(?<![A-Za-z0-9_.-])(/(?:home|Users)/[^/\s`\"'<>|]+/[^\s`\"'<>|]+"
+    r"|/mnt/[A-Za-z]/[^\s`\"'<>|]+)")
 PRIVATE_EVIDENCE_REDACTION_FILES = frozenset({
     "governance/LOG.md",
 })
 PRIVATE_EVIDENCE_REDACTION = "[private governed-source identifier omitted]"
+
+
+def current_record_has_concrete_host_path(relative: str, text: str) -> bool:
+    """Reject concrete host paths in current public records, not history."""
+    if relative not in CURRENT_PUBLIC_RECORDS:
+        return False
+    if any(not WINDOWS_PATH_PLACEHOLDER.match(match.group(1))
+           for match in WINDOWS_ABSOLUTE_PATH.finditer(text)):
+        return True
+    return POSIX_CONCRETE_HOST_PATH.search(text) is not None
 
 
 def transform_expected_private_evidence(relative: str, data: bytes,
@@ -377,6 +404,8 @@ def verify(root: Path, pattern_file: Path | None = None) -> None:
                 identifiers.setdefault(identifier, set()).add(relative)
         if any(pattern.casefold() in folded for pattern in patterns):
             fail("candidate contains a private disclosure pattern")
+        if current_record_has_concrete_host_path(relative, text):
+            fail("candidate contains host-specific data in a current public record")
         if any(needle and machine_path_occurs(text, needle)
                for needle in host_needles):
             fail("candidate contains host-specific data")
