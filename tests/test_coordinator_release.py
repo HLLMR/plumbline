@@ -53,7 +53,7 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def run_checker(self, candidate: Path, *extra: str):
         arguments = [str(candidate), *extra]
         if "--expected-tag" not in extra:
-            arguments.extend(("--expected-tag", "v0.9.1"))
+            arguments.extend(("--expected-tag", "v0.9.2"))
         return subprocess.run(
             [sys.executable, "-B", str(CHECKER), *arguments],
             cwd=REPO_ROOT,
@@ -158,6 +158,46 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("complete handoff failed", result.stdout + result.stderr)
 
+    def test_release_gate_requires_bootstrap_addendum(self):
+        checker = load_checker()
+        self.assertIn(
+            "writwall-adopt/assets/bootstrap-charter-addendum.md",
+            checker.REQUIRED_HANDOFF_PATHS,
+        )
+
+    def test_wheel_data_files_include_bootstrap_addendum(self):
+        with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
+            project = tomllib.load(handle)
+        data_files = project["tool"]["setuptools"]["data-files"]
+        packaged = {
+            path
+            for paths in data_files.values()
+            for path in paths
+        }
+        self.assertIn(
+            "skills/writwall-adopt/assets/bootstrap-charter-addendum.md",
+            packaged,
+        )
+
+    def test_omitted_packaged_bootstrap_addendum_fails_release_gate(self):
+        candidate = self.make_candidate()
+        pyproject = candidate / "pyproject.toml"
+        pyproject.write_text(
+            pyproject.read_text(encoding="utf-8").replace(
+                '  "skills/writwall-adopt/assets/bootstrap-charter-addendum.md",\n',
+                "",
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        result = self.run_checker(candidate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("complete handoff failed", result.stdout + result.stderr)
+        self.assertIn(
+            "bootstrap-charter-addendum.md",
+            result.stdout + result.stderr,
+        )
+
     def test_emitted_bytecode_residue_fails_with_diagnostic(self):
         candidate = self.make_candidate()
         start = candidate / "scripts" / "start_writwall.py"
@@ -187,15 +227,15 @@ class CoordinatorReleaseTests(unittest.TestCase):
         pyproject = candidate / "pyproject.toml"
         pyproject.write_text(
             pyproject.read_text(encoding="utf-8").replace(
-                'version = "0.9.1"', 'version = "0.9.0"'
+                'version = "0.9.2"', 'version = "0.9.0"'
             ),
             encoding="utf-8",
             newline="\n",
         )
-        result = self.run_checker(candidate, "--expected-tag", "v0.9.1")
+        result = self.run_checker(candidate, "--expected-tag", "v0.9.2")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "candidate version '0.9.0' does not match intended tag 'v0.9.1'",
+            "candidate version '0.9.0' does not match intended tag 'v0.9.2'",
             result.stdout + result.stderr,
         )
 
@@ -229,18 +269,21 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def test_release_identity_and_public_payload_are_coherent(self):
         with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
             project = tomllib.load(handle)["project"]
-        self.assertEqual(project["version"], "0.9.1")
+        self.assertEqual(project["version"], "0.9.2")
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
         contributing = (REPO_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
         publication = (REPO_ROOT / "PUBLICATION.md").read_text(encoding="utf-8")
         start = (REPO_ROOT / "START-HERE.md").read_text(encoding="utf-8")
-        tagged_archive = "archive/refs/tags/v0.9.1.zip"
+        tagged_archive = "archive/refs/tags/v0.9.2.zip"
         self.assertIn(tagged_archive, readme)
         self.assertIn(tagged_archive, adopting)
         self.assertIn(tagged_archive, start)
-        self.assertIn("--expected-tag v0.9.1", publication)
-        self.assertIn("--expected-tag v0.9.1", contributing)
+        self.assertIn("--expected-tag v0.9.2", publication)
+        self.assertIn("--expected-tag v0.9.2", contributing)
+        self.assertIn("Release `v0.9.0` first introduced", start)
+        self.assertIn("Release `v0.9.1` corrected", start)
+        self.assertIn("Release `v0.9.2` corrects", start)
         public_files = PUBLIC_FILES.read_text(encoding="utf-8").splitlines()
         self.assertIn("checks/check_coordinator_release.py", public_files)
         self.assertIn("tests/test_coordinator_release.py", public_files)

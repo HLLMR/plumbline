@@ -572,6 +572,18 @@ class StartWritwallTests(unittest.TestCase):
             self.assertEqual((copied / relative).read_bytes(),
                              (source / relative).read_bytes(), relative)
 
+    def test_clean_new_handoff_routes_bootstrap_charter_addendum(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        handoff = self.handoff()
+        self.assertIn(
+            ".writwall-bootstrap/writwall-adopt/assets/"
+            "bootstrap-charter-addendum.md",
+            handoff,
+        )
+        self.assertIn("Ordinary no-pointer work", handoff)
+        self.assertIn("confers no mutation authority", handoff)
+
     def test_name_clearance_proof_tools_are_canonical_in_emitted_bundle(self):
         result = self.run_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

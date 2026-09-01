@@ -452,7 +452,13 @@ def next_prompt(state: ObservedState) -> tuple[str, str]:
 and ratify; perform every clerical step an authorized recorder may perform.
 Ask one question at a time in plain language, recommendation first. Do not
 install or register the wall until the complete bundle and recovery instructions
-are locally readable. Do not begin product work or WO-001 before adoption.""",
+are locally readable. Before registration or any Level 1 call, copy
+`.writwall-bootstrap/writwall-adopt/assets/bootstrap-charter-addendum.md`
+verbatim into the engine-visible pre-adoption charter. Ordinary no-pointer work
+remains forbidden; the addendum permits only exact expected-denial probes named
+by a durably Owner-ratified lifecycle and confers no mutation authority. Denial
+is the only valid outcome, and any success stops adoption. Remove it before the
+adoption commit. Do not begin product work or WO-001 before adoption.""",
         )
     if state.name == "partial_bootstrap":
         return (

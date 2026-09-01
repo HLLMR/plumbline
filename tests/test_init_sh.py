@@ -326,7 +326,7 @@ class InitScriptTests(unittest.TestCase):
         self.assertIn("checks/check_work_order_dispatch.py", result.stdout)
         self.assertIn("skipped", result.stdout)
 
-    def test_scaffolder_and_bundle_routes_agree_on_b_template_and_migration_guide(self):
+    def test_scaffolder_and_bundle_routes_agree_on_templates_and_migration_guide(self):
         """Route-consistency lock for Doctrine 0.7 (DR-004): the scaffolder
         route installs the current canonical B-work-order template
         byte-for-byte, with exactly one enforced_by: {} default and exactly
@@ -349,6 +349,17 @@ class InitScriptTests(unittest.TestCase):
         bundled_b = (REPO_ROOT / "skills" / "writwall-adopt" / "assets" /
                     "templates" / "B-work-order.md").read_bytes()
         self.assertEqual(bundled_b, canonical_b)
+
+        canonical_addendum = (REPO_ROOT / "docs" /
+                              "bootstrap-charter-addendum.md").read_bytes()
+        bundled_addendum = (REPO_ROOT / "skills" / "writwall-adopt" /
+                            "assets" /
+                            "bootstrap-charter-addendum.md").read_bytes()
+        self.assertEqual(bundled_addendum, canonical_addendum)
+        self.assertFalse(
+            (self.target / "governance" / "templates" /
+             "bootstrap-charter-addendum.md").exists(),
+            "the temporary pre-adoption addendum is not an adopted template")
 
         canonical_guide = REPO_ROOT / "migration-guides" / "0.6-to-0.7.md"
         bundled_guide = (REPO_ROOT / "skills" / "writwall-adopt" / "references" /

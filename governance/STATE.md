@@ -15,21 +15,50 @@ accepted WO-WW-003 retained-identity ledger refresh, accepted WO-WW-004
 managed day-zero privacy screening, accepted WO-WW-005 GitHub Actions Node 24
 refresh, and accepted WO-WW-006 coordinator release readiness and external
 smoke work, accepted WO-WW-007 first-use bytecode-residue correction,
-accepted WO-WW-008 State derivation endpoint correction, and accepted
-WO-WW-009 patch-release identity correction.
-Release `v0.9.0` is public. External Pilot A reached an unratified bootstrap
+accepted WO-WW-008 State derivation endpoint correction, accepted WO-WW-009
+patch-release identity correction, and accepted WO-WW-010 bootstrap
+expected-denial probe contract correction, accepted WO-WW-011 v0.9.2 release
+identity correction, accepted WO-WW-012 installed bootstrap-bundle completeness
+correction, accepted WO-WW-013 post-closeout projection-reference truth, and
+accepted WO-WW-014 public current-record host-path privacy.
+Release `v0.9.1` is public. External Pilot A reached an unratified bootstrap
 handoff and exposed public issue #16: normal first use could copy Python
 bytecode residue into coordinator output. Public PR #17 merged the accepted
 correction and closed issue #16. **WO-WW-009 is COMPLETE and accepted**; package
 metadata, current install guidance, and the mandatory intended-tag gate agree on
 `v0.9.1`. The authorized post-closeout projection, public PR, protected-CI
-merge, patch release, and pilot regeneration remain unstarted.
+merge, patch release, and pilot regeneration completed. External Pilot A then
+exposed public issue #22 when a conforming provider followed the bootstrap
+charter and refused the required no-pointer birth-test probes before hook
+dispatch. **WO-WW-010 is COMPLETE and accepted**; its authorized private
+closeout, public patch-release tail, and one regenerated External Pilot A birth
+test are in progress. The first two post-closeout candidates were checker-clean
+and byte-identical but correctly failed the intended-tag gate because their
+current release identity remained `v0.9.1`; they were deleted. **WO-WW-011 is
+COMPLETE and accepted** with exact current identity `v0.9.2`; its authorized
+private closeout, public release tail, and one External Pilot A birth test are in
+progress. The first final publication review blocked because the installed wheel
+and release gate both omitted the new bootstrap addendum; both candidates were
+deleted. **WO-WW-012 is COMPLETE and accepted**: the canonical addendum is now
+packaged in the installed adoption bundle and required by the external release
+gate. Its authorized private closeout, public release tail, and one External
+Pilot A birth test are in progress. The first post-closeout candidates failed
+closed on one unqualified private-only path in the new LOG record and were
+deleted. **WO-WW-013 is COMPLETE and accepted**: the record is qualified, the
+issued Plan no longer repeats the literal, and the final pair passed. The public
+release and pilot tail remain in progress. No external media content, website,
+DNS, or mail mutation is active. Fresh final publication review then found one
+concrete sibling-project host path in an earlier current-use Plan section.
+**WO-WW-014 is COMPLETE and accepted**: the Plan reference is host-neutral and
+the projection checker now rejects concrete Windows, macOS, Linux-home, and
+mounted-drive paths in current public records without echoing their values. The
+authorized public release and pilot tail resume.
 
 **Derived:** 2026-08-31 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
 accepted WO-PL-017 through WO-PL-023 and WO-PL-025 through WO-PL-033 records,
 the WO-PL-024 sequencing recovery, the verified public-release event, and the
-accepted WO-WW-001 through WO-WW-009 closeout records.
+accepted WO-WW-001 through WO-WW-014 closeout records.
 **Boundary:** post-adoption, all 10 counted pilot work orders and their
 evaluation complete; WO-PL-017 remediation complete; DR-003 ratified;
 WO-PL-018 through WO-PL-023 complete; WO-PL-024 void before implementation;
@@ -41,7 +70,7 @@ the current identity with the two-line wall glyph; WO-PL-039 complete and
 accepted, with public PR #5 merged after the required CI passed and issue #4
 closed; WO-PL-040 complete and accepted; public PR #8 merged and issue #1
 closed; the historical `WO-PL` series ends at 040; **WO-WW-001 through
-WO-WW-009 are COMPLETE and accepted**; public PR #9, #12, #13, and #17 merged with
+WO-WW-014 are COMPLETE and accepted**; public PR #9, #12, #13, and #17 merged with
 protected CI green; public issue #11 is closed; public issue #14 records the
 coordinator release gate; release `v0.9.0` is published; public issue #16
 records the corrected cache-residue defect found by the first unratified
@@ -110,7 +139,12 @@ externally.
 | WO-WW-007 | **COMPLETE**, accepted 2026-08-31; first-use bytecode-residue correction. Installed wheel evidence proved 3 cache directories and 4 `.pyc` files existed before first start and were copied into the handoff. Two public-interface RED/GREEN cycles made output intrinsically cache-free and made the release gate run normal bytecode behavior and reject residue. Windows passed 725 tests with two skips; native Ubuntu external-candidate verification passed; fresh review returned **ACCEPT WITH NON-BLOCKING NOTE/HIGH confidence**. Owner active minutes **NOT REPORTED**. Public issue #16 remains open pending the separately authorized projection PR and patch release; the unratified external bootstrap remains preserved pending published correction |
 | WO-WW-008 | **COMPLETE**, accepted 2026-08-31; record-only State derivation endpoint correction. The accepted State snapshot endpoint now includes WO-WW-007, and ordinary closeout advances the derivation endpoint through WO-WW-008. The State correction changed only its two mechanically dependent identity digests; closeout also refreshed the retained LOG source digest after appending this completion record. Focused regression passed 462 tests with two skips; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Public issue #16 remains open pending the separately authorized projection PR; merge and release remain unauthorized |
 | WO-WW-009 | **COMPLETE**, accepted 2026-08-31; patch-release identity correction. Package metadata and current onboarding guidance now identify `v0.9.1`; the external release checker requires a canonical ASCII intended tag and proves exact metadata agreement before building. Windows passed 729 tests with two skips; native Ubuntu passed 13 affected tests; corrected fresh re-review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Public issue #20 proceeds through the authorized post-closeout projection/PR and protected-CI release tail |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-009 COMPLETE and accepted**; public PR #9, #12, #13, and #17 merged with protected CI green; public issues #1, #4, #10, #11, and #16 closed; public issue #14 records the accepted release gate; `v0.9.0` is published; issue #20 awaits the authorized `v0.9.1` release-identity PR; external media regeneration, website, DNS, and mail pilots remain queued |
+| WO-WW-010 | **COMPLETE**, accepted 2026-09-01; public issue #22 records the External Pilot A bootstrap-contract contradiction. Ordinary no-pointer mutation remains forbidden; only exact calls named by a durably Owner-ratified lifecycle may reach the wall as expected-denial probes, with denial the sole valid outcome and any success stopping adoption. Final Windows passed 735 tests with two skips; native Ubuntu passed 735 with three; two 136-file public candidates were checker-clean and byte-identical; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Authorized private closeout, public v0.9.2 release tail, and one regenerated External Pilot A birth test remain in progress |
+| WO-WW-011 | **COMPLETE**, accepted 2026-09-01; the existing release gate caught package/docs identity `v0.9.1` before an intended `v0.9.2` release. Current metadata, install URLs, publication/contribution commands, and executable tests now agree on `0.9.2` / `v0.9.2`, while historical `v0.9.0` and `v0.9.1` facts remain. Windows passed 735 tests with two skips; Ubuntu passed 13 release tests; two 136-file candidates were projection/release-clean and byte-identical; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Authorized private closeout, public release tail, and one External Pilot A birth test remain in progress |
+| WO-WW-012 | **COMPLETE**, accepted 2026-09-01; the installed wheel now includes the exact canonical bootstrap addendum and the release gate requires it as part of every complete handoff. Removing the packaging entry fails deterministically. Windows passed 738 tests with two skips; native Ubuntu passed 16 release tests; two 136-file candidates were projection/release-clean and byte-identical; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. The authorized v0.9.2 release tail and one External Pilot A birth test remain in progress |
+| WO-WW-013 | **COMPLETE**, accepted 2026-09-01; the completed WO-WW-012 LOG record now qualifies its omitted private-only path on the same physical line. The unchanged checker also caught an unnecessary repetition in the issued Plan before publication. Two final 136-file candidates passed projection and installed `v0.9.2` release gates and were byte-identical; fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Product and checker bytes were unchanged; the public release and pilot tail remain in progress |
+| WO-WW-014 | **COMPLETE**, accepted 2026-09-01; the earlier current-use Plan reference is host-neutral and the projection checker rejects concrete Windows, macOS, Linux-home, and mounted-drive paths in current public records without echoing values. Windows passed 743 tests with two skips; Windows and Ubuntu projection suites each passed 68 tests; two 136-file candidates were projection/release-clean and byte-identical; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. The authorized public release and External Pilot A tail resume |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-014 COMPLETE and accepted**; public PR #9, #12, #13, #17, and #21 merged with protected CI green; public issues #1, #4, #10, #11, #16, and #20 closed; public issue #14 records the accepted release gate; `v0.9.1` is published; issue #22 proceeds through the authorized v0.9.2 release tail; external media regeneration, website, DNS, and mail pilots remain queued |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout

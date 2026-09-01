@@ -32,6 +32,10 @@ NEW_REQUIRED_FILES = (
 )
 
 BUNDLE_CHECKER_RELPATH = "skills/writwall-adopt/assets/checks/check_work_order_dispatch.py"
+BOOTSTRAP_ADDENDUM_COPY = (
+    "skills/writwall-adopt/assets/bootstrap-charter-addendum.md",
+    "docs/bootstrap-charter-addendum.md",
+)
 
 NAME_CLEARANCE_BUNDLE_COPIES = {
     "skills/writwall-adopt/assets/scripts/collect_name_clearance.py":
@@ -361,6 +365,21 @@ class DispatchCheckerPackagingTests(unittest.TestCase):
         self.assertIn(BUNDLE_CHECKER_RELPATH, copy_relpaths,
                       "the bundled adoption-skill checker copy is not declared in "
                       "check_distribution.py BUNDLE_COPIES")
+
+    def test_bootstrap_charter_addendum_copy_is_declared(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "_check_distribution_bootstrap_addendum",
+            REPO_ROOT / "checks" / "check_distribution.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        declared = {
+            copy.relative_to(REPO_ROOT).as_posix():
+                source.relative_to(REPO_ROOT).as_posix()
+            for copy, source in module.BUNDLE_COPIES.items()
+        }
+        copy, source = BOOTSTRAP_ADDENDUM_COPY
+        self.assertEqual(declared.get(copy), source)
 
     def test_missing_bundle_checker_copy_fails_distribution_gate(self):
         (self.repo / BUNDLE_CHECKER_RELPATH).unlink()

@@ -5,9 +5,9 @@ Legacy commit identifiers in projected records refer to that private
 source and are intentionally not resolvable from fresh public history.
 No private remote URL is recorded here.
 
-- Source commit: `40cdbd64c71769bf3ec2f1a28246d89713953240`
-- Source commit time: `2026-08-31T19:11:11-05:00`
-- Projection allowlist SHA-256: `393e7582af9d4ffa3bc8f574c179f8d4234f3a05b1416152c3bb0551855e7d97`
+- Source commit: `0150c3a97996f50a9faf77501c03b7ff58a237a1`
+- Source commit time: `2026-09-01T12:20:52-05:00`
+- Projection allowlist SHA-256: `fafcbf659c40d7260dddaa8a64b6b59c3b7de484f77d879a90323bb4b3e1a4a7`
 
 ## Legacy identifier inventory
 

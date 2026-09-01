@@ -34,6 +34,7 @@ REQUIRED_HANDOFF_PATHS = (
     "NAME-CLEARANCE.md",
     "OWNER-RATIFICATION.md",
     "writwall-adopt/SKILL.md",
+    "writwall-adopt/assets/bootstrap-charter-addendum.md",
     "writwall-adopt/assets/scripts/collect_name_clearance.py",
     "writwall-adopt/assets/checks/check_name_clearance.py",
     "writwall-adopt/references/name-clearance.md",

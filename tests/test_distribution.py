@@ -656,6 +656,7 @@ class SelfHostingSegregationTests(DistributionTestCase):
             "SKILL.md",
             "assets/adapters/claude-code/README.md",
             "assets/adapters/claude-code/wo_capability_wall.py",
+            "assets/bootstrap-charter-addendum.md",
             "assets/checks/check_name_clearance.py",
             "assets/checks/check_work_order_dispatch.py",
             "assets/scripts/collect_name_clearance.py",

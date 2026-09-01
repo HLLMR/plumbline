@@ -138,6 +138,8 @@ BUNDLE_COPIES = {
         REPO_ROOT / "checks" / "check_name_clearance.py",
     SKILL / "references" / "name-clearance.md":
         REPO_ROOT / "docs" / "name-clearance.md",
+    SKILL / "assets" / "bootstrap-charter-addendum.md":
+        REPO_ROOT / "docs" / "bootstrap-charter-addendum.md",
     **{
         SKILL / "assets" / "templates" / name: REPO_ROOT / "templates" / name
         for name in TEMPLATE_FILES.values()

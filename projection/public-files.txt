@@ -46,6 +46,7 @@ docs/assets/writwall-og.png
 docs/assets/writwall-og.svg
 docs/assets/writwall-readme-banner-0a5259d8.png
 docs/assets/writwall-readme-banner.svg
+docs/bootstrap-charter-addendum.md
 docs/day-zero-coordinator.md
 docs/identity-migration.md
 docs/name-clearance.md
@@ -96,6 +97,7 @@ skills/writwall-adopt/LICENSE-MAP.md
 skills/writwall-adopt/SKILL.md
 skills/writwall-adopt/assets/adapters/claude-code/README.md
 skills/writwall-adopt/assets/adapters/claude-code/wo_capability_wall.py
+skills/writwall-adopt/assets/bootstrap-charter-addendum.md
 skills/writwall-adopt/assets/checks/check_name_clearance.py
 skills/writwall-adopt/assets/checks/check_work_order_dispatch.py
 skills/writwall-adopt/assets/scripts/collect_name_clearance.py
@@ -114,6 +116,7 @@ templates/B-work-order.md
 templates/C-owner-brief.md
 templates/D-adoption-record.md
 templates/E-adoption-mapping.md
+tests/test_bootstrap_contract.py
 tests/test_check_distribution.py
 tests/test_check_licenses.py
 tests/test_check_work_order_dispatch.py
