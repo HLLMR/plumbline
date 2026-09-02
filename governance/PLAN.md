@@ -630,3 +630,63 @@ the Windows and Ubuntu projection suites each passed 68 tests; two 136-file
 candidates passed projection and installed `v0.9.2` release gates and were
 byte-identical. Fresh corrected-record review returned ACCEPT/HIGH. Resume the
 authorized public release and External Pilot A tail.
+
+## 24. External Pilot A disposition and terminal lifecycle routing — 2026-09-01
+
+Release `v0.9.2` is published. External Pilot A successfully adopted Writwall,
+completed its channel-local Windows birth test, and closed two genuine work
+orders with no successful forbidden mutation. That result remains a successful
+adoption and operating result. Public issue #24 records one product lesson:
+onboarding did not terminate at an explicit fresh Project-Architect boundary,
+so the already-long adoption coordinator continued as Architect by
+conversational momentum.
+
+**WO-WW-015 — COMPLETE, accepted 2026-09-01: terminal Architect handoff and
+lifecycle-aware start routing.** `writwall start --project-root <project>` is
+the sole human entry point. Clean/new projects retain interview and create-only
+bootstrap; partial/recovery, adopted or retired lockout, and active-work-order
+states skip intake and change no target bytes while routing to the correct
+fresh role. Adoption closeout presents the exact fresh Owner-Agent / Project-
+Architect handoff and stops before genuine project work.
+
+Fresh Architect evidence added one interaction correction: lead with a concise
+recommendation and material tradeoff, keep the complete packet as supporting
+evidence, and ask once for a combined disposition and mechanically available
+next action. When creating and dispatching a new user-owned task is that action,
+the same request names it explicitly; permission is not inferred later. Once
+approved, the Architect performs every mechanically available authorized step
+without asking the same decision twice. Human ratification, work-order
+activation boundaries, and distinct fresh review remain unchanged.
+
+This correction authorizes no closeout, public mutation, release, pilot
+mutation, external account access, or successor activation.
+
+Final Windows verification passed 750 tests with two skips. Native Ubuntu
+passed the affected lifecycle tests and the exact two installed-wheel tests
+under a temporary compatible declared build backend. Two independent 136-file
+public candidates were checker-clean and byte-identical. Fresh final re-review
+returned **ACCEPT — HIGH confidence**. Owner active minutes were **NOT
+REPORTED**. No successor work order is active; public issue #24 remains open
+pending a separately authorized projection and PR.
+
+## 25. v0.9.3 release identity — 2026-09-02
+
+The first post-WO-WW-015 public candidates were independently checker-clean,
+installed-release-clean, and byte-identical at 136 files. Fresh publication
+review blocked them before any public branch or PR because immutable release
+`v0.9.2` predates WO-WW-015 while current install guidance described the new
+lifecycle behavior under that old tag. Both candidates were deleted.
+
+**WO-WW-016 — COMPLETE, accepted 2026-09-02: release identity 0.9.3.** Current
+package metadata, conditional install guidance, and release-check commands now
+agree on `0.9.3` / `v0.9.3` while explicitly stating that the tag is not yet
+published. Truthful historical `v0.9.0` through `v0.9.2` evidence remains.
+
+Windows passed 750 tests with two skips; native Ubuntu passed 17 release tests
+and the installed `v0.9.3` gate. Two independent 136-file candidates passed
+their Windows installed-release and final projection gates and were byte-
+identical. Fresh review returned **ACCEPT — HIGH confidence**. Owner active
+minutes were **NOT REPORTED**. After ordinary closeout, repeat two projections
+and fresh publication review, open the issue #24 PR, and merge only after
+required CI passes. Tagging and releasing `v0.9.3` remain separate,
+unauthorized actions.

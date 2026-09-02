@@ -242,12 +242,56 @@ def check_candidate(candidate: Path, expected_tag: str) -> None:
                 + ", ".join(residue)
             )
 
+        adopted = workspace / "adopted-project"
+        governance = adopted / "governance"
+        decisions = governance / "decisions"
+        decisions.mkdir(parents=True)
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(
+                f"# {name}\n", encoding="utf-8", newline="\n"
+            )
+        (decisions / "DR-001.md").write_text(
+            "# Adoption record\n", encoding="utf-8", newline="\n"
+        )
+        adopted_before = tree_digest(adopted)
+        adopted_result = run(
+            [str(command), "start", "--project-root", str(adopted)],
+            cwd=workspace,
+            environment=environment,
+            label="installed adopted-lockout route",
+        )
+        required_route_text = (
+            "Observed lifecycle state: adopted_lockout",
+            "Act as a fresh Owner-Agent / Project-Architect",
+            "one combined disposition and action",
+            "Do not ask for the same decision again",
+        )
+        route_output = " ".join(adopted_result.stdout.split())
+        missing_route_text = [
+            text for text in required_route_text
+            if text not in route_output
+        ]
+        if missing_route_text:
+            raise ReleaseCheckError(
+                "installed adopted-lockout route omitted: "
+                + ", ".join(missing_route_text)
+            )
+        if (adopted / ".writwall-bootstrap").exists():
+            raise ReleaseCheckError(
+                "installed adopted-lockout route published a bootstrap"
+            )
+        if tree_digest(adopted) != adopted_before:
+            raise ReleaseCheckError(
+                "installed adopted-lockout route changed target bytes"
+            )
+
     verify_candidate_unchanged(candidate, before)
 
     print("OK: coordinator release candidate passed")
     print(f"  installed version : {expected_version}")
     print("  installed command : help and real start passed under normal bytecode behavior")
     print("  complete handoff  : all required packets present; no bytecode residue")
+    print("  adopted lockout   : fresh Architect route; zero target-byte change")
     print("  candidate unchanged: complete-tree digest preserved")
 
 

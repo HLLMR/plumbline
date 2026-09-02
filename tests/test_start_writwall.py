@@ -40,7 +40,9 @@ class StartWritwallTests(unittest.TestCase):
             [
                 sys.executable,
                 "-B",
-                str(STARTER),
+                "-m",
+                "writwall_cli",
+                "start",
                 "--non-interactive",
                 "--project-root",
                 str(project or self.project),
@@ -96,6 +98,28 @@ class StartWritwallTests(unittest.TestCase):
             text=True,
             timeout=60,
         )
+
+    def run_lifecycle_start(self, project: Path | None = None):
+        return subprocess.run(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "start",
+                "--project-root", str(project or self.project),
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+
+    @staticmethod
+    def tree_snapshot(root: Path) -> dict[str, bytes | None]:
+        return {
+            path.relative_to(root).as_posix(): (
+                path.read_bytes() if path.is_file() else None
+            )
+            for path in sorted(root.rglob("*"))
+        }
 
     @property
     def output(self) -> Path:
@@ -328,14 +352,62 @@ class StartWritwallTests(unittest.TestCase):
         self.assertIn("does not install or adopt Writwall", flat)
         self.assertIn("Do not enter passwords, API tokens", handoff)
 
-    def test_create_only_refuses_existing_output_without_overwrite(self):
+    def test_existing_bootstrap_routes_to_recovery_without_overwrite(self):
         self.output.mkdir()
         sentinel = self.output / "keep.txt"
         sentinel.write_text("unchanged", encoding="utf-8")
-        result = self.run_start()
-        self.assertNotEqual(result.returncode, 0)
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
         self.assertEqual(sentinel.read_text(encoding="utf-8"), "unchanged")
         self.assertEqual(sorted(p.name for p in self.output.iterdir()), ["keep.txt"])
+        self.assertIn("Observed lifecycle state: partial_bootstrap", result.stdout)
+        self.assertIn("Act as a fresh recovery coordinator", result.stdout)
+
+    def test_lifecycle_change_during_interactive_intake_stops_before_any_write(self):
+        process = subprocess.Popen(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "start",
+                "--project-root", str(self.project),
+                "--project-name", "Example project",
+                "--purpose", "Build a small, governed project.",
+                "--agent", "Codex",
+                "--location", "local workstation",
+                "--environment", "local repository only",
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        assert process.stdout is not None
+        prompt = ""
+        while "Track Owner active minutes?" not in prompt:
+            char = process.stdout.read(1)
+            if not char:
+                break
+            prompt += char
+        self.assertIn("Track Owner active minutes?", prompt)
+
+        governance = self.project / "governance"
+        decisions = governance / "decisions"
+        decisions.mkdir(parents=True)
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        (decisions / "DR-001.md").write_text(
+            "# Adoption record\n", encoding="utf-8"
+        )
+        changed_state = self.tree_snapshot(self.project)
+
+        stdout_tail, stderr = process.communicate("no\nyes\n\n\n", timeout=60)
+        self.assertNotEqual(process.returncode, 0, prompt + stdout_tail + stderr)
+        self.assertEqual(self.tree_snapshot(self.project), changed_state)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertIn("lifecycle changed during intake", stderr)
 
     def test_missing_secret_confirmation_fails_before_output(self):
         result = subprocess.run(
@@ -421,10 +493,14 @@ class StartWritwallTests(unittest.TestCase):
         pointer = self.project / ".claude" / "active-wo.txt"
         pointer.parent.mkdir(parents=True)
         pointer.write_text("governance/work-orders/WO-001.md\n", encoding="utf-8")
-        result = self.run_start()
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(self.intake()["observed_state"], "active_work_order")
-        self.assertIn("Act as Implementer for the active work order only", self.handoff())
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: active_work_order", result.stdout)
+        self.assertIn("Act as a fresh Implementer for the active work order only", result.stdout)
 
     def test_pointer_plus_second_active_order_stops_as_inconsistent(self):
         orders = self.project / "governance" / "work-orders"
@@ -437,10 +513,15 @@ class StartWritwallTests(unittest.TestCase):
         pointer = self.project / ".claude" / "active-wo.txt"
         pointer.parent.mkdir(parents=True)
         pointer.write_text("governance/work-orders/WO-001.md\n", encoding="utf-8")
-        result = self.run_start()
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
         self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.tree_snapshot(self.project), before)
         self.assertFalse(self.output.exists())
-        self.assertIn("only active", (result.stdout + result.stderr).lower())
+        self.assertIn(
+            "activation pointer does not identify the only ACTIVE work order",
+            result.stderr,
+        )
 
     def test_missing_pointer_with_closed_history_never_emits_resume_prompt(self):
         closed = self.project / "governance" / "history" / "WO-001.md"
@@ -448,13 +529,16 @@ class StartWritwallTests(unittest.TestCase):
         closed.write_text("---\nid: WO-001\nstatus: CLOSED\n---\n", encoding="utf-8")
         for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
             (self.project / "governance" / name).write_text(f"# {name}\n", encoding="utf-8")
-        result = self.run_start()
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(self.intake()["observed_state"], "retired_lockout")
-        handoff = self.handoff()
-        self.assertIn("Act as Dispatcher", handoff)
-        self.assertNotIn("resume", handoff.lower())
-        self.assertNotIn("Act as Implementer", handoff)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: retired_lockout", result.stdout)
+        self.assertIn("Act as a fresh Owner-Agent / Project-Architect", result.stdout)
+        self.assertNotIn("resume", result.stdout.lower())
+        self.assertNotIn("Act as a fresh Implementer", result.stdout)
 
     def test_pointer_to_closed_order_is_inconsistent_and_creates_nothing(self):
         work_order = self.project / "governance" / "work-orders" / "WO-001.md"
@@ -463,21 +547,93 @@ class StartWritwallTests(unittest.TestCase):
         pointer = self.project / ".claude" / "active-wo.txt"
         pointer.parent.mkdir(parents=True)
         pointer.write_text("governance/work-orders/WO-001.md\n", encoding="utf-8")
-        result = self.run_start()
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
         self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.tree_snapshot(self.project), before)
         self.assertFalse(self.output.exists())
-        self.assertIn("inconsistent", (result.stdout + result.stderr).lower())
+        self.assertIn(
+            "activation pointer resolves, but the work order status is 'CLOSED', not 'ACTIVE'",
+            result.stderr,
+        )
 
     def test_partial_bootstrap_routes_to_recovery_coordinator(self):
         settings = self.project / ".claude" / "settings.json"
         settings.parent.mkdir(parents=True)
         settings.write_text("{}\n", encoding="utf-8")
-        result = self.run_start()
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(self.intake()["observed_state"], "partial_bootstrap")
-        self.assertIn("recovery coordinator", self.handoff())
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: partial_bootstrap", result.stdout)
+        self.assertIn("Act as a fresh recovery coordinator", result.stdout)
 
-    def test_adopted_lockout_routes_to_dispatcher(self):
+    def test_partial_bootstrap_directory_routes_without_republication(self):
+        self.output.mkdir()
+        sentinel = self.output / "HANDOFF.md"
+        sentinel.write_text("incomplete bootstrap\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertEqual(sentinel.read_text(encoding="utf-8"), "incomplete bootstrap\n")
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: partial_bootstrap", result.stdout)
+        self.assertIn("Act as a fresh recovery coordinator", result.stdout)
+
+    def test_bootstrap_mixed_with_established_lifecycle_fails_closed(self):
+        for lifecycle in ("active", "adopted", "retired"):
+            with self.subTest(lifecycle=lifecycle):
+                project = self.temp / f"project-{lifecycle}"
+                project.mkdir()
+                bootstrap = project / ".writwall-bootstrap"
+                bootstrap.mkdir()
+                (bootstrap / "HANDOFF.md").write_text(
+                    "incomplete bootstrap\n", encoding="utf-8"
+                )
+                governance = project / "governance"
+                if lifecycle == "active":
+                    order = governance / "work-orders" / "WO-001.md"
+                    order.parent.mkdir(parents=True)
+                    order.write_text(
+                        "---\nid: WO-001\nstatus: ACTIVE\n---\n", encoding="utf-8"
+                    )
+                    pointer = project / ".claude" / "active-wo.txt"
+                    pointer.parent.mkdir(parents=True)
+                    pointer.write_text(
+                        "governance/work-orders/WO-001.md\n", encoding="utf-8"
+                    )
+                else:
+                    governance.mkdir()
+                    for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+                        (governance / name).write_text(
+                            f"# {name}\n", encoding="utf-8"
+                        )
+                    if lifecycle == "adopted":
+                        decision = governance / "decisions" / "DR-001.md"
+                        decision.parent.mkdir()
+                        decision.write_text("# Adoption record\n", encoding="utf-8")
+                    else:
+                        closed = governance / "history" / "WO-001.md"
+                        closed.parent.mkdir()
+                        closed.write_text(
+                            "---\nid: WO-001\nstatus: CLOSED\n---\n",
+                            encoding="utf-8",
+                        )
+
+                before = self.tree_snapshot(project)
+                result = self.run_lifecycle_start(project)
+                self.assertNotEqual(
+                    result.returncode, 0, result.stdout + result.stderr
+                )
+                self.assertEqual(self.tree_snapshot(project), before)
+                self.assertFalse(self.state.exists())
+                self.assertIn("inconsistent state", result.stderr)
+                self.assertIn(".writwall-bootstrap", result.stderr)
+
+    def test_adopted_lockout_routes_to_fresh_project_architect(self):
         governance = self.project / "governance"
         governance.mkdir()
         for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
@@ -485,10 +641,21 @@ class StartWritwallTests(unittest.TestCase):
         decision = governance / "decisions" / "DR-001.md"
         decision.parent.mkdir()
         decision.write_text("# Adoption record\n", encoding="utf-8")
-        result = self.run_start()
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(self.intake()["observed_state"], "adopted_lockout")
-        self.assertIn("Act as Dispatcher", self.handoff())
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: adopted_lockout", result.stdout)
+        self.assertIn("Act as a fresh Owner-Agent / Project-Architect", result.stdout)
+        flat = " ".join(result.stdout.split())
+        self.assertIn("Recommendation and material tradeoff", flat)
+        self.assertIn("supporting evidence", flat)
+        self.assertIn("one combined disposition and action", flat)
+        self.assertIn("explicitly include creation and dispatch", flat)
+        self.assertIn("Do not ask for the same decision again", flat)
+        self.assertIn("perform every mechanically available authorized step", flat)
 
     def test_owner_time_yes_defines_capture_and_no_records_not_reported(self):
         yes = self.run_start("--owner-time", "yes")
@@ -583,6 +750,14 @@ class StartWritwallTests(unittest.TestCase):
         )
         self.assertIn("Ordinary no-pointer work", handoff)
         self.assertIn("confers no mutation authority", handoff)
+
+    def test_clean_new_handoff_carries_terminal_fresh_architect_prompt(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        handoff = self.handoff()
+        self.assertIn("After adoption closeout", handoff)
+        self.assertIn(starter_module.PROJECT_ARCHITECT_PROMPT, handoff)
+        self.assertIn("onboarding coordinator stops", handoff)
 
     def test_name_clearance_proof_tools_are_canonical_in_emitted_bundle(self):
         result = self.run_start()
