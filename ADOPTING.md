@@ -42,9 +42,13 @@ locked session may deny the network request that would otherwise retrieve them.
 
 For a first adoption, the default is the day-zero coordinator:
 
+Release candidate `v0.9.3` contains the terminal Architect handoff described
+below but is not yet published. The tagged install command becomes valid only
+after that release is published; until then, use the checked source-tree fallback.
+
 ```text
-# Install the current tagged release.
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.2.zip"
+# After v0.9.3 is published, install that tagged release.
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project
@@ -57,11 +61,13 @@ python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
 It classifies the target from repository bytes, copies the complete skill bundle
-into a temporary `.writwall-bootstrap/` directory, and emits the exact next
-prompt. It is create-only bootstrap tooling, not an authority or installer.
-It also initializes a durable project-specific privacy screen in per-user local
-state outside the repository. The handoff records only ready status and entry
-count, never its location or contents. See
+into a temporary `.writwall-bootstrap/` directory only for a clean/new target,
+and emits the exact next prompt. It is lifecycle-aware bootstrap and routing
+tooling, not an authority or installer. Non-clean valid states skip intake and
+change no target bytes. Only clean/new mode initializes a durable project-
+specific privacy screen in per-user local state outside the repository. The
+bootstrap handoff records only ready status and entry count, never its location
+or contents. Its clean/new branch remains create-only bootstrap tooling. See
 [`docs/privacy-screen.md`](docs/privacy-screen.md).
 Contradictory active state stops before output. Full interface and external-
 Operator packet behavior are documented in
@@ -79,6 +85,14 @@ Routes combine. A common path for an existing project is A (mapping conversation
 
 The coordinator selects among these routes; it does not replace them. Its
 handoff is temporary and must be removed before the adoption commit.
+
+| Human command | Observed state | Fresh role receiving output | Prior session stops | Target bytes |
+|---|---|---|---|---|
+| `writwall start --project-root <project>` | Clean/new | Adoption coordinator | Launcher returns; coordinator stops at adoption closeout | Create-only bootstrap may be added |
+| Same command | Partial/recovery | Recovery coordinator | Incomplete or locked session | Unchanged |
+| Same command | Adopted/retired lockout | Owner-Agent / Project-Architect | Onboarding or prior work session | Unchanged |
+| Same command | Active work order | Bounded Implementer | Prior coordinator or Implementer context | Unchanged |
+| Same command | Malformed/contradictory | No role; fail-closed diagnostic | Invoking session | Unchanged |
 
 ---
 
@@ -281,12 +295,41 @@ What counts as proof is a **live-wall canary**: an Owner-authorized, genuinely m
 
 5.9 Make the adoption commit containing `governance/`, the charter, the adapter, and DR-001. Its message names the baseline hash. This is one local commit; it is not a push, a tag, or a release. You may make it yourself or have an authorized recorder make it on your behalf after you have ratified exactly what it will contain — in either case the commit records a decision that was already yours.
 
-5.10 Dispatch WO-001 as whatever the project genuinely needs next (6.1.4).
-After the candidate passes `--work-order`, create
-`.claude/active-wo.txt` with exactly one LF-terminated, repository-relative
-line naming it, then run `--active`. The pilot begins. This is a fresh Owner
-decision after adoption, never a continuation of the closeout: no bootstrap
-or recorder run starts it.
+5.10 End onboarding and hand the adopted project to a fresh Owner-Agent /
+Project-Architect. The recorder presents this exact prompt and stops:
+
+```text
+Act as a fresh Owner-Agent / Project-Architect. Begin read-only and verify
+the lifecycle from repository bytes rather than prior chat. Read the charter,
+Plan, State, Routing, ratified adoption record, and open transactional records.
+State the project's next decision plainly. Draft, but do not activate or
+implement, the smallest genuine work order or bounded external Operator packet.
+Lead with a concise Recommendation and material tradeoff; keep the detailed
+packet behind it as supporting evidence rather than the conversational front
+door. When the next safe mechanical action is available, ask once for one
+combined disposition and action. If that action uses a new user-owned task,
+explicitly include creation and dispatch of the named task in that approval
+request; never infer task-creation permission afterward. Once approved, perform
+every mechanically available authorized step. Do not ask for the same decision again.
+The human Owner alone ratifies intent and activates work; preserve a distinct
+fresh review after implementation. The onboarding coordinator stops here and
+does not continue into project work.
+```
+
+The Architect drafts whatever genuine work the project needs next (6.1.4),
+including a bounded external Operator packet when that is smaller than a
+repository work order. It leads with its recommendation and material tradeoff;
+the complete packet is supporting evidence. When a safe next mechanical action
+is available, its single approval request combines the disposition with that
+action. A new user-owned task is created or dispatched only when that same
+request explicitly asks for it. After approval, the Architect performs all
+mechanically available authorized steps without asking for the decision again.
+
+For a repository work order, activation remains a distinct Owner decision.
+After the candidate passes `--work-order`, the Owner-authorized lifecycle
+creates `.claude/active-wo.txt` with exactly one LF-terminated, repository-
+relative line naming it, then runs `--active`. The pilot begins. No bootstrap
+or recorder run activates or implements that work.
 
 ---
 

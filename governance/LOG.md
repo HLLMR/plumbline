@@ -872,6 +872,71 @@ were denied by its ACL; it contains no accepted release bytes or private input.
 No public mutation, release, tag, deployment, visibility change, or External
 Pilot A mutation occurred before acceptance.
 
+### Post-pilot WO-WW-015 completed record
+
+WO-WW-015 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-01 and reported
+active minutes **NOT REPORTED**.
+
+The single `writwall start --project-root <project>` entry point now separates
+clean/new intake from lifecycle routing. Recovery, adopted/retired lockout, and
+active-work-order states skip intake and preserve target bytes while handing
+off to the correct fresh role. Adoption closeout stops at an explicit fresh
+Owner-Agent / Project-Architect boundary. Architect interaction now leads with
+a concise recommendation, keeps the full packet as supporting evidence, and
+combines disposition with the mechanically available next action so an
+approved dispatch is not requested twice.
+
+Fresh review found a stale-classification race and three mixed-state fail-open
+routes. Public-interface RED/GREEN corrections added pre-write lifecycle
+revalidation and fail-closed recovery-marker contradictions. Windows passed
+750 tests with two skips. Native Ubuntu passed the affected lifecycle tests and
+the exact two installed-wheel tests under a temporary compatible declared
+build backend. Two independent 136-file public candidates passed projection
+and installed-release gates and were byte-identical at complete-tree ledger
+SHA-256 `0CE941705CE8FEAB868220D198DDC37B12F5A213A3C482AF6E9ED43DDA19088D`.
+Fresh final re-review returned **ACCEPT — HIGH confidence**.
+
+Accepted deviations are preserved in the report: the Codex implementation
+surface was not physically governed by the Claude hook; early test bytecode
+residue was caught and removed; the native environment first lacked pip and
+then a compatible declared build backend; one temporary-backend setup command
+was recovered with Ubuntu restored and all temporary paths removed; and one
+read-denied history search printed filenames only, without retrieving content.
+No public mutation, release, tag, deployment, pilot mutation, or successor
+activation occurred before acceptance. Public issue #24 remains open pending a
+separately authorized public projection and PR.
+
+### Post-pilot WO-WW-016 completed record
+
+WO-WW-016 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-02 and reported
+active minutes **NOT REPORTED**.
+
+The immutable `v0.9.2` release predates WO-WW-015, so the accepted lifecycle
+handoff could not truthfully remain packaged or documented as that release.
+Package metadata, conditional tagged-install guidance, contribution and
+publication commands, and executable synchronization tests now agree on
+`0.9.3` / `v0.9.3`. Current onboarding text says the tag is not yet published;
+historical `v0.9.0` through `v0.9.2` facts remain unchanged.
+
+Windows passed 750 tests with two skips. Native Ubuntu passed 17 release tests
+and the installed `v0.9.3` gate using an Owner-authorized disposable compatible
+backend. Two independent 136-file candidates passed Windows installed-release
+and final projection gates and were byte-identical at complete-tree ledger
+SHA-256 `D7AC9887601144906E416AEC78ACE71944DCC6B580588EC709FF4011B2CB3649`.
+Fresh review returned **ACCEPT — HIGH confidence**.
+
+Accepted deviations are preserved in the report: the first sandboxed native
+invocation was denied before execution; Ubuntu lacked its optional `venv`
+component, so the temporary backend used an isolated module directory; and one
+status-wrapper quoting error made an otherwise green test run diagnostic before
+a corrected complete rerun passed. Temporary candidates and dependency paths
+were deleted and proven absent. No out-of-grant mutation succeeded. No public
+branch, PR, issue closure, merge, tag, or release occurred before acceptance.
+Issue #24 proceeds only through the separately authorized post-closeout PR and
+protected-CI merge; tagging and releasing `v0.9.3` remain unauthorized.
+
 ---
 
 ## Column definitions

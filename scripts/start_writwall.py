@@ -30,6 +30,21 @@ SECRET_WARNING = (
     "record values, or other secrets. This tool writes your answers as plain "
     "text inside the target project."
 )
+PROJECT_ARCHITECT_PROMPT = """Act as a fresh Owner-Agent / Project-Architect. Begin read-only and verify
+the lifecycle from repository bytes rather than prior chat. Read the charter,
+Plan, State, Routing, ratified adoption record, and open transactional records.
+State the project's next decision plainly. Draft, but do not activate or
+implement, the smallest genuine work order or bounded external Operator packet.
+Lead with a concise Recommendation and material tradeoff; keep the detailed
+packet behind it as supporting evidence rather than the conversational front
+door. When the next safe mechanical action is available, ask once for one
+combined disposition and action. If that action uses a new user-owned task,
+explicitly include creation and dispatch of the named task in that approval
+request; never infer task-creation permission afterward. Once approved, perform
+every mechanically available authorized step. Do not ask for the same decision again.
+The human Owner alone ratifies intent and activates work; preserve a distinct
+fresh review after implementation. The onboarding coordinator stops here and
+does not continue into project work."""
 
 DNS_MAIL_SCENARIO = (
     "DNS provider selection",
@@ -167,6 +182,18 @@ def _safe_pointer_target(project: Path, value: str) -> Path:
 
 def classify_project(project: Path) -> ObservedState:
     """Classify lifecycle state from repository bytes, never chat context."""
+    bootstrap = project / OUTPUT_NAME
+    bootstrap_exists = _entry_exists(bootstrap)
+    if bootstrap_exists:
+        _safe_project_path(project, bootstrap, "bootstrap recovery marker")
+
+    def reject_bootstrap_conflict(lifecycle: str) -> None:
+        if bootstrap_exists:
+            raise CoordinatorError(
+                "inconsistent state: .writwall-bootstrap recovery marker "
+                f"coexists with {lifecycle} lifecycle state"
+            )
+
     claude_dir = project / ".claude"
     if _entry_exists(claude_dir):
         resolved_claude = _safe_project_path(project, claude_dir, ".claude directory")
@@ -227,6 +254,7 @@ def classify_project(project: Path) -> ObservedState:
                 f"work order; observed ACTIVE records: {names}"
             )
         relative = pointed_target.relative_to(project).as_posix()
+        reject_bootstrap_conflict("active work-order")
         return ObservedState(
             "active_work_order",
             ("activation pointer exists", f"pointed work order is ACTIVE: {relative}"),
@@ -276,6 +304,7 @@ def classify_project(project: Path) -> ObservedState:
                 )
 
     if all(path.is_file() for path in core) and closed_records:
+        reject_bootstrap_conflict("retired lockout")
         return ObservedState(
             "retired_lockout",
             (
@@ -287,6 +316,7 @@ def classify_project(project: Path) -> ObservedState:
     if all(path.is_file() for path in core) and any(
         path.is_file() for path in adoption_records
     ):
+        reject_bootstrap_conflict("adopted lockout")
         return ObservedState(
             "adopted_lockout",
             (
@@ -296,6 +326,7 @@ def classify_project(project: Path) -> ObservedState:
         )
 
     writwall_markers = (
+        project / OUTPUT_NAME,
         project / ".claude" / "hooks" / "wo_capability_wall.py",
         project / ".claude" / "settings.json",
         governance / "PLAN.md",
@@ -446,7 +477,7 @@ def next_prompt(state: ObservedState) -> tuple[str, str]:
     if state.name == "clean_new":
         return (
             "Adoption coordinator before wall registration",
-            """Act as my Writwall adoption coordinator, not as an Implementer. Read
+            f"""Act as my Writwall adoption coordinator, not as an Implementer. Read
 `.writwall-bootstrap/writwall-adopt/SKILL.md` and use bootstrap mode. Treat
 `.writwall-bootstrap/intake.json` as unratified intake, not authority. I decide
 and ratify; perform every clerical step an authorized recorder may perform.
@@ -458,35 +489,51 @@ verbatim into the engine-visible pre-adoption charter. Ordinary no-pointer work
 remains forbidden; the addendum permits only exact expected-denial probes named
 by a durably Owner-ratified lifecycle and confers no mutation authority. Denial
 is the only valid outcome, and any success stops adoption. Remove it before the
-adoption commit. Do not begin product work or WO-001 before adoption.""",
+adoption commit. Do not begin product work or WO-001 before adoption.
+
+After adoption closeout, present the following exact fresh-role handoff and
+stop. The onboarding coordinator stops before product work:
+
+{PROJECT_ARCHITECT_PROMPT}""",
         )
     if state.name == "partial_bootstrap":
         return (
-            "External recovery coordinator",
-            """Act as my Writwall accidental-overlay or incomplete-adoption recovery coordinator,
-not as an Implementer. Read `.writwall-bootstrap/writwall-adopt/SKILL.md`.
-Inventory only; do not delete, overwrite, move, install, register, activate, or
-invent missing intent. Use the observed-state evidence in the handoff, propose
-an exact disposition packet, and ask one question at a time.""",
+            "Fresh external recovery coordinator",
+            """Act as a fresh recovery coordinator for this accidental overlay or incomplete
+Writwall adoption, not as an Implementer. Begin read-only. Use a complete local
+Writwall source or adoption bundle outside the locked session; do not assume a
+partial project-local bundle is complete. Inventory only: do not delete,
+overwrite, move, install, register, activate, or invent missing intent. Verify
+the lifecycle from repository bytes, propose an exact disposition packet, and
+ask one question at a time. The prior session stops here.""",
         )
     if state.name in {"adopted_lockout", "retired_lockout"}:
         return (
-            "Dispatcher for a new candidate work order",
-            """Act as Dispatcher. The repository is in observed lockout; no active work order
-is established. Read the charter, Plan, State, Routing, and ratified adoption
-record. Draft one bounded work order for the project's genuine next task.
-Generate and validate its boundaries, but do not activate it. Return the exact
-candidate and scope rationale for Owner approval.""",
+            "Fresh Owner-Agent / Project-Architect",
+            PROJECT_ARCHITECT_PROMPT,
         )
     if state.name == "active_work_order":
         return (
-            "Walled repository Implementer",
-            """Act as Implementer for the active work order only. Re-read the activation
+            "Fresh walled repository Implementer",
+            """Act as a fresh Implementer for the active work order only. Re-read the activation
 pointer and pointed work order from repository bytes, confirm the active
 dispatch and required live-wall canary before mutation, execute only its grant,
 write its report, and stop before acceptance or closeout.""",
         )
     raise CoordinatorError(f"inconsistent state: unsupported classification {state.name!r}")
+
+
+def emit_lifecycle_handoff(state: ObservedState) -> None:
+    """Print the next fresh-role handoff without changing target bytes."""
+    role, prompt = next_prompt(state)
+    print(f"Observed lifecycle state: {state.name}")
+    for item in state.evidence:
+        print(f"  - {item}")
+    if state.active_work_order:
+        print(f"Pointed work order: {state.active_work_order}")
+    print(f"Next role: {role}")
+    print("\nCopy this prompt into a fresh session:\n")
+    print(prompt)
 
 
 def render_time(owner_time: str) -> str:
@@ -991,6 +1038,21 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def resolve_project_root(value: str | None) -> Path:
+    if not value:
+        raise CoordinatorError("missing required intake: project root")
+    supplied_project = Path(value).expanduser()
+    if supplied_project.is_symlink():
+        raise CoordinatorError("target project must not be a symlink")
+    try:
+        project = supplied_project.resolve(strict=True)
+    except OSError as exc:
+        raise CoordinatorError(f"target project directory is not readable: {exc}") from exc
+    if not project.is_dir() or project.is_symlink():
+        raise CoordinatorError("target project must be an existing, non-symlink directory")
+    return project
+
+
 def normalize_args(args: argparse.Namespace) -> tuple[argparse.Namespace, Path, tuple[str, ...]]:
     if not args.non_interactive:
         args = interactive_args(args)
@@ -1058,15 +1120,7 @@ def normalize_args(args: argparse.Namespace) -> tuple[argparse.Namespace, Path, 
                 "be both a constraint and a non-goal"
             )
 
-    supplied_project = Path(args.project_root).expanduser()
-    if supplied_project.is_symlink():
-        raise CoordinatorError("target project must not be a symlink")
-    try:
-        project = supplied_project.resolve(strict=True)
-    except OSError as exc:
-        raise CoordinatorError(f"target project directory is not readable: {exc}") from exc
-    if not project.is_dir() or project.is_symlink():
-        raise CoordinatorError("target project must be an existing, non-symlink directory")
+    project = resolve_project_root(args.project_root)
 
     if args.brief_file:
         brief = Path(args.brief_file).expanduser()
@@ -1093,12 +1147,23 @@ def main(argv: list[str] | None = None) -> int:
             PrivacyScreenError, add_identifier, initialize,
         )
 
-        args, project, functions = normalize_args(parse_args(argv))
+        args = parse_args(argv)
+        project = resolve_project_root(args.project_root)
+        state = classify_project(project)
+        if state.name != "clean_new":
+            emit_lifecycle_handoff(state)
+            return 0
+        args, project, functions = normalize_args(args)
+        current_state = classify_project(project)
+        if current_state.name != state.name:
+            raise CoordinatorError(
+                "lifecycle changed during intake: expected clean_new, observed "
+                f"{current_state.name}; no privacy or bootstrap bytes were created"
+            )
         if _entry_exists(project / OUTPUT_NAME):
             raise CoordinatorError(
                 f"create-only stop: {OUTPUT_NAME} already exists; nothing was overwritten"
             )
-        state = classify_project(project)
         try:
             privacy_count = initialize(project)
             for identifier in args.private_identifier:

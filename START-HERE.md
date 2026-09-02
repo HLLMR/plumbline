@@ -59,16 +59,18 @@ names, repository slugs, domains, logos, or launch copy. The coordinator may
 collect evidence, but the Owner chooses the identity; unavailable sources are
 not clear results.
 
-1. Install the current public coordinator without unpacking it over your
-   project:
+1. Release candidate `v0.9.3` contains the terminal Architect handoff but is
+   not yet published. After publication, install it without unpacking it over
+   your project; until then, use the checked source-tree fallback below:
 
    ```text
-   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.2.zip"
+   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
    ```
 
    Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrected
    first-use bytecode residue. Release `v0.9.2` corrects the bootstrap
-   expected-denial contract and is the minimum recommended coordinator release.
+   expected-denial contract. Release candidate `v0.9.3` adds lifecycle-aware
+   routing and the terminal Architect handoff.
    If you are testing an unpublished release candidate, use its checked external
    candidate tree and the release gate in `PUBLICATION.md`.
 2. Run one command:
@@ -84,12 +86,23 @@ not clear results.
    python3 scripts/start_writwall.py --project-root /path/to/your-project
    ```
 
+   The same command is the entry point throughout the project lifecycle:
+
+   | Observed state | Fresh role receiving the output | Session that stops | May target bytes change? |
+   |---|---|---|---|
+   | Clean/new | Adoption coordinator | The human's current launcher returns after creating the bootstrap; the adoption coordinator later stops at closeout | Yes: create-only `.writwall-bootstrap/` |
+   | Partial bootstrap or recovery | Recovery coordinator | The incomplete adoption or locked session | No |
+   | Adopted or retired lockout | Owner-Agent / Project-Architect | The onboarding coordinator or prior work session | No |
+   | Active work order | Bounded Implementer | Any prior coordinator or Implementer context | No |
+   | Malformed or contradictory | No role; precise stop diagnostic | The invoking session | No |
+
 3. If you choose to track Owner active minutes, start the timer when the first
    question tells you to; do not reconstruct time later. Answer one question at
    a time without entering secrets. You may point it at an existing brief. The
-   command observes actual repository lifecycle state, creates
-   `<project>/.writwall-bootstrap/`, and initializes a durable local privacy
-   screen outside the repository. Add only private names, codenames, client
+   command observes actual repository lifecycle state. Only a clean/new target
+   enters intake, creates `<project>/.writwall-bootstrap/`, and initializes a
+   durable local privacy screen outside the repository. Later valid states emit
+   a fresh-role prompt without changing target bytes. Add only private names, codenames, client
    identifiers, or domains; never add credentials or secret values. See
    [`docs/privacy-screen.md`](docs/privacy-screen.md).
 4. Open its `HANDOFF.md`. Start the agent and location it names and paste the
@@ -235,21 +248,41 @@ temporary bootstrap bundle before the adoption commit, return the project to
 lockout, and do not dispatch WO-001.
 ```
 
-## First work order
+## Terminal Project-Architect handoff
 
-After the adoption commit, tell the Dispatcher:
+Adoption closeout ends the onboarding session. After the adoption commit, open
+a fresh Owner-Agent / Project-Architect and paste exactly:
 
 ```text
-Act as Dispatcher. Read the charter, Plan, State, Routing, and ratified adoption
-record. Draft one bounded work order for the project's genuine next product
-task. Generate and validate its boundaries, but do not activate it. Return the
-exact candidate and your scope rationale for my approval.
+Act as a fresh Owner-Agent / Project-Architect. Begin read-only and verify
+the lifecycle from repository bytes rather than prior chat. Read the charter,
+Plan, State, Routing, ratified adoption record, and open transactional records.
+State the project's next decision plainly. Draft, but do not activate or
+implement, the smallest genuine work order or bounded external Operator packet.
+Lead with a concise Recommendation and material tradeoff; keep the detailed
+packet behind it as supporting evidence rather than the conversational front
+door. When the next safe mechanical action is available, ask once for one
+combined disposition and action. If that action uses a new user-owned task,
+explicitly include creation and dispatch of the named task in that approval
+request; never infer task-creation permission afterward. Once approved, perform
+every mechanically available authorized step. Do not ask for the same decision again.
+The human Owner alone ratifies intent and activates work; preserve a distinct
+fresh review after implementation. The onboarding coordinator stops here and
+does not continue into project work.
 ```
 
-After you approve and activate that work order, start a fresh Implementer:
+The Architect leads with a concise recommendation and material tradeoff; its
+detailed packet remains supporting evidence. If the next safe step can be done,
+its one approval request includes both the disposition and that action. Creating
+a new user-owned task must be explicitly included in that request. Once you
+approve it, the Architect performs every authorized mechanical step available
+without asking the same question again. It still does not infer ratification,
+activate a work order it was told only to draft, or implement product work.
+
+After you separately approve and activate a work order, start a fresh Implementer:
 
 ```text
-Act as Implementer for the active work order only. Confirm the active dispatch
+Act as a fresh Implementer for the active work order only. Confirm the active dispatch
 and required live-wall canary before mutation. Execute the order, preserve RED
 and GREEN evidence, write its report, and stop before acceptance or closeout.
 ```

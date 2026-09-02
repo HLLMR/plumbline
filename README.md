@@ -93,14 +93,18 @@ actually blocks the current session before real work begins.
 
 ## Try it in five minutes
 
-If you are new to Writwall, run the day-zero coordinator from this clean source
-distribution. It inspects the target before assigning a role, makes the complete
-adoption bundle local, and writes the exact next prompt without installing the
-wall or claiming adoption:
+Run the lifecycle-aware coordinator from this clean source distribution. It
+inspects the target before intake, assigns the correct fresh role, and changes
+target bytes only for clean/new bootstrap. It never installs the wall or claims
+adoption. This routing happens without installing the wall or claiming adoption:
+
+Release candidate `v0.9.3` contains the terminal Architect handoff described
+below but is not yet published. The tagged install command becomes valid only
+after that release is published; until then, use the checked source-tree fallback.
 
 ```text
-# Install the current tagged release.
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.2.zip"
+# After v0.9.3 is published, install that tagged release.
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project
@@ -113,11 +117,20 @@ py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
 
-The command asks one question at a time, creates `.writwall-bootstrap/` in the
-target, and initializes a durable project-specific privacy screen in your
-operating system's local user state outside the repository. Read its
-`HANDOFF.md`, open the named
-agent in the named location, and paste the supplied prompt. Do not enter
+| Observed state | Fresh role | Prior session stops | Target bytes |
+|---|---|---|---|
+| Clean/new | Adoption coordinator | Launcher returns; onboarding later stops at closeout | Create-only bootstrap may be added |
+| Partial/recovery | Recovery coordinator | Incomplete or locked session | Unchanged |
+| Adopted/retired lockout | Owner-Agent / Project-Architect | Onboarding or prior work session | Unchanged |
+| Active work order | Bounded Implementer | Prior coordinator/Implementer context | Unchanged |
+| Malformed/contradictory | No role; fail-closed diagnostic | Invoking session | Unchanged |
+
+For clean/new state, the command asks one question at a time, creates
+`.writwall-bootstrap/`, and initializes a durable project-specific privacy
+screen in your operating system's local user state outside the repository.
+Read its `HANDOFF.md`, open the named agent in the named location, and paste the
+supplied prompt. Later states print their fresh-role handoff directly without
+intake, privacy initialization, or target writes. Do not enter
 passwords, API tokens, private keys, mailbox contents, DNS values, or other
 secrets; intake is stored as local plain text. See the
 [coordinator reference](docs/day-zero-coordinator.md), or use

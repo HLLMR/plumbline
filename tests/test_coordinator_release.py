@@ -53,7 +53,7 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def run_checker(self, candidate: Path, *extra: str):
         arguments = [str(candidate), *extra]
         if "--expected-tag" not in extra:
-            arguments.extend(("--expected-tag", "v0.9.2"))
+            arguments.extend(("--expected-tag", "v0.9.3"))
         return subprocess.run(
             [sys.executable, "-B", str(CHECKER), *arguments],
             cwd=REPO_ROOT,
@@ -104,6 +104,8 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertIn("OK: coordinator release candidate passed", result.stdout)
         self.assertIn("installed command", result.stdout)
         self.assertIn("complete handoff", result.stdout)
+        self.assertIn("adopted lockout", result.stdout)
+        self.assertIn("zero target-byte change", result.stdout)
         self.assertIn("candidate unchanged", result.stdout)
         self.assertEqual(tree_digest(candidate), before)
 
@@ -120,6 +122,26 @@ class CoordinatorReleaseTests(unittest.TestCase):
         result = self.run_checker(candidate)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("wheel build failed", result.stdout + result.stderr)
+
+    def test_installed_adopted_lockout_target_write_fails_release_gate(self):
+        candidate = self.make_candidate()
+        start = candidate / "scripts" / "start_writwall.py"
+        start.write_text(
+            start.read_text(encoding="utf-8").replace(
+                "            emit_lifecycle_handoff(state)\n            return 0\n",
+                "            emit_lifecycle_handoff(state)\n"
+                "            (project / 'forbidden-route-write.txt').write_text('changed')\n"
+                "            return 0\n",
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        result = self.run_checker(candidate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(
+            "installed adopted-lockout route changed target bytes",
+            result.stdout + result.stderr,
+        )
 
     def test_installed_help_mismatch_fails_with_diagnostic(self):
         candidate = self.make_candidate()
@@ -227,15 +249,15 @@ class CoordinatorReleaseTests(unittest.TestCase):
         pyproject = candidate / "pyproject.toml"
         pyproject.write_text(
             pyproject.read_text(encoding="utf-8").replace(
-                'version = "0.9.2"', 'version = "0.9.0"'
+                'version = "0.9.3"', 'version = "0.9.0"'
             ),
             encoding="utf-8",
             newline="\n",
         )
-        result = self.run_checker(candidate, "--expected-tag", "v0.9.2")
+        result = self.run_checker(candidate, "--expected-tag", "v0.9.3")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "candidate version '0.9.0' does not match intended tag 'v0.9.2'",
+            "candidate version '0.9.0' does not match intended tag 'v0.9.3'",
             result.stdout + result.stderr,
         )
 
@@ -269,18 +291,21 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def test_release_identity_and_public_payload_are_coherent(self):
         with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
             project = tomllib.load(handle)["project"]
-        self.assertEqual(project["version"], "0.9.2")
+        self.assertEqual(project["version"], "0.9.3")
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
         contributing = (REPO_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
         publication = (REPO_ROOT / "PUBLICATION.md").read_text(encoding="utf-8")
         start = (REPO_ROOT / "START-HERE.md").read_text(encoding="utf-8")
-        tagged_archive = "archive/refs/tags/v0.9.2.zip"
+        tagged_archive = "archive/refs/tags/v0.9.3.zip"
         self.assertIn(tagged_archive, readme)
         self.assertIn(tagged_archive, adopting)
         self.assertIn(tagged_archive, start)
-        self.assertIn("--expected-tag v0.9.2", publication)
-        self.assertIn("--expected-tag v0.9.2", contributing)
+        self.assertIn("--expected-tag v0.9.3", publication)
+        self.assertIn("--expected-tag v0.9.3", contributing)
+        for document in (readme, adopting, start):
+            self.assertIn("not yet published", document)
+            self.assertIn("After", document)
         self.assertIn("Release `v0.9.0` first introduced", start)
         self.assertIn("Release `v0.9.1` corrected", start)
         self.assertIn("Release `v0.9.2` corrects", start)

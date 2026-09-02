@@ -20,6 +20,8 @@ import unittest
 import zipfile
 from pathlib import Path
 
+from scripts.start_writwall import PROJECT_ARCHITECT_PROMPT
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKIP_DIRS = {".git", "dist", "__pycache__", ".pytest_cache", "bootstrap"}
 IS_PROJECTION = all(
@@ -352,6 +354,33 @@ class CurrentDocumentationSynchronizationTests(unittest.TestCase):
             with self.subTest(path=relative):
                 self.assertNotIn("remains bound to 0.6", text)
                 self.assertIn("operatively bound to Doctrine 0.8", text)
+
+    def test_terminal_architect_handoff_is_synchronized(self):
+        for relative in (
+            "START-HERE.md",
+            "ADOPTING.md",
+            "skills/writwall-adopt/SKILL.md",
+        ):
+            with self.subTest(path=relative):
+                text = (REPO_ROOT / relative).read_text(encoding="utf-8")
+                self.assertIn(PROJECT_ARCHITECT_PROMPT, text)
+
+    def test_human_ramp_and_coordinator_reference_carry_lifecycle_table(self):
+        for relative in (
+            "README.md",
+            "START-HERE.md",
+            "ADOPTING.md",
+            "docs/day-zero-coordinator.md",
+        ):
+            with self.subTest(path=relative):
+                text = " ".join(
+                    (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+                ).lower()
+                for truth in (
+                    "partial", "adopted", "active work order", "target bytes",
+                    "project-architect", "recovery coordinator", "implementer",
+                ):
+                    self.assertIn(truth, text)
 
 
 class CheckerFailureCategories(DistributionTestCase):
@@ -3192,7 +3221,12 @@ class DayZeroCoordinatorContractTests(DistributionTestCase):
         self.assert_fails(self.check(), "onboarding")
 
     def test_start_here_losing_temporary_bundle_fails(self):
-        self.edit("START-HERE.md", ".writwall-bootstrap/", ".temporary-bootstrap/")
+        self.edit(
+            "START-HERE.md",
+            ".writwall-bootstrap/",
+            ".temporary-bootstrap/",
+            count=-1,
+        )
         self.assert_fails(self.check(), "onboarding")
 
     def test_skill_losing_repository_state_rule_fails(self):
