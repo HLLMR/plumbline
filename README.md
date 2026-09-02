@@ -98,12 +98,10 @@ inspects the target before intake, assigns the correct fresh role, and changes
 target bytes only for clean/new bootstrap. It never installs the wall or claims
 adoption. This routing happens without installing the wall or claiming adoption:
 
-Release candidate `v0.9.3` contains the terminal Architect handoff described
-below but is not yet published. The tagged install command becomes valid only
-after that release is published; until then, use the checked source-tree fallback.
+Release `v0.9.3` is published and contains the terminal Architect handoff
+described below.
 
 ```text
-# After v0.9.3 is published, install that tagged release.
 python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
 
 # Installed command

@@ -690,3 +690,22 @@ minutes were **NOT REPORTED**. After ordinary closeout, repeat two projections
 and fresh publication review, open the issue #24 PR, and merge only after
 required CI passes. Tagging and releasing `v0.9.3` remain separate,
 unauthorized actions.
+
+## 26. Post-v0.9.3 release truth and CI reliability — 2026-09-02
+
+The Owner confirms that public `main` and release tag `v0.9.3` are both
+`e0cef360843dff38d6a02dd48be8f61b2d2d300e`, the GitHub release is public,
+its complete CI run passed, public issue #24 is closed, and no public pull
+request remains open. The post-release governed-source record and current
+install guidance must now be reconciled with those observed facts.
+
+**WO-WW-017 — COMPLETE, accepted 2026-09-02: post-release truth and CI
+reliability.** Current guidance now truthfully identifies published v0.9.3;
+the obsolete former-identity `dist/plumbline-0.6.zip` (private governed-source reference, not present in this candidate) was retired at Owner closeout;
+Windows privacy-profile replacement contention has a bounded classified retry;
+and pull-request heads execute one complete matrix without duplicate push
+jobs. Windows passed 752 tests with two skips, the native Ubuntu affected set
+passed with one platform skip, and fresh review returned **ACCEPT — HIGH
+confidence** after two correction cycles. Public issues #18 and #19 proceed
+through the authorized post-closeout projection, review, and protected-CI PR.
+No release or external-project mutation is authorized.

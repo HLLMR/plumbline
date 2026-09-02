@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -234,6 +235,84 @@ class PrivacyScreenTests(unittest.TestCase):
         stored = profile.read_text(encoding="utf-8")
         for identifier in identifiers:
             self.assertIn(identifier, stored)
+
+    @unittest.skipUnless(
+        sys.platform == "win32", "Windows atomic-replacement contention regression"
+    )
+    def test_windows_replacement_contention_retries_until_handle_releases(self) -> None:
+        import ctypes
+
+        initialized = self.run_cli(
+            "privacy", "init", "--project-root", str(self.project)
+        )
+        self.assertEqual(initialized.returncode, 0, initialized.stderr)
+        profile = next(self.state.rglob("private-patterns.txt"))
+
+        generic_read = 0x80000000
+        file_share_read = 0x00000001
+        file_share_write = 0x00000002
+        open_existing = 3
+        file_attribute_normal = 0x80
+        invalid_handle_value = ctypes.c_void_p(-1).value
+        create_file = ctypes.windll.kernel32.CreateFileW
+        create_file.restype = ctypes.c_void_p
+        # Deny delete sharing only, reproducing real Windows replacement
+        # contention (for example from an indexer or antivirus scanner)
+        # without also blocking ordinary readers or writers.
+        handle = create_file(
+            str(profile), generic_read, file_share_read | file_share_write,
+            None, open_existing, file_attribute_normal, None,
+        )
+        self.assertNotEqual(handle, invalid_handle_value, ctypes.WinError())
+
+        signal = self.temp / "replace-contention-observed.txt"
+        instrumented_cli = (
+            "from pathlib import Path\n"
+            "from scripts import privacy_screen\n"
+            f"signal = Path({str(signal)!r})\n"
+            "real_replace = privacy_screen.os.replace\n"
+            "def observed_replace(source, target):\n"
+            "    try:\n"
+            "        return real_replace(source, target)\n"
+            "    except OSError as exc:\n"
+            "        signal.write_text(str(getattr(exc, 'winerror', '')), "
+            "encoding='ascii')\n"
+            "        raise\n"
+            "privacy_screen.os.replace = observed_replace\n"
+            "from writwall_cli.__main__ import main\n"
+            f"raise SystemExit(main(['privacy', 'add', '--project-root', "
+            f"{str(self.project)!r}, '--identifier-stdin', "
+            "'--confirm-no-secrets']))\n"
+        )
+        process = subprocess.Popen(
+            [sys.executable, "-B", "-c", instrumented_cli],
+            cwd=REPO_ROOT, env=self.managed_environment(), stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        )
+        assert process.stdin is not None
+        process.stdin.write("PRIVATE-CONTENTION-MARKER\n")
+        process.stdin.close()
+        contention_winerror: int | None = None
+        try:
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline:
+                if signal.is_file():
+                    contention_winerror = int(signal.read_text(encoding="ascii"))
+                    break
+                if process.poll() is not None:
+                    break
+                time.sleep(0.01)
+        finally:
+            ctypes.windll.kernel32.CloseHandle(handle)
+
+        stdout, stderr = process.communicate(timeout=30)
+        self.assertIn(
+            contention_winerror,
+            {5, 32, 33},
+            "privacy add did not encounter classified replacement contention",
+        )
+        self.assertEqual(process.returncode, 0, stdout + stderr)
+        self.assertRegex(stdout, r"privacy screen: ready \([1-9][0-9]* entries\)")
 
 
 if __name__ == "__main__":

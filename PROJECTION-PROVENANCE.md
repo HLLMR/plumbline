@@ -5,8 +5,8 @@ Legacy commit identifiers in projected records refer to that private
 source and are intentionally not resolvable from fresh public history.
 No private remote URL is recorded here.
 
-- Source commit: `9da1a2b34e787737837a9c857f002dc23ebfb277`
-- Source commit time: `2026-09-02T12:10:32-05:00`
+- Source commit: `b36afe10baa7d7dd83f405d07f6bf4d38f5120c7`
+- Source commit time: `2026-09-02T18:30:05-05:00`
 - Projection allowlist SHA-256: `fafcbf659c40d7260dddaa8a64b6b59c3b7de484f77d879a90323bb4b3e1a4a7`
 
 ## Legacy identifier inventory
@@ -21,4 +21,5 @@ No private remote URL is recorded here.
 - `a905c87987f31094121c11a3b8163f97ef1abcf4` — `SELF-HOSTING.md`, `governance/STATE.md`, `governance/decisions/DR-001.md`
 - `ba3c0754e5019f1fa93779d110843562cfa07307` — `governance/STATE.md`
 - `d790a2b8d500a1c3a5e10af9f0a78d1c3c3f4e3a` — `governance/STATE.md`
+- `e0cef360843dff38d6a02dd48be8f61b2d2d300e` — `governance/PLAN.md`, `governance/STATE.md`
 - `e270fd3235d170a28a21fd198b88857740b74acd` — `governance/STATE.md`

@@ -331,6 +331,29 @@ class CIWorkflowTests(DistributionTestCase):
             with self.subTest(requirement=requirement):
                 self.assertIn(f'"{requirement}"', provisioning)
 
+    def test_pull_request_heads_do_not_duplicate_the_push_matrix(self):
+        workflow = (self.repo / ".github" / "workflows" / "ci.yml").read_text(
+            encoding="utf-8"
+        )
+        on_block_match = re.search(r"(?ms)^on:\n(.*?)\n(?=\S)", workflow)
+        self.assertIsNotNone(on_block_match, "workflow 'on:' block is missing")
+        on_block = on_block_match.group(1)
+        self.assertIn("push:", on_block)
+        self.assertIn("pull_request:", on_block)
+        push_index = on_block.index("push:")
+        pull_request_index = on_block.index("pull_request:")
+        self.assertLess(push_index, pull_request_index)
+        push_block = on_block[push_index:pull_request_index]
+        pull_request_block = on_block[pull_request_index:]
+        # A push-event filter narrowed to main and release tags means an
+        # ordinary feature-branch push, including the one behind a pull
+        # request, no longer independently triggers the push matrix; only
+        # the unrestricted pull_request trigger runs it for that head.
+        self.assertIn("branches: [main]", push_block)
+        self.assertIn('tags: ["v*"]', push_block)
+        self.assertNotIn("branches:", pull_request_block)
+        self.assertNotIn("tags:", pull_request_block)
+
 
 class CurrentDocumentationSynchronizationTests(unittest.TestCase):
     def test_adapter_readme_lists_every_reason_code_and_surface(self):
