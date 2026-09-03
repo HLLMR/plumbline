@@ -53,7 +53,7 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def run_checker(self, candidate: Path, *extra: str):
         arguments = [str(candidate), *extra]
         if "--expected-tag" not in extra:
-            arguments.extend(("--expected-tag", "v0.9.3"))
+            arguments.extend(("--expected-tag", "v0.10.0"))
         return subprocess.run(
             [sys.executable, "-B", str(CHECKER), *arguments],
             cwd=REPO_ROOT,
@@ -105,6 +105,9 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertIn("installed command", result.stdout)
         self.assertIn("complete handoff", result.stdout)
         self.assertIn("adopted lockout", result.stdout)
+        self.assertIn("retired lockout", result.stdout)
+        self.assertIn("draft regression", result.stdout)
+        self.assertIn("unrelated regression", result.stdout)
         self.assertIn("zero target-byte change", result.stdout)
         self.assertIn("candidate unchanged", result.stdout)
         self.assertEqual(tree_digest(candidate), before)
@@ -140,6 +143,26 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
             "installed adopted-lockout route changed target bytes",
+            result.stdout + result.stderr,
+        )
+
+    def test_installed_reintroduced_filename_only_adoption_defect_fails_release_gate(self):
+        candidate = self.make_candidate()
+        start = candidate / "scripts" / "start_writwall.py"
+        original = start.read_text(encoding="utf-8")
+        self.assertIn("adopted = bool(ratified_evidence)", original)
+        start.write_text(
+            original.replace(
+                "adopted = bool(ratified_evidence)",
+                "adopted = bool(adoption_evidence)",
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        result = self.run_checker(candidate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(
+            "installed draft-adoption-record regression route failed",
             result.stdout + result.stderr,
         )
 
@@ -249,15 +272,15 @@ class CoordinatorReleaseTests(unittest.TestCase):
         pyproject = candidate / "pyproject.toml"
         pyproject.write_text(
             pyproject.read_text(encoding="utf-8").replace(
-                'version = "0.9.3"', 'version = "0.9.0"'
+                'version = "0.10.0"', 'version = "0.9.0"'
             ),
             encoding="utf-8",
             newline="\n",
         )
-        result = self.run_checker(candidate, "--expected-tag", "v0.9.3")
+        result = self.run_checker(candidate, "--expected-tag", "v0.10.0")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "candidate version '0.9.0' does not match intended tag 'v0.9.3'",
+            "candidate version '0.9.0' does not match intended tag 'v0.10.0'",
             result.stdout + result.stderr,
         )
 
@@ -288,34 +311,66 @@ class CoordinatorReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(checker.ReleaseCheckError, "candidate changed"):
             checker.verify_candidate_unchanged(candidate, before)
 
+    def test_release_check_reports_installed_canonical_root_evidence(self):
+        candidate = self.make_candidate()
+        result = self.run_checker(candidate)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("canonical root", result.stdout.lower())
+
+    def test_release_check_exercises_nested_worktree_stop_on_the_installed_wheel(self):
+        candidate = self.make_candidate()
+        result = self.run_checker(candidate)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("worktree", result.stdout.lower())
+
     def test_release_identity_and_public_payload_are_coherent(self):
         with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
             project = tomllib.load(handle)["project"]
-        self.assertEqual(project["version"], "0.9.3")
+        self.assertEqual(project["version"], "0.10.0")
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
         contributing = (REPO_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
         publication = (REPO_ROOT / "PUBLICATION.md").read_text(encoding="utf-8")
         start = (REPO_ROOT / "START-HERE.md").read_text(encoding="utf-8")
-        tagged_archive = "archive/refs/tags/v0.9.3.zip"
+        tagged_archive = "archive/refs/tags/v0.10.0.zip"
         self.assertIn(tagged_archive, readme)
         self.assertIn(tagged_archive, adopting)
         self.assertIn(tagged_archive, start)
-        self.assertIn("--expected-tag v0.9.3", publication)
-        self.assertIn("--expected-tag v0.9.3", contributing)
+        self.assertIn("--expected-tag v0.10.0", publication)
+        self.assertIn("--expected-tag v0.10.0", contributing)
         for document in (readme, adopting, start):
             self.assertNotIn("not yet published", document)
             self.assertIn(
                 'python -m pip install '
-                '"https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"',
+                '"https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"',
                 document,
             )
         self.assertIn("Release `v0.9.0` first introduced", start)
         self.assertIn("Release `v0.9.1` corrected", start)
         self.assertIn("Release `v0.9.2` corrects", start)
+        self.assertIn("Release `v0.9.3` adds", start)
         public_files = PUBLIC_FILES.read_text(encoding="utf-8").splitlines()
         self.assertIn("checks/check_coordinator_release.py", public_files)
         self.assertIn("tests/test_coordinator_release.py", public_files)
+
+    # -- WO-WW-021: the installed-wheel release gate confirms the new
+    # Owner/Architect/General/Operator topology reaches the installed
+    # coordinator, including the adopted-lockout route now naming a fresh
+    # General rather than the old "Owner-Agent / Project-Architect" text.
+    # Added RED in this work order; now exercised against the GREEN
+    # implementation.
+
+    def test_installed_release_gate_confirms_general_role_for_adopted_lockout(self):
+        candidate = self.make_candidate()
+        result = self.run_checker(candidate)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("General", result.stdout)
+
+    def test_installed_release_gate_exercises_conversation_first_clean_project(self):
+        candidate = self.make_candidate()
+        result = self.run_checker(candidate)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("conversation-first", result.stdout)
 
 
 if __name__ == "__main__":

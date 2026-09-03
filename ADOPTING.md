@@ -42,11 +42,12 @@ locked session may deny the network request that would otherwise retrieve them.
 
 For a first adoption, the default is the day-zero coordinator:
 
-Release `v0.9.3` is published and contains the terminal Architect handoff
-described below.
+Release `v0.10.0` packages the conversation-first Architect handoff,
+canonical-root enforcement, and corrected lifecycle classification described
+below.
 
 ```text
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project
@@ -67,7 +68,14 @@ specific privacy screen in per-user local state outside the repository. The
 bootstrap handoff records only ready status and entry count, never its location
 or contents. Its clean/new branch remains create-only bootstrap tooling. See
 [`docs/privacy-screen.md`](docs/privacy-screen.md).
-Contradictory active state stops before output. Full interface and external-
+Contradictory active state stops before output.
+
+For a clean/new target, the ordinary invocation is conversation-first: it
+asks nothing on the command line and hands off to a fresh Architect with a
+bounded, local, non-secret inventory for an existing project, or one open
+invitation for an empty one. The former full questionnaire remains available
+verbatim behind `--structured-intake`; deterministic automation keeps using
+`--non-interactive`. Full interface and external-
 Operator packet behavior are documented in
 [`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md).
 The idea-first qualification and identity gate are documented in
@@ -86,10 +94,11 @@ handoff is temporary and must be removed before the adoption commit.
 
 | Human command | Observed state | Fresh role receiving output | Prior session stops | Target bytes |
 |---|---|---|---|---|
-| `writwall start --project-root <project>` | Clean/new | Adoption coordinator | Launcher returns; coordinator stops at adoption closeout | Create-only bootstrap may be added |
+| `writwall start --project-root <project>` | Clean/new (ordinary invocation) | Architect (conversation-first) | Launcher returns; the Architect stops before adoption mechanics until the Owner promotes | Create-only bootstrap may be added |
+| `... --structured-intake` | Clean/new | Adoption coordinator | Launcher returns; coordinator stops at adoption closeout | Create-only bootstrap may be added |
 | Same command | Partial/recovery | Recovery coordinator | Incomplete or locked session | Unchanged |
-| Same command | Adopted/retired lockout | Owner-Agent / Project-Architect | Onboarding or prior work session | Unchanged |
-| Same command | Active work order | Bounded Implementer | Prior coordinator or Implementer context | Unchanged |
+| Same command | Adopted/retired lockout | Fresh General | Onboarding or prior work session | Unchanged |
+| Same command | Active work order | Bounded Operator/Implementer | Prior coordinator or Implementer context | Unchanged |
 | Same command | Malformed/contradictory | No role; fail-closed diagnostic | Invoking session | Unchanged |
 
 ---
@@ -293,35 +302,37 @@ What counts as proof is a **live-wall canary**: an Owner-authorized, genuinely m
 
 5.9 Make the adoption commit containing `governance/`, the charter, the adapter, and DR-001. Its message names the baseline hash. This is one local commit; it is not a push, a tag, or a release. You may make it yourself or have an authorized recorder make it on your behalf after you have ratified exactly what it will contain — in either case the commit records a decision that was already yours.
 
-5.10 End onboarding and hand the adopted project to a fresh Owner-Agent /
-Project-Architect. The recorder presents this exact prompt and stops:
+5.10 End onboarding and hand the adopted project to a fresh General. Earlier
+releases called this continuity role `Owner-Agent / Project-Architect`; that
+term remains compatibility vocabulary for older records, not the current route. The
+recorder presents this exact prompt and stops:
 
 ```text
-Act as a fresh Owner-Agent / Project-Architect. Begin read-only and verify
-the lifecycle from repository bytes rather than prior chat. Read the charter,
-Plan, State, Routing, ratified adoption record, and open transactional records.
-State the project's next decision plainly. Draft, but do not activate or
-implement, the smallest genuine work order or bounded external Operator packet.
-Lead with a concise Recommendation and material tradeoff; keep the detailed
-packet behind it as supporting evidence rather than the conversational front
-door. When the next safe mechanical action is available, ask once for one
-combined disposition and action. If that action uses a new user-owned task,
-explicitly include creation and dispatch of the named task in that approval
-request; never infer task-creation permission afterward. Once approved, perform
-every mechanically available authorized step. Do not ask for the same decision again.
-The human Owner alone ratifies intent and activates work; preserve a distinct
-fresh review after implementation. The onboarding coordinator stops here and
-does not continue into project work.
+Act as a fresh General for this already-adopted project's continuity. Begin
+read-only and verify the lifecycle from repository bytes rather than prior chat. Read the
+charter, Plan, State, Routing, ratified adoption record, and open transactional records. State
+the project's next decision plainly. Prepare, but do not activate, the smallest genuine work
+order or bounded Operator packet; route it to a fresh Architect instead only when the next
+decision requires new design or design-conformance judgment rather than routine continuity. Lead
+with a concise Recommendation and material tradeoff; keep the detailed packet behind it as
+supporting evidence rather than the conversational front door. When the next safe mechanical
+action is available, ask once for one combined disposition and action. If that action uses a new
+user-owned task, explicitly include creation and dispatch of the named task in that approval
+request; never infer task-creation permission afterward. Once approved, perform every
+mechanically available authorized step. Do not ask for the same decision again. The human Owner
+alone ratifies intent and activates work; preserve a distinct fresh Reviewer after
+implementation. The onboarding coordinator stops here and does not continue into project work.
 ```
 
-The Architect drafts whatever genuine work the project needs next (6.1.4),
+The General prepares whatever genuine work the project needs next (6.1.4),
 including a bounded external Operator packet when that is smaller than a
 repository work order. It leads with its recommendation and material tradeoff;
 the complete packet is supporting evidence. When a safe next mechanical action
 is available, its single approval request combines the disposition with that
 action. A new user-owned task is created or dispatched only when that same
-request explicitly asks for it. After approval, the Architect performs all
+request explicitly asks for it. After approval, the General performs all
 mechanically available authorized steps without asking for the decision again.
+New design or design-conformance judgment is routed to a fresh Architect.
 
 For a repository work order, activation remains a distinct Owner decision.
 After the candidate passes `--work-order`, the Owner-authorized lifecycle

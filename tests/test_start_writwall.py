@@ -22,6 +22,125 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 STARTER = REPO_ROOT / "scripts" / "start_writwall.py"
 
 
+def ratified_adoption_record(
+    *, owner: str = "Test Owner", date: str = "2026-01-01",
+    revision: str = "0.8", revision_date: str = "2026-08-21",
+    revision_record: str = "decisions/DR-005.md",
+    baseline: str = "0" * 40,
+    title: str = "# Adoption record",
+) -> str:
+    """A complete, well-formed, signed Appendix D record.
+
+    This is the deterministic ratified shape: an adoption title, all of
+    D.1-D.9, a concrete D.2 baseline commit with adoption-effective
+    language, a D.3 revision, and a dated Owner Signature. It matches the
+    established shape of this repository's own `governance/decisions/DR-001.md`.
+    """
+    return f"""{title}
+
+## D.1 Date and Owner
+
+{date} · Owner: {owner}
+
+## D.2 Pre-adoption baseline commit
+
+`{baseline}` — baseline commit. Adoption became effective at this commit.
+
+## D.3 Doctrine revision bound
+
+Revision **{revision}**, ratified **{revision_date}** by `{revision_record}`.
+
+## D.4 Enforcement at adoption
+
+Observed enforcement surfaces at adoption.
+
+## D.5 Conformance gate during the pilot
+
+Reviewer-only controlled inference.
+
+## D.6 Recognized controlling sources at adoption
+
+Disposed by the Owner.
+
+## D.7 Pilot period
+
+10 counted work orders.
+
+## D.8 Reasoning: why adopt, and why now
+
+Recorded by the Owner.
+
+## D.9 Rejected alternatives
+
+1. Alternative rejected.
+
+## Signature
+
+{owner} — Owner — {date}
+"""
+
+
+def draft_adoption_record() -> str:
+    """Complete Appendix D section shape, but explicitly unsigned/proposed."""
+    return """# Adoption record
+
+## D.1 Date and Owner
+
+DRAFT — Owner: TBD
+
+## D.2 Pre-adoption baseline commit
+
+Proposed baseline; not yet selected.
+
+## D.3 Doctrine revision bound
+
+Revision **0.8**, PROPOSED.
+
+## D.4 Enforcement at adoption
+
+Draft enforcement notes.
+
+## D.5 Conformance gate during the pilot
+
+Draft conformance notes.
+
+## D.6 Recognized controlling sources at adoption
+
+Draft mapping.
+
+## D.7 Pilot period
+
+Draft pilot period.
+
+## D.8 Reasoning: why adopt, and why now
+
+Draft reasoning.
+
+## D.9 Rejected alternatives
+
+Draft rejected alternatives.
+"""
+
+
+def unrelated_ratified_decision() -> str:
+    """A signed, ratified decision that is not an Appendix D adoption record.
+
+    Used both at an unrelated path (to prove it cannot lend adoption
+    authority to a draft record elsewhere) and at the exact adoption-record
+    path itself (to prove a filename alone, even carrying a real Signature,
+    is never adoption authority).
+    """
+    return """# DR-001: Naming decision
+
+Ratified by the Owner on 2026-01-01. This record ratifies a project naming
+choice; it is not an adoption record and contains no Appendix D sections.
+
+## Signature
+
+Test Owner — Owner — 2026-01-01
+"""
+
+
 class StartWritwallTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = Path(tempfile.mkdtemp()).resolve()
@@ -130,6 +249,45 @@ class StartWritwallTests(unittest.TestCase):
 
     def handoff(self) -> str:
         return (self.output / "HANDOFF.md").read_text(encoding="utf-8")
+
+    def assert_contains_canonical_root(self, text: str, root: Path, label: str) -> None:
+        """Accept either native or portable rendering of one resolved root."""
+        native = str(root)
+        posix = root.as_posix()
+        self.assertTrue(
+            native in text or posix in text,
+            f"{label} does not carry the canonical project root {root!s}",
+        )
+
+    def git(self, *args: str, cwd: Path) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            ["git", *args], cwd=cwd, capture_output=True, text=True, timeout=30,
+        )
+
+    def make_git_worktree(self, repo_name: str, worktree_name: str,
+                          branch: str) -> Path:
+        """Build a minimal seeded repository plus one linked worktree.
+
+        Skips the calling test outright when a local git executable is
+        unavailable; otherwise returns the worktree top-level path.
+        """
+        repo = self.temp / repo_name
+        repo.mkdir()
+        init = self.git("init", "--quiet", cwd=repo)
+        if init.returncode != 0:
+            self.skipTest(f"git unavailable: {init.stderr}")
+        self.git("config", "user.email", "test@example.invalid", cwd=repo)
+        self.git("config", "user.name", "Test", cwd=repo)
+        (repo / "README.md").write_text("seed\n", encoding="utf-8")
+        self.git("add", "README.md", cwd=repo)
+        commit = self.git("commit", "--quiet", "-m", "seed", cwd=repo)
+        self.assertEqual(commit.returncode, 0, commit.stdout + commit.stderr)
+        worktree = self.temp / worktree_name
+        add = self.git(
+            "worktree", "add", "--quiet", str(worktree), "-b", branch, cwd=repo,
+        )
+        self.assertEqual(add.returncode, 0, add.stdout + add.stderr)
+        return worktree
 
     def install_writwall(self) -> Path:
         build_source = self.temp / "build-source"
@@ -285,6 +443,13 @@ class StartWritwallTests(unittest.TestCase):
             (self.output / "discovery.json").read_text(encoding="utf-8")
         )
         self.assertEqual(local_discovery["topology"]["tier"], "local_only")
+        self.assertIn("Architect", local_discovery["topology"]["roles"])
+        self.assertIn("General", local_discovery["topology"]["roles"])
+        self.assertIn("repository Operator", local_discovery["topology"]["roles"])
+        self.assertNotIn(
+            "Owner-Agent architect/coordinator",
+            local_discovery["topology"]["roles"],
+        )
 
         high_impact_project = self.temp / "high-impact-project"
         high_impact_project.mkdir()
@@ -369,6 +534,7 @@ class StartWritwallTests(unittest.TestCase):
         process = subprocess.Popen(
             [
                 sys.executable, "-B", "-m", "writwall_cli", "start",
+                "--structured-intake",
                 "--project-root", str(self.project),
                 "--project-name", "Example project",
                 "--purpose", "Build a small, governed project.",
@@ -398,7 +564,7 @@ class StartWritwallTests(unittest.TestCase):
         for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
             (governance / name).write_text(f"# {name}\n", encoding="utf-8")
         (decisions / "DR-001.md").write_text(
-            "# Adoption record\n", encoding="utf-8"
+            draft_adoption_record(), encoding="utf-8"
         )
         changed_state = self.tree_snapshot(self.project)
 
@@ -529,6 +695,9 @@ class StartWritwallTests(unittest.TestCase):
         closed.write_text("---\nid: WO-001\nstatus: CLOSED\n---\n", encoding="utf-8")
         for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
             (self.project / "governance" / name).write_text(f"# {name}\n", encoding="utf-8")
+        decision = self.project / "governance" / "decisions" / "DR-001.md"
+        decision.parent.mkdir(parents=True)
+        decision.write_text(ratified_adoption_record(), encoding="utf-8")
         before = self.tree_snapshot(self.project)
         result = self.run_lifecycle_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -536,7 +705,9 @@ class StartWritwallTests(unittest.TestCase):
         self.assertFalse(self.output.exists())
         self.assertFalse(self.state.exists())
         self.assertIn("Observed lifecycle state: retired_lockout", result.stdout)
-        self.assertIn("Act as a fresh Owner-Agent / Project-Architect", result.stdout)
+        self.assertIn("Act as a fresh General", result.stdout)
+        self.assertIn("General", result.stdout)
+        self.assertNotIn("Owner-Agent / Project-Architect", result.stdout)
         self.assertNotIn("resume", result.stdout.lower())
         self.assertNotIn("Act as a fresh Implementer", result.stdout)
 
@@ -614,8 +785,11 @@ class StartWritwallTests(unittest.TestCase):
                     if lifecycle == "adopted":
                         decision = governance / "decisions" / "DR-001.md"
                         decision.parent.mkdir()
-                        decision.write_text("# Adoption record\n", encoding="utf-8")
+                        decision.write_text(ratified_adoption_record(), encoding="utf-8")
                     else:
+                        decision = governance / "decisions" / "DR-001.md"
+                        decision.parent.mkdir()
+                        decision.write_text(ratified_adoption_record(), encoding="utf-8")
                         closed = governance / "history" / "WO-001.md"
                         closed.parent.mkdir()
                         closed.write_text(
@@ -633,14 +807,14 @@ class StartWritwallTests(unittest.TestCase):
                 self.assertIn("inconsistent state", result.stderr)
                 self.assertIn(".writwall-bootstrap", result.stderr)
 
-    def test_adopted_lockout_routes_to_fresh_project_architect(self):
+    def test_adopted_lockout_routes_to_fresh_general(self):
         governance = self.project / "governance"
         governance.mkdir()
         for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
             (governance / name).write_text(f"# {name}\n", encoding="utf-8")
         decision = governance / "decisions" / "DR-001.md"
         decision.parent.mkdir()
-        decision.write_text("# Adoption record\n", encoding="utf-8")
+        decision.write_text(ratified_adoption_record(), encoding="utf-8")
         before = self.tree_snapshot(self.project)
         result = self.run_lifecycle_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -648,7 +822,8 @@ class StartWritwallTests(unittest.TestCase):
         self.assertFalse(self.output.exists())
         self.assertFalse(self.state.exists())
         self.assertIn("Observed lifecycle state: adopted_lockout", result.stdout)
-        self.assertIn("Act as a fresh Owner-Agent / Project-Architect", result.stdout)
+        self.assertIn("Act as a fresh General", result.stdout)
+        self.assertNotIn("Owner-Agent / Project-Architect", result.stdout)
         flat = " ".join(result.stdout.split())
         self.assertIn("Recommendation and material tradeoff", flat)
         self.assertIn("supporting evidence", flat)
@@ -656,6 +831,151 @@ class StartWritwallTests(unittest.TestCase):
         self.assertIn("explicitly include creation and dispatch", flat)
         self.assertIn("Do not ask for the same decision again", flat)
         self.assertIn("perform every mechanically available authorized step", flat)
+
+    def test_draft_adoption_record_with_closed_history_never_reports_adopted_or_retired(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        decisions = governance / "decisions"
+        decisions.mkdir(parents=True)
+        (decisions / "DR-001.md").write_text(draft_adoption_record(), encoding="utf-8")
+        (decisions / "DR-999-unrelated.md").write_text(
+            unrelated_ratified_decision(), encoding="utf-8"
+        )
+        closed = governance / "history" / "WO-001.md"
+        closed.parent.mkdir(parents=True)
+        closed.write_text("---\nid: WO-001\nstatus: CLOSED\n---\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertNotIn("Observed lifecycle state: adopted_lockout", result.stdout)
+        self.assertNotIn("Observed lifecycle state: retired_lockout", result.stdout)
+        self.assertIn("Observed lifecycle state: partial_bootstrap", result.stdout)
+
+    def test_signed_unrelated_decision_at_exact_adoption_path_fails_closed(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        decisions = governance / "decisions"
+        decisions.mkdir(parents=True)
+        (decisions / "DR-001.md").write_text(
+            unrelated_ratified_decision(), encoding="utf-8"
+        )
+        closed = governance / "history" / "WO-001.md"
+        closed.parent.mkdir(parents=True)
+        closed.write_text("---\nid: WO-001\nstatus: CLOSED\n---\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertNotIn("Observed lifecycle state: adopted_lockout", result.stdout)
+        self.assertNotIn("Observed lifecycle state: retired_lockout", result.stdout)
+        self.assertIn("inconsistent state", result.stderr)
+        self.assertIn("does not carry", result.stderr)
+        self.assertIn("adoption-record title", result.stderr)
+        # Nondisclosing: the diagnostic names the path, never the document body.
+        self.assertNotIn("Test Owner", result.stderr)
+        self.assertNotIn("Naming decision", result.stderr)
+
+    def test_adopted_lockout_requires_ratified_evidence_not_mere_filename(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        decision = governance / "decisions" / "DR-001.md"
+        decision.parent.mkdir(parents=True)
+        decision.write_text("# Adoption record\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertNotIn("Observed lifecycle state: adopted_lockout", result.stdout)
+        self.assertIn("inconsistent state", result.stderr)
+        self.assertIn("missing required Appendix D section", result.stderr)
+
+    def test_retired_lockout_requires_ratified_adoption_evidence(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        closed = governance / "history" / "WO-001.md"
+        closed.parent.mkdir(parents=True)
+        closed.write_text("---\nid: WO-001\nstatus: CLOSED\n---\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertNotIn("Observed lifecycle state: retired_lockout", result.stdout)
+        self.assertIn("Observed lifecycle state: partial_bootstrap", result.stdout)
+
+    def test_alternate_adoption_record_path_routes_to_adopted_lockout(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        (governance / "ADOPTION-RECORD.md").write_text(
+            ratified_adoption_record(title="# Adoption record (alternate path)"),
+            encoding="utf-8",
+        )
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertIn("Observed lifecycle state: adopted_lockout", result.stdout)
+
+    def test_contradictory_coexisting_adoption_records_fail_closed(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        decisions = governance / "decisions"
+        decisions.mkdir(parents=True)
+        (decisions / "DR-001.md").write_text(ratified_adoption_record(), encoding="utf-8")
+        (governance / "ADOPTION-RECORD.md").write_text(
+            ratified_adoption_record(
+                title="# Adoption record (alternate path)", revision="0.6",
+            ),
+            encoding="utf-8",
+        )
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertIn("inconsistent state", result.stderr)
+        self.assertIn("contradictory", result.stderr)
+
+    def test_contradictory_baseline_between_coexisting_adoption_records_fails_closed(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        decisions = governance / "decisions"
+        decisions.mkdir(parents=True)
+        (decisions / "DR-001.md").write_text(ratified_adoption_record(), encoding="utf-8")
+        (governance / "ADOPTION-RECORD.md").write_text(
+            ratified_adoption_record(
+                title="# Adoption record (alternate path)", baseline="1" * 40,
+            ),
+            encoding="utf-8",
+        )
+        before = self.tree_snapshot(self.project)
+        result = self.run_lifecycle_start()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertIn("inconsistent state", result.stderr)
+        self.assertIn("contradictory", result.stderr)
+        self.assertIn("baseline", result.stderr)
 
     def test_owner_time_yes_defines_capture_and_no_records_not_reported(self):
         yes = self.run_start("--owner-time", "yes")
@@ -710,9 +1030,12 @@ class StartWritwallTests(unittest.TestCase):
             path.read_text(encoding="utf-8")
             for path in (self.output / "operations").glob("*.md")
         )
-        self.assertNotIn("fastmail", combined.lower())
-        self.assertNotIn("proton", combined.lower())
-        self.assertNotIn("hllmr", combined.lower())
+        scenario_text = combined.replace(
+            self.project.resolve().as_posix(), "<canonical-project-root>"
+        ).lower()
+        self.assertNotIn("fastmail", scenario_text)
+        self.assertNotIn("proton", scenario_text)
+        self.assertNotIn("hllmr", scenario_text)
         self.assertIn("eight domains", combined.lower())
         self.assertIn("dns authority cutover", combined.lower())
         self.assertIn("historical mailbox data", combined.lower())
@@ -783,7 +1106,12 @@ class StartWritwallTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         handoff = self.handoff()
         self.assertIn("Recommended smallest credible role split", handoff)
-        self.assertIn("one human Owner, one Owner-Agent coordinator", handoff)
+        self.assertIn(
+            "one human Owner, one Architect, one General, one repository Operator",
+            handoff,
+        )
+        self.assertIn("The Architect may interview", handoff)
+        self.assertIn("The General may draft, route", handoff)
         self.assertIn("2 separately bounded external function packet(s)", handoff)
 
     def test_windows_reserved_operator_name_is_made_portable(self):
@@ -891,6 +1219,7 @@ class StartWritwallTests(unittest.TestCase):
         result = subprocess.run(
             [
                 sys.executable, "-B", str(STARTER),
+                "--structured-intake",
                 "--project-root", str(self.project),
                 "--project-name", "Interactive project",
             ],
@@ -935,6 +1264,7 @@ class StartWritwallTests(unittest.TestCase):
         )
         result = subprocess.run(
             [sys.executable, "-B", "-m", "writwall_cli", "start",
+             "--structured-intake",
              "--project-root", str(self.project)],
             cwd=REPO_ROOT,
             env=self.environment(),
@@ -992,6 +1322,135 @@ class StartWritwallTests(unittest.TestCase):
         self.assertNotIn("\\", text)
         self.assertIn(".writwall-bootstrap", self.handoff())
 
+    def test_intake_records_one_resolved_canonical_project_root(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        canonical = self.project.resolve()
+        self.assertEqual(self.intake()["project_root"], canonical.as_posix())
+        self.assertNotEqual(self.intake()["project_root"], ".")
+
+    def test_discovery_record_carries_the_same_canonical_project_root(self):
+        result = self.run_idea_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        canonical = self.project.resolve()
+        discovery = json.loads(
+            (self.output / "discovery.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(discovery.get("project_root"), canonical.as_posix())
+
+    def test_every_generated_role_packet_carries_the_canonical_project_root(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        canonical = self.project.resolve()
+        for relative in (
+            "HANDOFF.md", "OWNER-AGENT.md", "REPOSITORY-OPERATOR.md",
+            "REVIEWER.md", "NAME-CLEARANCE.md", "OWNER-RATIFICATION.md",
+        ):
+            text = (self.output / relative).read_text(encoding="utf-8")
+            self.assert_contains_canonical_root(text, canonical, relative)
+
+    def test_handoff_states_the_no_shadow_repository_no_durable_temp_rule(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        handoff = self.handoff()
+        flat = " ".join(handoff.split()).lower()
+        self.assertIn("durable project artifacts", flat)
+        self.assertIn("never become the authoritative project tree", flat)
+        self.assertIn("removed after use", flat)
+
+    def test_operation_packets_carry_root_and_no_shadow_repository_rule(self):
+        result = self.run_start("--external-operator", "DNS administration")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        canonical = self.project.resolve()
+        packet = (self.output / "operations" / "dns-administration.md").read_text(
+            encoding="utf-8"
+        )
+        self.assert_contains_canonical_root(packet, canonical, "operation packet")
+        self.assertIn("shadow", packet.lower())
+        self.assertIn("canonical", packet.lower())
+
+    def test_supplied_path_spelling_is_resolved_to_one_canonical_form(self):
+        spelled = str(self.project) + os.sep + "." + os.sep
+        result = subprocess.run(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "start",
+                "--non-interactive",
+                "--project-root", spelled,
+                "--project-name", "Example project",
+                "--purpose", "Build a small, governed project.",
+                "--agent", "Codex",
+                "--location", "local workstation",
+                "--environment", "local repository only",
+                "--owner-time", "no",
+                "--confirm-no-secrets",
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        canonical = self.project.resolve()
+        self.assertEqual(self.intake()["project_root"], canonical.as_posix())
+
+    def test_non_git_project_directory_is_recorded_canonically(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertFalse((self.project / ".git").exists())
+        canonical = self.project.resolve()
+        self.assertEqual(self.intake()["project_root"], canonical.as_posix())
+
+    def test_git_worktree_top_level_is_recorded_as_its_own_canonical_root(self):
+        worktree = self.make_git_worktree(
+            "wt-top-repo", "wt-top-worktree", "wt-top-branch"
+        )
+        result = self.run_start(project=worktree)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        intake = json.loads(
+            ((worktree / ".writwall-bootstrap") / "intake.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(intake["project_root"], worktree.resolve().as_posix())
+
+    def test_nested_directory_inside_git_worktree_stops_with_rerun_diagnostic(self):
+        worktree = self.make_git_worktree(
+            "wt-nested-repo", "wt-nested-worktree", "wt-nested-branch"
+        )
+        nested = worktree / "nested" / "project"
+        nested.mkdir(parents=True)
+        before = self.tree_snapshot(worktree)
+        result = subprocess.run(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "start",
+                "--non-interactive",
+                "--project-root", str(nested),
+                "--project-name", "Example project",
+                "--purpose", "Build a small, governed project.",
+                "--agent", "Codex",
+                "--location", "local workstation",
+                "--environment", "local repository only",
+                "--owner-time", "no",
+                "--confirm-no-secrets",
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(worktree), before)
+        self.assertFalse((nested / ".writwall-bootstrap").exists())
+        combined = (result.stdout + result.stderr).lower()
+        self.assertIn("worktree", combined)
+        self.assertIn("rerun", combined)
+        self.assert_contains_canonical_root(
+            result.stdout + result.stderr, worktree.resolve(),
+            "worktree rerun diagnostic",
+        )
+
     def test_environment_is_captured_without_becoming_authority(self):
         result = self.run_start()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -1014,7 +1473,9 @@ class StartWritwallTests(unittest.TestCase):
         self.assertGreater(intake["privacy_screen"]["entry_count"], 0)
         combined = result.stdout + result.stderr + self.handoff()
         self.assertNotIn(str(self.state), combined)
-        self.assertNotIn(str(self.project.resolve()), self.handoff())
+        self.assert_contains_canonical_root(
+            self.handoff(), self.project.resolve(), "HANDOFF.md"
+        )
         self.assertEqual(len(list(self.state.rglob("private-patterns.txt"))), 1)
 
     def test_start_preserves_local_private_identifiers_without_copying_them_to_bootstrap(self):
@@ -1038,6 +1499,149 @@ class StartWritwallTests(unittest.TestCase):
         self.assertNotIn(private_identifier, bootstrap_text)
         profile = next(self.state.rglob("private-patterns.txt"))
         self.assertIn(private_identifier, profile.read_text(encoding="utf-8"))
+
+    # -- WO-WW-021: conversation-first inception and existing-project
+    # continuity. Prove the ordinary bare invocation no longer demands the
+    # long structured questionnaire, existing repositories get a bounded
+    # local inventory and conversation-first Architect opening, empty
+    # projects get one open invitation, structured/non-interactive intake
+    # still works and now also emits the Owner/Architect/General/Operator
+    # topology, and active work still routes to a bounded Operator/
+    # Implementer. Added RED in this work order; now exercised against the
+    # GREEN implementation.
+
+    def run_conversation_start(self, *extra: str, project: Path | None = None):
+        """The ordinary, low-friction invocation: only --project-root, no
+        other intake flags, and no answers available on stdin. Today this
+        falls straight into the full interactive questionnaire and crashes
+        with EOFError on the first blocking `input()` call; the conversation
+        -first coordinator must instead succeed without it.
+        """
+        return subprocess.run(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "start",
+                "--project-root", str(project or self.project),
+                *extra,
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            input="",
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+
+    def test_ordinary_project_root_only_invocation_skips_long_questionnaire(self):
+        result = self.run_conversation_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        combined = result.stdout + result.stderr
+        for legacy_prompt in (
+            "Track Owner active minutes?",
+            "Continue without entering secrets?",
+            "Problem or opportunity",
+            "Working candidate name",
+        ):
+            self.assertNotIn(legacy_prompt, combined)
+
+    def test_existing_git_repository_yields_bounded_local_observations_and_architect_opening(self):
+        init = self.git("init", "--quiet", cwd=self.project)
+        if init.returncode != 0:
+            self.skipTest(f"git unavailable: {init.stderr}")
+        self.git("config", "user.email", "test@example.invalid", cwd=self.project)
+        self.git("config", "user.name", "Test", cwd=self.project)
+        (self.project / "README.md").write_text("An existing project.\n", encoding="utf-8")
+        self.git("add", "README.md", cwd=self.project)
+        commit = self.git(
+            "commit", "--quiet", "-m", "Seed existing project inventory marker",
+            cwd=self.project,
+        )
+        self.assertEqual(commit.returncode, 0, commit.stdout + commit.stderr)
+        branch = self.git("branch", "--show-current", cwd=self.project).stdout.strip()
+        self.assertTrue(branch)
+
+        # A direct ordinary Git repository root (not a linked or nested
+        # worktree) used as the project root itself.
+        result = self.run_conversation_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        combined = result.stdout + result.stderr + self.handoff()
+        self.assertIn(branch, combined)
+        self.assertIn("Seed existing project inventory marker", combined)
+        self.assertIn("clean", combined.lower())
+        self.assertIn("read-only", combined.lower())
+        self.assertTrue(
+            "explore" in combined.lower() or "start elsewhere" in combined.lower(),
+            combined,
+        )
+
+    def test_empty_new_project_receives_open_conversational_invitation(self):
+        result = self.run_conversation_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        combined = result.stdout + result.stderr + self.handoff()
+        self.assertIn("Tell me what you are thinking", combined)
+        self.assertNotIn("Problem or opportunity", combined)
+        self.assertNotIn("Working candidate name", combined)
+
+    def test_conversation_first_partial_idea_flags_keep_validation(self):
+        result = self.run_conversation_start(
+            "--problem", "A stated problem without the remaining qualification.",
+        )
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("missing idea qualification", result.stderr)
+        self.assertFalse(self.output.exists())
+
+    def test_conversation_first_contradictory_idea_flags_keep_validation(self):
+        flags = [
+            "--problem", "A fully stated idea.",
+            "--intended-user", "The Owner.",
+            "--why-matters", "It avoids drift.",
+            "--evidence", "A concrete observed failure.",
+            "--smallest-outcome", "One bounded fix.",
+            "--success-signal", "The regression stays green.",
+            "--constraint", "Do not publish.",
+            "--non-goal", "Do not publish.",
+            "--risk", "The intake could overreach.",
+            "--kill-condition", "Stop on ambiguity.",
+            "--asset", "The existing repository.",
+        ]
+        result = self.run_conversation_start(*flags)
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("contradictory idea qualification", result.stderr)
+        self.assertFalse(self.output.exists())
+
+    def test_structured_non_interactive_intake_still_emits_new_role_topology(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue((self.output / "ARCHITECT.md").is_file())
+        self.assertTrue((self.output / "GENERAL.md").is_file())
+        self.assertTrue((self.output / "OPERATOR.md").is_file())
+        self.assertTrue((self.output / "REPOSITORY-OPERATOR.md").is_file())
+        self.assertTrue((self.output / "REVIEWER.md").is_file())
+
+    def test_legacy_role_packet_names_remain_as_documented_compatibility_aliases(self):
+        result = self.run_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        owner_agent = (self.output / "OWNER-AGENT.md").read_text(encoding="utf-8")
+        repository_operator = (self.output / "REPOSITORY-OPERATOR.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("compatibility alias", owner_agent.lower())
+        self.assertIn("Architect", owner_agent)
+        self.assertIn("compatibility alias", repository_operator.lower())
+        self.assertIn("Operator", repository_operator)
+
+    def test_active_work_order_routes_to_bounded_operator_implementer(self):
+        work_order = self.project / "governance" / "work-orders" / "WO-001.md"
+        work_order.parent.mkdir(parents=True)
+        work_order.write_text(
+            "---\nid: WO-001\nstatus: ACTIVE\n---\n# Work\n", encoding="utf-8"
+        )
+        pointer = self.project / ".claude" / "active-wo.txt"
+        pointer.parent.mkdir(parents=True)
+        pointer.write_text("governance/work-orders/WO-001.md\n", encoding="utf-8")
+        result = self.run_lifecycle_start()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Observed lifecycle state: active_work_order", result.stdout)
+        self.assertIn("Operator", result.stdout)
 
 
 if __name__ == "__main__":

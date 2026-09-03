@@ -5,17 +5,19 @@ Legacy commit identifiers in projected records refer to that private
 source and are intentionally not resolvable from fresh public history.
 No private remote URL is recorded here.
 
-- Source commit: `ae6ca4e29493b7c33738756190dc1bbf1617388d`
-- Source commit time: `2026-09-02T20:30:55-05:00`
+- Source commit: `be8cfa99b53996d140433610b12886cf62c444f0`
+- Source commit time: `2026-09-03T17:19:47-05:00`
 - Projection allowlist SHA-256: `fafcbf659c40d7260dddaa8a64b6b59c3b7de484f77d879a90323bb4b3e1a4a7`
 
 ## Legacy identifier inventory
 
+- `0000000000000000000000000000000000000000` — `checks/check_coordinator_release.py`
 - `11d5960a326750d5838078e36cf38b85af677262` — `tests/test_distribution.py`
 - `3d3c42e5aac5ba805825da76410c181273ba90b1` — `.github/workflows/ci.yml`, `tests/test_distribution.py`
 - `5fda3b95a4ea91299a34e894583c3862153e4b97` — `.github/workflows/ci.yml`, `tests/test_distribution.py`
 - `6e165e585f907baf83a787ba5cc71270a5a4652e` — `checks/check_distribution.py`, `governance/decisions/DR-001.md`, `tests/test_distribution.py`
 - `8d5b2b3668ef626525e57028ac09661e17d44edc` — `governance/LOG.md`, `governance/PLAN.md`, `governance/STATE.md`, `governance/decisions/DR-001.md`
+- `92846c03f60303efd9f0e2fc14a99bbca2e1daea` — `governance/PLAN.md`
 - `a26af69be951a213d495a4c3e4e4022e16d87065` — `tests/test_distribution.py`
 - `a6a71fee0b567e8c70a7ea518398af48b4d0175d` — `governance/decisions/DR-001.md`
 - `a905c87987f31094121c11a3b8163f97ef1abcf4` — `SELF-HOSTING.md`, `governance/STATE.md`, `governance/decisions/DR-001.md`
