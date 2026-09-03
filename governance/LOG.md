@@ -970,6 +970,107 @@ post-closeout projection, review, and protected-CI pull request. The separate
 External Pilot B lifecycle-classification defect is queued after that merge;
 hllmr-site remains untouched.
 
+### Post-pilot WO-WW-019 completed record
+
+WO-WW-019 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-03 and reported
+active minutes **NOT REPORTED**.
+
+The coordinator now distinguishes complete affirmative Appendix D adoption
+evidence from filenames, closed history, draft records, and unrelated signed
+decisions. Genuine established and alternate-path records remain compatible;
+coexisting records must agree on baseline, Doctrine revision, and Owner.
+Malformed evidence fails closed with a useful nondisclosing structural reason.
+The installed-wheel gate exercises adopted, retired, draft, and unrelated
+exact-path cases while preserving candidate and target bytes.
+
+The live canary added record 321 and no out-of-grant mutation succeeded. Seven
+focused regressions, all 51 coordinator tests, and all 18 release tests passed.
+A clean prospective Windows tree passed 761 tests with two skips plus identity,
+distribution, licensing, dispatch, and whitespace gates. The repository's own
+ratified record classified as `retired_lockout` with zero byte change. Fresh
+Claude Sonnet review returned **ACCEPT — HIGH confidence** after an initial
+control-flow finding was disproved by the exact passing mutation test and
+explicitly retracted.
+
+Accepted deviations are preserved in the report: strict RED chronology was not
+independently observed; the complete-suite and self-classification commands
+traversed routed historical/archive fixtures without exposing their contents;
+and Windows packaging tests used an existing disposable build environment with
+no dependency download. Owner acceptance authorized ordinary closeout, one
+private commit/push, and subsequent activation of WO-WW-020. No publication,
+release, tag, deployment, visibility change, or External Pilot B mutation
+occurred under WO-WW-019.
+
+### Post-pilot WO-WW-020 completed record
+
+WO-WW-020 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-03 and reported
+active minutes **NOT REPORTED**.
+
+Generated repository, role, handoff, and external-Operator packets now carry
+one resolved canonical project root and state that durable project records stay
+below it. OS-local privacy state and temporary evidence staging remain distinct.
+Supplying a nested path inside a Git worktree stops before privacy/bootstrap
+writes and identifies the exact root for a rerun; non-Git and exact worktree-root
+invocations remain compatible.
+
+Nine focused RED assertions failed on unchanged product bytes and passed after
+implementation. Windows and native Ubuntu installed-wheel coordinator/release
+sets each passed 80 tests. The Ubuntu run installed only Owner-authorized
+setuptools 84.0.0 inside one disposable environment; the environment and
+temporary mount were deleted and verified absent. Fresh Claude Sonnet review
+returned **ACCEPT — medium-high confidence** with no substantive correctness,
+security, public-path-leak, or dual-tree blocker.
+
+The first closeout suite caught one omitted mechanically dependent projected-
+State digest refresh in three projection tests. After correcting that single
+ledger field, the three tests passed and the complete Windows closeout suite
+passed 772 tests with two expected skips; lockout, identity, distribution,
+licensing, and whitespace gates passed on the same record state.
+
+Records 323-328 contain the valid canary and five additional denied agent calls;
+none produced its requested mutation. Accepted deviations and two non-blocking
+follow-ups are preserved in the report. External Pilot B was neither accessed
+nor resumed. No publication, release, tag, deployment, visibility change, or
+external-project mutation occurred under WO-WW-020.
+
+### Post-pilot WO-WW-021 completed record
+
+WO-WW-021 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-03 and reported
+active minutes **NOT REPORTED**.
+
+The ordinary `writwall start --project-root` route is now conversation-first.
+An existing Git project receives bounded branch, cleanliness, recent-subject,
+and top-level-name observations; an empty project receives one open invitation.
+No recursive content dump, network access, or outside-root inspection is part
+of discovery. Structured intake and non-interactive automation remain available.
+Generated packets now present the Owner / Architect / General / Operator /
+Reviewer topology while retaining explicit compatibility aliases.
+
+Initial RED produced 9/9 failures. Reviewer-directed validation and topology
+rework added two further RED slices, and a later review exposed that the
+installed-wheel gate did not execute the bare conversation-first command. A
+final public-interface RED/GREEN slice added that exact installed command with
+closed stdin and preserved the established failure diagnostic. Final Windows
+and native Ubuntu affected/installed-wheel sets each passed 90/90. Fresh final
+Sonnet review returned **ACCEPT** with no substantive or record-only defect.
+
+Denial record 329 is the valid excluded-target canary; no forbidden mutation
+succeeded. The report preserves four bounded native-test orchestration
+diagnostics, the host-Python build-backend limitation, and the accepted
+environment lifecycle. Every disposable environment and temporary mount was
+deleted and verified absent. No publication, public projection, public pull
+request, release, tag, deployment, visibility change, or external-project
+mutation occurred under WO-WW-021.
+
+The first complete closeout suite caught one stale mechanically dependent
+projected-State digest in three projection tests. After refreshing that one
+ledger field, those tests passed 3/3 and the complete suite passed 782 tests
+with two expected skips. Lockout, identity, distribution, licensing, and
+whitespace gates passed on the same final record bytes.
+
 ---
 
 ## Column definitions

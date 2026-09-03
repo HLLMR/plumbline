@@ -78,7 +78,7 @@ gate against the final checked public candidate on native Windows and native
 Ubuntu:
 
 ```text
-python checks/check_coordinator_release.py <external-candidate-directory> --expected-tag v0.9.3
+python checks/check_coordinator_release.py <external-candidate-directory> --expected-tag v0.10.0
 ```
 
 The gate copies the candidate to temporary build space, builds and installs the

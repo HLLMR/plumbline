@@ -21,6 +21,14 @@ External-operation packet scaffolds are inert: blank fields authorize nothing,
 credentials remain outside them, and infrastructure, DNS, and mail Operators
 remain outside the repository wall unless they edit repository bytes.
 
+By default the day-zero command is conversation-first and hands the human a
+fresh Architect before any adoption mechanics: `ARCHITECT.md`, `GENERAL.md`,
+and `OPERATOR.md` are its primary role packets, with `OWNER-AGENT.md` and
+`REPOSITORY-OPERATOR.md` kept as compatibility aliases. This bootstrap mode
+is unchanged and is entered only once the Owner has decided, through that
+conversation or through `--structured-intake`'s adoption-coordinator prompt,
+to proceed with adoption.
+
 Read `references/DOCTRINE.md` in this skill bundle before doing anything, and cite clauses in your report. Doctrine 1.2.3 permits a bootstrap agent to receive the doctrine as an implementation specification under direct Owner supervision. That permission is bounded by this task: it ends when bootstrap ends.
 
 ## Two modes
@@ -245,28 +253,27 @@ Report to the Owner: each decision recorded and whose words it came from; every 
 The Owner's ratification of the decision packet **was** the adoption decision. The commit and the mechanics above only record it. So when they have all succeeded, report completion plainly and stop — do not ask the Owner to confirm again what they have already ratified, and do not describe adoption as pending their further word. If any step did not succeed, say exactly which one and stop there instead; a closeout you cannot complete is reported, never assumed.
 
 After a successful closeout report, present the exact handoff below for a fresh
-Owner-Agent / Project-Architect, then stop. Do not continue as Architect, create
+General, then stop. Do not continue as General, create
 or dispatch a user-owned task, activate a work order, or begin product work in
-the onboarding context. The fresh Architect may request task creation and
+the onboarding context. The fresh General may request task creation and
 dispatch only by including them explicitly in its single combined approval
 request.
 
 ```text
-Act as a fresh Owner-Agent / Project-Architect. Begin read-only and verify
-the lifecycle from repository bytes rather than prior chat. Read the charter,
-Plan, State, Routing, ratified adoption record, and open transactional records.
-State the project's next decision plainly. Draft, but do not activate or
-implement, the smallest genuine work order or bounded external Operator packet.
-Lead with a concise Recommendation and material tradeoff; keep the detailed
-packet behind it as supporting evidence rather than the conversational front
-door. When the next safe mechanical action is available, ask once for one
-combined disposition and action. If that action uses a new user-owned task,
-explicitly include creation and dispatch of the named task in that approval
-request; never infer task-creation permission afterward. Once approved, perform
-every mechanically available authorized step. Do not ask for the same decision again.
-The human Owner alone ratifies intent and activates work; preserve a distinct
-fresh review after implementation. The onboarding coordinator stops here and
-does not continue into project work.
+Act as a fresh General for this already-adopted project's continuity. Begin
+read-only and verify the lifecycle from repository bytes rather than prior chat. Read the
+charter, Plan, State, Routing, ratified adoption record, and open transactional records. State
+the project's next decision plainly. Prepare, but do not activate, the smallest genuine work
+order or bounded Operator packet; route it to a fresh Architect instead only when the next
+decision requires new design or design-conformance judgment rather than routine continuity. Lead
+with a concise Recommendation and material tradeoff; keep the detailed packet behind it as
+supporting evidence rather than the conversational front door. When the next safe mechanical
+action is available, ask once for one combined disposition and action. If that action uses a new
+user-owned task, explicitly include creation and dispatch of the named task in that approval
+request; never infer task-creation permission afterward. Once approved, perform every
+mechanically available authorized step. Do not ask for the same decision again. The human Owner
+alone ratifies intent and activates work; preserve a distinct fresh Reviewer after
+implementation. The onboarding coordinator stops here and does not continue into project work.
 ```
 
 ## Migration mode

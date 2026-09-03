@@ -4,20 +4,20 @@ You do not need to understand the Doctrine before beginning. You need to know
 which role you are talking to, where that agent is running, and what decision
 belongs to you.
 
-The safest default is: **prepare adoption with a coordinator before opening a
-walled Implementer session.** Make the self-contained `writwall-adopt` bundle
-local before the wall is registered. The wall may intentionally deny network
-access once the project enters lockout; an agent cannot fetch instructions it
-does not already have.
+The safest default is: **run the coordinator, talk to the Architect it names,
+and promote the project into adoption only when the idea is ready.** Make the
+self-contained `writwall-adopt` bundle local before the wall is registered. The
+wall may intentionally deny network access once the project enters lockout; an
+agent cannot fetch instructions it does not already have.
 
 ## Who does what
 
 | Function | Who or what performs it | May share an agent? |
 |---|---|---|
 | **Owner** | You. You decide intent, ratify records, authorize lifecycle actions, and accept results. | Never delegated. |
-| **Adoption coordinator / recorder** | A chat or coding agent that can inspect the project and prepare or record your decisions. During recovery it runs outside the walled Implementer grant. | May also act as Dispatcher on a small project. |
-| **Dispatcher** | Turns ratified Plan intent into one bounded work order. | May be the coordinator in a fresh turn or session. |
-| **Implementer** | The coding agent operating inside the project with one active work order. | Does not review or authorize its own work. |
+| **Architect** | The fresh agent that listens to the pitch, inventories an existing project, challenges the idea, and returns a project sketch for your promotion decision. It returns later for new design or design-conformance judgment. | May be the same model used later, but not the same running context. |
+| **General** | The fresh post-adoption continuity agent that maintains the Plan, prepares bounded dispatch, routes work, and records only decisions you already made. | May perform Dispatcher and recorder mechanics in a fresh turn or session. |
+| **Operator / Implementer** | The coding, infrastructure, or other execution agent working under one bounded packet or active work order. | Does not review or authorize its own work. |
 | **Reviewer** | A fresh read-only agent given the work order, report, and changed result. | Use a fresh session with no implementation role; a different provider is optional, not required. |
 
 These are functions, not permanent job titles. One model can perform several
@@ -28,26 +28,26 @@ between them and does not review its own implementation in the same context.
 
 ### Small project
 
-Use one capable coordinator for interviewing, dispatch drafting, and recorder
-mechanics; use your IDE coding agent as the walled Implementer; open a fresh
-session for Reviewer work. This is the lightest credible arrangement.
+Use one capable frontier model sequentially in separate sessions as Architect
+and General; use your IDE coding agent as the walled Operator/Implementer; open
+a fresh session for Reviewer work. This is the lightest credible arrangement.
 
-Talk first to the coordinator outside the walled IDE, or to the IDE agent
+Talk first to the Architect outside the walled IDE, or to the IDE agent
 **before** any project hook is registered. Give it the public Writwall source
 or the complete local adoption bundle.
 
 ### Split-role project
 
-Use an external adoption coordinator / recorder (for example a general-purpose
-coding task or chat with repository access), a walled Implementer inside the
-IDE, and a fresh Reviewer. This is the recommended path when the wall is
+Use an external Architect and General (for example general-purpose coding tasks
+or chats with repository access), a walled Operator inside the IDE, and a fresh
+Reviewer. This is the recommended path when the wall is
 already installed, the repository has substantial existing intent, or the IDE
 session cannot perform protected lifecycle mechanics.
 
 ### Provider-neutral
 
-Use any capable model for coordinator, Dispatcher, Implementer, and Reviewer
-functions. Without a birth-tested provider adapter, the grants are
+Use any capable model for Architect, General, Operator, and Reviewer functions.
+Without a birth-tested provider adapter, the grants are
 instruction-bounded rather than mechanically enforced. The records and review
 flow still work; describe the enforcement boundary honestly.
 
@@ -59,17 +59,20 @@ names, repository slugs, domains, logos, or launch copy. The coordinator may
 collect evidence, but the Owner chooses the identity; unavailable sources are
 not clear results.
 
-1. Release `v0.9.3` is published and contains the terminal Architect handoff.
+1. Release `v0.10.0` packages the conversation-first Architect handoff,
+   canonical-root enforcement, and corrected lifecycle classification.
    Install it without unpacking it over your project:
 
    ```text
-   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
+   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"
    ```
 
    Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrected
    first-use bytecode residue. Release `v0.9.2` corrects the bootstrap
    expected-denial contract. Release `v0.9.3` adds lifecycle-aware
-   routing and the terminal Architect handoff.
+   routing and the terminal Architect handoff. Release `v0.10.0` adds
+   conversation-first inception, corrected adoption-state classification,
+   and canonical project-root enforcement.
    If you are testing an unpublished release candidate, use its checked external
    candidate tree and the release gate in `PUBLICATION.md`.
 2. Run one command:
@@ -89,20 +92,29 @@ not clear results.
 
    | Observed state | Fresh role receiving the output | Session that stops | May target bytes change? |
    |---|---|---|---|
-   | Clean/new | Adoption coordinator | The human's current launcher returns after creating the bootstrap; the adoption coordinator later stops at closeout | Yes: create-only `.writwall-bootstrap/` |
+   | Clean/new (ordinary invocation) | Architect (conversation-first) | The human's current launcher returns after creating the bootstrap; the Architect stops before adoption mechanics until you make an explicit promotion decision | Yes: create-only `.writwall-bootstrap/` |
+   | Clean/new (`--structured-intake`) | Adoption coordinator | The human's current launcher returns after creating the bootstrap; the adoption coordinator later stops at closeout | Yes: create-only `.writwall-bootstrap/` |
    | Partial bootstrap or recovery | Recovery coordinator | The incomplete adoption or locked session | No |
-   | Adopted or retired lockout | Owner-Agent / Project-Architect | The onboarding coordinator or prior work session | No |
-   | Active work order | Bounded Implementer | Any prior coordinator or Implementer context | No |
+   | Adopted or retired lockout | Fresh General | The onboarding coordinator or prior work session | No |
+   | Active work order | Bounded Operator/Implementer | Any prior coordinator or Implementer context | No |
    | Malformed or contradictory | No role; precise stop diagnostic | The invoking session | No |
 
-3. If you choose to track Owner active minutes, start the timer when the first
-   question tells you to; do not reconstruct time later. Answer one question at
-   a time without entering secrets. You may point it at an existing brief. The
-   command observes actual repository lifecycle state. Only a clean/new target
-   enters intake, creates `<project>/.writwall-bootstrap/`, and initializes a
-   durable local privacy screen outside the repository. Later valid states emit
-   a fresh-role prompt without changing target bytes. Add only private names, codenames, client
-   identifiers, or domains; never add credentials or secret values. See
+3. For a clean/new target, the ordinary command above is conversation-first:
+   it asks nothing on the command line and never blocks on a questionnaire.
+   It observes actual repository lifecycle state, creates
+   `<project>/.writwall-bootstrap/`, and initializes a durable local privacy
+   screen outside the repository, then hands off to a fresh Architect. If
+   the target already holds work, the Architect's opening carries a bounded,
+   local, non-secret inventory (Git branch, cleanliness, a few recent commit
+   subjects, and top-level project-relative names) and asks whether to
+   explore that work or start elsewhere; if the target is empty, it opens
+   with exactly: "Tell me what you are thinking." Later valid states emit a
+   fresh-role prompt without changing target bytes. To use the former full
+   questionnaire instead — Owner-time timer, one question at a time, no
+   local inventory — add `--structured-intake`; for deterministic,
+   non-interactive automation, use `--non-interactive` with its existing
+   required flags. Add only private names, codenames, client identifiers, or
+   domains; never add credentials or secret values. See
    [`docs/privacy-screen.md`](docs/privacy-screen.md).
 4. Open its `HANDOFF.md`. Start the agent and location it names and paste the
    exact prompt. The complete local `writwall-adopt` bundle is already beside
@@ -113,7 +125,7 @@ not clear results.
 
 The command does not install Writwall, interpret intake as ratified intent,
 create an activation pointer, contact an external system, or replace the
-Owner-Agent. It stops on contradictory state instead of guessing from prior
+human Owner, Architect, or General. It stops on contradictory state instead of guessing from prior
 chat. See [`docs/day-zero-coordinator.md`](docs/day-zero-coordinator.md) for
 the complete contract.
 It may start with an unnamed idea; see
@@ -247,36 +259,39 @@ temporary bootstrap bundle before the adoption commit, return the project to
 lockout, and do not dispatch WO-001.
 ```
 
-## Terminal Project-Architect handoff
+## Terminal General handoff
+
+Earlier releases labeled this continuity handoff `Owner-Agent / Project-Architect`;
+that term is retained only as compatibility vocabulary for older records.
 
 Adoption closeout ends the onboarding session. After the adoption commit, open
-a fresh Owner-Agent / Project-Architect and paste exactly:
+a fresh General and paste exactly:
 
 ```text
-Act as a fresh Owner-Agent / Project-Architect. Begin read-only and verify
-the lifecycle from repository bytes rather than prior chat. Read the charter,
-Plan, State, Routing, ratified adoption record, and open transactional records.
-State the project's next decision plainly. Draft, but do not activate or
-implement, the smallest genuine work order or bounded external Operator packet.
-Lead with a concise Recommendation and material tradeoff; keep the detailed
-packet behind it as supporting evidence rather than the conversational front
-door. When the next safe mechanical action is available, ask once for one
-combined disposition and action. If that action uses a new user-owned task,
-explicitly include creation and dispatch of the named task in that approval
-request; never infer task-creation permission afterward. Once approved, perform
-every mechanically available authorized step. Do not ask for the same decision again.
-The human Owner alone ratifies intent and activates work; preserve a distinct
-fresh review after implementation. The onboarding coordinator stops here and
-does not continue into project work.
+Act as a fresh General for this already-adopted project's continuity. Begin
+read-only and verify the lifecycle from repository bytes rather than prior chat. Read the
+charter, Plan, State, Routing, ratified adoption record, and open transactional records. State
+the project's next decision plainly. Prepare, but do not activate, the smallest genuine work
+order or bounded Operator packet; route it to a fresh Architect instead only when the next
+decision requires new design or design-conformance judgment rather than routine continuity. Lead
+with a concise Recommendation and material tradeoff; keep the detailed packet behind it as
+supporting evidence rather than the conversational front door. When the next safe mechanical
+action is available, ask once for one combined disposition and action. If that action uses a new
+user-owned task, explicitly include creation and dispatch of the named task in that approval
+request; never infer task-creation permission afterward. Once approved, perform every
+mechanically available authorized step. Do not ask for the same decision again. The human Owner
+alone ratifies intent and activates work; preserve a distinct fresh Reviewer after
+implementation. The onboarding coordinator stops here and does not continue into project work.
 ```
 
-The Architect leads with a concise recommendation and material tradeoff; its
+The General leads with a concise recommendation and material tradeoff; its
 detailed packet remains supporting evidence. If the next safe step can be done,
 its one approval request includes both the disposition and that action. Creating
 a new user-owned task must be explicitly included in that request. Once you
-approve it, the Architect performs every authorized mechanical step available
+approve it, the General performs every authorized mechanical step available
 without asking the same question again. It still does not infer ratification,
-activate a work order it was told only to draft, or implement product work.
+activate a work order it was told only to prepare, or implement product work.
+It routes new design and design-conformance decisions back to a fresh Architect.
 
 After you separately approve and activate a work order, start a fresh Implementer:
 

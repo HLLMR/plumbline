@@ -98,11 +98,12 @@ inspects the target before intake, assigns the correct fresh role, and changes
 target bytes only for clean/new bootstrap. It never installs the wall or claims
 adoption. This routing happens without installing the wall or claiming adoption:
 
-Release `v0.9.3` is published and contains the terminal Architect handoff
-described below.
+Release `v0.10.0` packages the conversation-first Architect handoff,
+canonical-root enforcement, and corrected lifecycle classification described
+below.
 
 ```text
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project
@@ -117,20 +118,35 @@ python3 scripts/start_writwall.py --project-root /path/to/your-project
 
 | Observed state | Fresh role | Prior session stops | Target bytes |
 |---|---|---|---|
-| Clean/new | Adoption coordinator | Launcher returns; onboarding later stops at closeout | Create-only bootstrap may be added |
+| Clean/new (ordinary invocation) | Architect (conversation-first) | Launcher returns; the Architect stops before adoption mechanics until the Owner makes an explicit promotion decision | Create-only bootstrap may be added |
+| Clean/new (`--structured-intake`) | Adoption coordinator | Launcher returns; onboarding later stops at closeout | Create-only bootstrap may be added |
 | Partial/recovery | Recovery coordinator | Incomplete or locked session | Unchanged |
-| Adopted/retired lockout | Owner-Agent / Project-Architect | Onboarding or prior work session | Unchanged |
-| Active work order | Bounded Implementer | Prior coordinator/Implementer context | Unchanged |
+| Adopted/retired lockout | Fresh General (the continuity role previously labeled Project-Architect) | Onboarding or prior work session | Unchanged |
+| Active work order | Bounded Operator/Implementer | Prior coordinator/Implementer context | Unchanged |
 | Malformed/contradictory | No role; fail-closed diagnostic | Invoking session | Unchanged |
 
-For clean/new state, the command asks one question at a time, creates
-`.writwall-bootstrap/`, and initializes a durable project-specific privacy
-screen in your operating system's local user state outside the repository.
-Read its `HANDOFF.md`, open the named agent in the named location, and paste the
-supplied prompt. Later states print their fresh-role handoff directly without
-intake, privacy initialization, or target writes. Do not enter
-passwords, API tokens, private keys, mailbox contents, DNS values, or other
-secrets; intake is stored as local plain text. See the
+For clean/new state, the ordinary command above is conversation-first: it
+asks nothing on the command line and never blocks on a questionnaire. It
+creates `.writwall-bootstrap/` and initializes a durable project-specific
+privacy screen in your operating system's local user state outside the
+repository, then hands off to a fresh Architect. For an existing project,
+the handoff carries a bounded, local, non-secret inventory (Git branch,
+cleanliness, a few recent commit subjects, and top-level project-relative
+names), and the Architect begins read-only, summarizes what it found from
+that evidence, and asks whether to explore that work or start elsewhere. For
+a genuinely empty target, it opens with exactly: "Tell me what you are
+thinking." Read its `HANDOFF.md`, open the named agent in the named
+location, and paste the supplied prompt. Later states print their fresh-role
+handoff directly without intake, privacy initialization, or target writes.
+Do not enter passwords, API tokens, private keys, mailbox contents, DNS
+values, or other secrets; intake is stored as local plain text.
+
+The former full structured questionnaire (Owner-time capture, secret
+confirmation, project name, purpose, agent, location, environment, external
+operators, privacy identifiers, one question at a time) remains available
+verbatim behind the explicit `--structured-intake` flag. Deterministic,
+non-interactive automation keeps using `--non-interactive` with its existing
+required flags, exactly as before. See the
 [coordinator reference](docs/day-zero-coordinator.md), or use
 [START-HERE.md](START-HERE.md) for the manual and recovery routes.
 The coordinator does not register, activate, or birth-test the wall.
