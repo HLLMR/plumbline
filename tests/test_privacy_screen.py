@@ -236,6 +236,78 @@ class PrivacyScreenTests(unittest.TestCase):
         for identifier in identifiers:
             self.assertIn(identifier, stored)
 
+    def _reap_helper(self, process: subprocess.Popen[str]) -> None:
+        """Guarantee the helper process is terminated, reaped, and closed.
+
+        Idempotent, so it is safe both as an immediate call on the timeout
+        path and as a deferred ``addCleanup`` safety net on every other
+        path (exception, assertion failure, or ordinary success where the
+        process already exited).
+        """
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+        else:
+            process.wait(timeout=5)
+        for stream in (process.stdin, process.stdout, process.stderr):
+            if stream is not None and not stream.closed:
+                stream.close()
+
+    def _observe_contention_signal(
+        self, process: subprocess.Popen[str], signal: Path, timeout: float = 10
+    ) -> int | None:
+        """Wait up to ``timeout`` seconds for a complete, parseable signal.
+
+        A present-but-empty or otherwise unparseable signal is treated as
+        not-yet-published rather than raised, so a partially observed write
+        can never crash the parse; the wait is always bounded regardless of
+        whether a valid signal ever appears. If the deadline elapses without
+        the helper exiting on its own or publishing a valid signal, the
+        helper is terminated and reaped here before returning, so a
+        never-resolving wait can never leak it. On every other return path
+        the helper is left running for the caller to await naturally (for
+        example while it retries and finishes after a contended handle is
+        released).
+        """
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if signal.is_file():
+                content = signal.read_text(encoding="ascii")
+                if content:
+                    try:
+                        return int(content)
+                    except ValueError:
+                        pass
+            if process.poll() is not None:
+                return None
+            time.sleep(0.01)
+        self._reap_helper(process)
+        return None
+
+    def test_signal_race_present_but_incomplete_does_not_leak_helper(self) -> None:
+        signal = self.temp / "race-signal.txt"
+        process = subprocess.Popen(
+            [sys.executable, "-B", "-c", "import sys; sys.stdin.read()"],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True,
+        )
+        self.addCleanup(self._reap_helper, process)
+        # Present but never completed: reproduces the observed race
+        # deterministically, without depending on real filesystem timing.
+        signal.write_bytes(b"")
+
+        self._observe_contention_signal(process, signal, timeout=1)
+
+        self.assertIsNotNone(
+            process.poll(),
+            "a present-but-incomplete completion signal must not leak the "
+            "helper process",
+        )
+
     @unittest.skipUnless(
         sys.platform == "win32", "Windows atomic-replacement contention regression"
     )
@@ -275,8 +347,10 @@ class PrivacyScreenTests(unittest.TestCase):
             "    try:\n"
             "        return real_replace(source, target)\n"
             "    except OSError as exc:\n"
-            "        signal.write_text(str(getattr(exc, 'winerror', '')), "
-            "encoding='ascii')\n"
+            "        content = str(getattr(exc, 'winerror', ''))\n"
+            "        staging = signal.with_name(signal.name + '.tmp')\n"
+            "        staging.write_text(content, encoding='ascii')\n"
+            "        real_replace(staging, signal)\n"
             "        raise\n"
             "privacy_screen.os.replace = observed_replace\n"
             "from writwall_cli.__main__ import main\n"
@@ -289,19 +363,14 @@ class PrivacyScreenTests(unittest.TestCase):
             cwd=REPO_ROOT, env=self.managed_environment(), stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
         )
+        self.addCleanup(self._reap_helper, process)
         assert process.stdin is not None
         process.stdin.write("PRIVATE-CONTENTION-MARKER\n")
         process.stdin.close()
-        contention_winerror: int | None = None
         try:
-            deadline = time.monotonic() + 10
-            while time.monotonic() < deadline:
-                if signal.is_file():
-                    contention_winerror = int(signal.read_text(encoding="ascii"))
-                    break
-                if process.poll() is not None:
-                    break
-                time.sleep(0.01)
+            contention_winerror = self._observe_contention_signal(
+                process, signal, timeout=10
+            )
         finally:
             ctypes.windll.kernel32.CloseHandle(handle)
 

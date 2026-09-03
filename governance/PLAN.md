@@ -709,3 +709,47 @@ passed with one platform skip, and fresh review returned **ACCEPT — HIGH
 confidence** after two correction cycles. Public issues #18 and #19 proceed
 through the authorized post-closeout projection, review, and protected-CI PR.
 No release or external-project mutation is authorized.
+
+## 27. CI recovery and onboarding correction sequence — 2026-09-02
+
+The first protected-CI run for the accepted WO-WW-017 public projection passed
+fourteen of fifteen jobs and exposed a Python 3.14 race in the Windows
+contention-test harness. Public issue #27 records the failure. The Owner
+authorized correction rather than an unexplained rerun.
+
+1. **WO-WW-018 — COMPLETE, accepted 2026-09-02: Python 3.14
+   contention-test race.** The observation handshake now publishes atomically,
+   tolerates present-but-incomplete state within a bounded wait, and guarantees
+   helper reaping and stream closure without weakening real Windows contention
+   or product assertions. Native Windows Python 3.14 focused tests and 20 stress
+   iterations passed; a clean prospective tree passed 753 tests with two skips
+   and every repository gate. Fresh independent execution returned **ACCEPT
+   WITH NON-BLOCKING POLISH / high confidence**. Resume PR #26 only after the
+   complete required matrix passes.
+2. **WO-WW-019 — External Pilot B lifecycle classification.** A clean external
+   pilot with draft/unratified adoption records was classified as retired
+   lockout. Require evidence of ratification, preserve clean/new and recovery
+   compatibility, and fail closed on contradictory records before that pilot
+   resumes.
+3. **WO-WW-020 — Canonical project-root enforcement.** Generated repository and
+   external-Operator packets must name the discovered canonical repository root,
+   prohibit durable project artifacts in user/temp/bootstrap locations, and
+   distinguish external evidence staging from project records. Correct every
+   route that can otherwise create dual-repository or synchronization drift.
+4. **WO-WW-021 — Conversation-first inception and existing-project continuity.**
+   Preserve the current CLI and lifecycle routes while adding a low-friction
+   discovery stage. For an existing project, begin with a read-only high-level
+   inventory of current documents, code, history, and recorded reasoning;
+   summarize the apparent project and ask whether to explore that work or start
+   elsewhere. Do not make the Owner re-enter facts the repository already
+   supports. For a new or unnamed idea, begin with one open invitation and let
+   adaptive discovery continue as long as useful. Before governance mechanics,
+   return a concise project sketch, recommended topology, and provisional first
+   backlog. Nothing in discovery is ratified authority; adoption and the first
+   executable work order begin only after one explicit promotion decision.
+
+The conversational path is not capped at three questions or any fixed turn
+count. Fast first value is the target; useful inquiry may continue. Existing
+`writwall start --project-root ...` automation and lifecycle-aware behavior
+remain backward-compatible. The public on-ramp must make the simple path
+obvious without removing the detailed manual and recovery routes.

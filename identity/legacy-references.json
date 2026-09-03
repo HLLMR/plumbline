@@ -100,13 +100,13 @@
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "d0fdc045bc5ee436fa09adc174a489e5236a59c101c4959af67e4a5d7e405f63"
+      "sha256": "0a1cfae5dcd8d475a599fff8bb8c07c745f4baae63adb8def5ddbcad6cfb13ea"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "33cc96d0e09b95bb7dd4ccfbba54eadcc0c2bc941b3054d8371dd4ac7dc62f00",
-      "projection_sha256": "c4ced7a03126f5d837cfcc6cc64f5e7e3e15295a40bac59a81299f338fd33031"
+      "sha256": "87ed1be87ddf391439baddcb2a1aef588387e813a3e42dc05e297384da806f0c",
+      "projection_sha256": "4ad60876ac2ff78f8eb212e0c4b54a42dd5c1131780a2b1add58f9367bcd0ee7"
     },
     {
       "path": "governance/decisions/DR-001.md",
