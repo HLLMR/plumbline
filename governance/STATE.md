@@ -22,8 +22,12 @@ identity correction, accepted WO-WW-012 installed bootstrap-bundle completeness
 correction, accepted WO-WW-013 post-closeout projection-reference truth,
 accepted WO-WW-014 public current-record host-path privacy, accepted WO-WW-015
 terminal Architect handoff and lifecycle-aware start routing, and accepted
-WO-WW-016 release identity 0.9.3.
-Release `v0.9.2` is public. External Pilot A successfully adopted Writwall,
+WO-WW-016 release identity 0.9.3, and accepted WO-WW-017 post-release truth
+and CI reliability. No work order is active during the closeout publication
+tail.
+Release `v0.9.3` is public at commit
+`e0cef360843dff38d6a02dd48be8f61b2d2d300e`; its complete CI run passed,
+public issue #24 is closed, and no public pull request is open. External Pilot A successfully adopted Writwall,
 completed its channel-local Windows birth test, and closed two genuine work
 orders with no successful forbidden mutation. Public issue #24 records the
 product lesson that onboarding did not terminate in an explicit fresh Project-
@@ -34,14 +38,16 @@ WO-WW-015 corrected those product interactions without reclassifying the pilot
 as a failure: clean/new retains intake and create-only bootstrap; later valid
 states route without target-byte changes; adoption closeout stops at the fresh
 Architect boundary; and Architect requests use progressive disclosure plus one
-combined disposition/action gate. No external media content, website, DNS, or
-mail mutation is active.
+combined disposition/action gate. Public issues #18 and #19 remain open
+pending the authorized WO-WW-017 public projection and PR. The obsolete `dist/plumbline-0.6.zip` (private governed-source reference, not present in this candidate) was retired at Owner closeout. No external media content,
+website, DNS, or mail mutation is active.
 
-**Derived:** 2026-09-01 from the ten accepted pilot records, the Doctrine 9.3.1
+**Derived:** 2026-09-02 from the ten accepted pilot records, the Doctrine 9.3.1
 fresh-agent evaluation, ratified DR-002 and project-migration DR-003, and
 accepted WO-PL-017 through WO-PL-023 and WO-PL-025 through WO-PL-033 records,
 the WO-PL-024 sequencing recovery, the verified public-release events, the
-accepted WO-WW-001 through WO-WW-016 closeout records.
+accepted WO-WW-001 through WO-WW-017 closeout records, plus the observed
+v0.9.3 publication.
 **Boundary:** post-adoption, all 10 counted pilot work orders and their
 evaluation complete; WO-PL-017 remediation complete; DR-003 ratified;
 WO-PL-018 through WO-PL-023 complete; WO-PL-024 void before implementation;
@@ -53,12 +59,12 @@ the current identity with the two-line wall glyph; WO-PL-039 complete and
 accepted, with public PR #5 merged after the required CI passed and issue #4
 closed; WO-PL-040 complete and accepted; public PR #8 merged and issue #1
 closed; the historical `WO-PL` series ends at 040; **WO-WW-001 through
-WO-WW-016 are COMPLETE and accepted**; no work order is active; public PR #9,
-#12, #13, and #17 merged with protected CI green; public issue #14 records the
-coordinator release gate; release `v0.9.2` is published; External Pilot A
-adopted successfully and closed two genuine work orders; public issue #24
-records the terminal-Architect handoff defect. No external media content,
-website, DNS, or mail mutation is active.
+WO-WW-017 are COMPLETE and accepted**; **no work order is active**; public PR #9,
+#12, #13, #17, and #21 merged with protected CI green; public issue #14 records
+the coordinator release gate; release `v0.9.3` is published; External Pilot A
+adopted successfully and closed two genuine work orders; public issue #24 is
+closed; public issues #18 and #19 remain open. No external media content,
+website, DNS, or mail mutation is active from this repository.
 The hash of the commit containing this file is intentionally recorded only
 externally.
 
@@ -129,7 +135,9 @@ externally.
 | WO-WW-014 | **COMPLETE**, accepted 2026-09-01; the earlier current-use Plan reference is host-neutral and the projection checker rejects concrete Windows, macOS, Linux-home, and mounted-drive paths in current public records without echoing values. Windows passed 743 tests with two skips; Windows and Ubuntu projection suites each passed 68 tests; two 136-file candidates were projection/release-clean and byte-identical; corrected fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. The authorized public release and External Pilot A tail resume |
 | WO-WW-015 | **COMPLETE**, accepted 2026-09-01; lifecycle-aware `writwall start` now preserves clean/new intake while routing recovery, adopted/retired lockout, and active-work-order states to the correct fresh role with zero target-byte change. Adoption closes at an explicit fresh Project-Architect handoff using progressive disclosure and one combined approval/action gate. Windows passed 750 tests with two skips; native Ubuntu affected and installed-wheel gates passed; two 136-file candidates were checker-clean and byte-identical; fresh final re-review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; public issue #24 remains open pending separately authorized public projection/PR work |
 | WO-WW-016 | **COMPLETE**, accepted 2026-09-02; current package metadata, conditional install guidance, and executable release checks agree on `0.9.3` / `v0.9.3` without claiming the tag is published. Historical release facts remain unchanged. Windows passed 750 tests with two skips; native Ubuntu passed 17 release tests and the installed gate; two 136-file candidates were projection/release-clean and byte-identical; fresh review returned **ACCEPT — HIGH confidence**. Owner active minutes **NOT REPORTED**. Records retained in `governance/history/`; issue #24 proceeds through the authorized post-closeout public PR while tag and release remain unauthorized |
-| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-016 COMPLETE and accepted**; no work order is active; public PR #9, #12, #13, #17, and #21 merged with protected CI green; public issues #1, #4, #10, #11, #16, and #20 closed; public issue #14 records the accepted release gate; `v0.9.2` is published; `v0.9.3` is not yet tagged or released; External Pilot A adopted and closed two genuine work orders; issue #24 remains open pending the authorized public PR; website, DNS, and mail pilots remain queued |
+| WO-WW-017 | **COMPLETE**, accepted 2026-09-02; published-release truth, bounded Windows privacy-profile replacement retry, and non-duplicating CI triggers are implemented. Windows passed 752 tests with two skips; the native Ubuntu affected set passed with one platform skip; fresh review returned **ACCEPT — HIGH confidence** after two rework cycles. Owner active minutes **NOT REPORTED**. The obsolete `dist/plumbline-0.6.zip` (private governed-source reference, not present in this candidate) was retired at closeout. Public issues #18 and #19 remain open pending the authorized public PR |
+| WO-WW-018 | **COMPLETE**, accepted 2026-09-02; Python 3.14 contention-test signal publication and helper cleanup repaired without product-code change. Native Windows Python 3.14 focused tests and 20 stress iterations passed; a clean prospective tree passed 753 tests with two skips and all gates; independent public-clone review returned **ACCEPT WITH NON-BLOCKING POLISH / high confidence**. Owner active minutes **NOT REPORTED**. Public issue #27 and PR #26 proceed through protected CI |
+| Post-pilot sequence | **WO-PL-017 through WO-PL-023 COMPLETE**; WO-PL-024 **VOID BEFORE IMPLEMENTATION**; WO-PL-025 through WO-PL-040 **COMPLETE**; historical `WO-PL` identifiers end at 040; **WO-WW-001 through WO-WW-018 COMPLETE and accepted**; no active work order; public PR #9, #12, #13, #17, and #21 merged with protected CI green; public issues #1, #4, #10, #11, #16, #20, and #24 closed; public issue #14 records the accepted release gate; `v0.9.3` is published; External Pilot A adopted and closed two genuine work orders; public issues #18, #19, and #27 remain open behind PR #26; lifecycle classification, canonical-root enforcement, and conversation-first onboarding are queued as WO-WW-019 through WO-WW-021; website and infrastructure pilots proceed under their own repositories and authority |
 | Bootstrap history | Eleven completed work orders retained as uncounted pre-adoption evidence under `archive/pre-adoption-bootstrap/` |
 
 ### Verification accepted at WO-PL-016 closeout
@@ -971,14 +979,14 @@ it on 2026-08-28 and reported active minutes **NOT REPORTED**.
 | RFI-28 | **RESOLVED** at WO-PL-014 closeout under the Owner-approved parser-free design. Frontmatter is sole grant authority; B.4 is generated and unmatched B.3/B.4 paths block dispatch |
 | RFI-25 / 27 / 28 routing | The records remain separate but were implemented and disposed together by WO-PL-014; their bounded residuals remain visible in each record |
 | RFI-03 / licensing | **RESOLVED by DR-003, 2026-08-20.** License map selected; mechanization and publication remain separate gates |
-| Active work order | None; intentional between-work-order lockout |
-| Queued work | No successor work order. The accepted external Writwall cutover packet remains pending a separate Owner authorization |
+| Active work order | None |
+| Queued work | Complete protected CI and merge PR #26; then WO-WW-019 lifecycle classification, WO-WW-020 canonical-root enforcement, and WO-WW-021 conversation-first inception/existing-project continuity; private pilots retain their own authority |
 | WO-PL-010 follow-up | **Complete.** The three adoption-recorder consistency findings from WO-PL-009 are closed |
 | Second-project boundary | Each adopting project maintains its own adoption and product state. No second-project source, private benchmark material, proprietary design detail, or trade-secret material is imported into Plumbline by this closeout |
 | Published / tagged / licensed | **Yes**: clean-history public repository `HLLMR/plumbline`, release tag `v0.8`; DR-003 path-based license map remains operative |
 | Push | WO-PL-034 private and public updates authorized; remote commit identities are recorded after the push completes |
 | Repository visibility | Private governed source remains private; clean-history `HLLMR/plumbline` is public |
-| Stage | **Plumbline 0.8 remains the historical public release; Writwall migration is accepted in governed source; Tuesday promotion remains frozen pending the separately authorized external cutover** |
+| Stage | **Writwall v0.9.3 is public; WO-WW-018 is accepted and closed; PR #26 awaits a complete green CI matrix; hllmr-site remains frozen pending WO-WW-019** |
 
 ---
 

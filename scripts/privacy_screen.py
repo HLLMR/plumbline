@@ -169,6 +169,28 @@ def _locked_profile(path: Path):
         os.close(descriptor)
 
 
+_WINDOWS_REPLACE_CONTENTION_WINERRORS = frozenset({5, 32, 33})
+_WINDOWS_REPLACE_RETRY_DEADLINE_SECONDS = 2.0
+_WINDOWS_REPLACE_RETRY_INTERVAL_SECONDS = 0.05
+
+
+def _replace_with_windows_contention_retry(temporary: Path, path: Path) -> None:
+    if sys.platform != "win32":
+        os.replace(temporary, path)
+        return
+    deadline = time.monotonic() + _WINDOWS_REPLACE_RETRY_DEADLINE_SECONDS
+    while True:
+        try:
+            os.replace(temporary, path)
+            return
+        except OSError as exc:
+            if getattr(exc, "winerror", None) not in _WINDOWS_REPLACE_CONTENTION_WINERRORS:
+                raise
+            if time.monotonic() >= deadline:
+                raise
+            time.sleep(_WINDOWS_REPLACE_RETRY_INTERVAL_SECONDS)
+
+
 def _write_patterns(path: Path, patterns: list[str]) -> None:
     _assert_managed_components(path)
     temporary = path.with_name(f".{PROFILE_NAME}.{uuid.uuid4().hex}.tmp")
@@ -181,7 +203,7 @@ def _write_patterns(path: Path, patterns: list[str]) -> None:
             os.fsync(stream.fileno())
         if os.name != "nt":
             temporary.chmod(0o600)
-        os.replace(temporary, path)
+        _replace_with_windows_contention_retry(temporary, path)
     except OSError as exc:
         raise PrivacyScreenError("privacy screen could not be written") from exc
     finally:

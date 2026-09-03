@@ -937,6 +937,39 @@ branch, PR, issue closure, merge, tag, or release occurred before acceptance.
 Issue #24 proceeds only through the separately authorized post-closeout PR and
 protected-CI merge; tagging and releasing `v0.9.3` remain unauthorized.
 
+### Post-pilot WO-WW-017 completed record
+
+WO-WW-017 is post-pilot and does not add an eleventh metrics row or change the
+accepted ten-order aggregate. The Owner accepted it on 2026-09-02 and reported
+active minutes **NOT REPORTED**.
+
+Current install guidance now truthfully identifies published `v0.9.3`. The
+obsolete former-identity distribution archive was retired from private
+governed source at closeout. Windows privacy-profile replacement contention
+now receives a bounded retry only for WinError 5, 32, or 33 while atomicity,
+locking, link protection, and nondisclosure remain intact. Pull-request heads
+now execute one complete CI matrix without also matching the push trigger;
+direct-main and version-tag coverage, all three operating systems, all five
+Python versions, and `CI required` remain.
+
+The complete Windows suite passed 752 tests with two skips. The native Ubuntu
+affected set passed with one Windows-only skip. The final synchronized
+contention regression passed 20/20 repetitions and fails against the pre-edit
+implementation. Fresh review returned **ACCEPT — HIGH confidence** after two
+rework cycles: first for a malformed issued baseline hash and timing-based
+test, then for a staging-file signal that did not prove replacement had been
+attempted. The accepted test observes a real failed `os.replace` and verifies
+recovery through the production CLI without a production test hook.
+
+Accepted environment diagnostics are preserved in the report: a Windows 3.14
+host lacked the declared build backend, and Ubuntu's old system setuptools
+could not parse the modern SPDX license expression. Neither diagnostic is
+acceptance evidence and no package was installed. No out-of-grant mutation
+succeeded. Public issues #18 and #19 remain open pending the authorized
+post-closeout projection, review, and protected-CI pull request. The separate
+External Pilot B lifecycle-classification defect is queued after that merge;
+hllmr-site remains untouched.
+
 ---
 
 ## Column definitions

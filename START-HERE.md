@@ -59,9 +59,8 @@ names, repository slugs, domains, logos, or launch copy. The coordinator may
 collect evidence, but the Owner chooses the identity; unavailable sources are
 not clear results.
 
-1. Release candidate `v0.9.3` contains the terminal Architect handoff but is
-   not yet published. After publication, install it without unpacking it over
-   your project; until then, use the checked source-tree fallback below:
+1. Release `v0.9.3` is published and contains the terminal Architect handoff.
+   Install it without unpacking it over your project:
 
    ```text
    python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
@@ -69,7 +68,7 @@ not clear results.
 
    Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrected
    first-use bytecode residue. Release `v0.9.2` corrects the bootstrap
-   expected-denial contract. Release candidate `v0.9.3` adds lifecycle-aware
+   expected-denial contract. Release `v0.9.3` adds lifecycle-aware
    routing and the terminal Architect handoff.
    If you are testing an unpublished release candidate, use its checked external
    candidate tree and the release gate in `PUBLICATION.md`.

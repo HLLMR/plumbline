@@ -304,8 +304,12 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertIn("--expected-tag v0.9.3", publication)
         self.assertIn("--expected-tag v0.9.3", contributing)
         for document in (readme, adopting, start):
-            self.assertIn("not yet published", document)
-            self.assertIn("After", document)
+            self.assertNotIn("not yet published", document)
+            self.assertIn(
+                'python -m pip install '
+                '"https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"',
+                document,
+            )
         self.assertIn("Release `v0.9.0` first introduced", start)
         self.assertIn("Release `v0.9.1` corrected", start)
         self.assertIn("Release `v0.9.2` corrects", start)

@@ -16,7 +16,7 @@
     {
       "path": "README.md",
       "context": "migration_provenance",
-      "sha256": "2bef9b65ca9ff3aec8dc8149f185f337c7f0e4d71c79c62661f37f9c1a543c82"
+      "sha256": "d05596604edc06e5ac5c2502ecd61b945e0caa41fe63a39de66a3d58fa2e1e2b"
     },
     {
       "path": "SELF-HOSTING.md",
@@ -94,19 +94,19 @@
     {
       "path": "governance/LOG.md",
       "context": "historical_pilot_summary",
-      "sha256": "8f1ae9b4f005a31eed74e9f68429fed33fc6ffed2bd31e05de59327d4f9db220",
+      "sha256": "8a27c2cda1dbbb3d38ca03f1745352abb0ab07290d691dd4f063d3e274da425f",
       "projection_transform": "private_evidence_redaction"
     },
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "3b5645777ed304ce7205fbd797323320fd10ddd421bf4b9562c5bd3c28b4df9f"
+      "sha256": "0a1cfae5dcd8d475a599fff8bb8c07c745f4baae63adb8def5ddbcad6cfb13ea"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "4939f44b509ce43e356f55d40f7ec506e29f3fb0a236096b8353729f59f68e3c",
-      "projection_sha256": "abd6676fd83bb1e7a480048ffc3e717fe9184a41e5c887ef223c40d3bed113a1"
+      "sha256": "87ed1be87ddf391439baddcb2a1aef588387e813a3e42dc05e297384da806f0c",
+      "projection_sha256": "4ad60876ac2ff78f8eb212e0c4b54a42dd5c1131780a2b1add58f9367bcd0ee7"
     },
     {
       "path": "governance/decisions/DR-001.md",
@@ -127,7 +127,7 @@
     {
       "path": "tests/test_distribution.py",
       "context": "historical_evidence_fixture",
-      "sha256": "e5e6df9ead5effa20ee48167f070aa43eb8716e4df66fd997df65d6c2edc7c69"
+      "sha256": "6483f84819c08284b989252f4a40a42e8eca64fec5fda303cec62350c19328d0"
     },
     {
       "path": "tests/test_identity_migration.py",

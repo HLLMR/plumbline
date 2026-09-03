@@ -42,12 +42,10 @@ locked session may deny the network request that would otherwise retrieve them.
 
 For a first adoption, the default is the day-zero coordinator:
 
-Release candidate `v0.9.3` contains the terminal Architect handoff described
-below but is not yet published. The tagged install command becomes valid only
-after that release is published; until then, use the checked source-tree fallback.
+Release `v0.9.3` is published and contains the terminal Architect handoff
+described below.
 
 ```text
-# After v0.9.3 is published, install that tagged release.
 python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.9.3.zip"
 
 # Installed command
