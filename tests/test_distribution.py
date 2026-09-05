@@ -407,6 +407,17 @@ class CurrentDocumentationSynchronizationTests(unittest.TestCase):
 
 
 class CheckerFailureCategories(DistributionTestCase):
+    def test_preserved_naming_examples_pass_as_history(self):
+        self.assertNotIn("[name-clearance]", self.check().stdout)
+
+    def test_an_unlisted_stale_ledger_still_fails_current_validation(self):
+        folder = self.repo / "examples" / "name-clearance-ledgers"
+        payload = json.loads((folder / "writwall-candidate.json").read_text(encoding="utf-8"))
+        payload["expires_at"] = "2000-01-01T00:00:00Z"
+        (folder / "new-decision.json").write_text(json.dumps(payload), encoding="utf-8")
+        result = self.check()
+        self.assertIn("new-decision.json: [freshness] evidence expired", result.stdout)
+
     def test_unclassified_former_identity_fails_release_gate(self):
         self.edit(
             "START-HERE.md",

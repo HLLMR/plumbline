@@ -12,3 +12,10 @@ def start(argv: Sequence[str] | None = None) -> int:
     from scripts.start_writwall import main
 
     return main(list(argv) if argv is not None else None)
+
+
+def inspect(argv: Sequence[str] | None = None) -> int:
+    """Print a read-only coordinator handoff through the supported API."""
+    from scripts.start_writwall import inspect_main
+
+    return inspect_main(list(argv) if argv is not None else None)

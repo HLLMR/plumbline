@@ -1075,6 +1075,23 @@ whitespace gates passed on the same final record bytes.
 
 ## Column definitions
 
+### Post-pilot WO-WW-026 completed record
+
+Owner ACCEPT on 2026-09-04, including Amendment 1 and disclosed diagnostics;
+active minutes NOT REPORTED. This order does not alter the ten-order pilot.
+Public-distribution classification and complete-ledger derivation were corrected;
+four historical naming examples now use recorded-decision freshness without
+changing their evidence, while new naming checks remain current-time.
+Windows: 810 tests OK, two skips. Ubuntu public candidate: 810 OK, four skips.
+Both 136-file candidates passed checker and installed gates on both platforms
+and matched byte-for-byte. Fresh implementation and record reviews: ACCEPT.
+Two initial Reviewer edge cases required RED/GREEN correction; the subsequent
+expiry blocker was resolved by Owner Amendment 1. Earlier failures and wrapper,
+environment, identity-refresh and Windows timing limitations remain in the
+private report. Eight declared surfaces were instruction-bound, zero claimed
+mechanically enforced; no new live-wall proof is claimed. Records are retired
+to private governed history. Publication proceeds separately after closeout.
+
 **9.2.1 Denials.** One mutation attempt rejected by the enforcement provider and attributable to the active work order. Count raw denial events; identify surface and mutation channel. Birth-test and regression-test probes are excluded from pilot totals and recorded separately in `LOG-denials-probes.md`. Every **successful** out-of-grant mutation is recorded as a deviation in Notes. Predicted count for successes: zero.
 
 **9.2.2 RFIs.** Each distinct numbered RFI first opened during the work order. Replies and updates to an existing RFI do not add counts.

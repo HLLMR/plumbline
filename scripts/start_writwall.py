@@ -76,6 +76,27 @@ sketch, recommended Owner/Architect/General/Operator topology, provisional first
 uncertainties and risks, and the one explicit Owner promotion decision before any adoption
 mechanics begin."""
 
+ARCHITECT_PREPARED_INTAKE_PROMPT = f"""Act as a fresh Writwall Architect. Begin read-only; do
+not implement, install, register a wall, adopt the project, or activate work. Read
+`.writwall-bootstrap/intake.json`, `discovery.json`, and `ARCHITECT.md`. Treat every collected
+answer as unratified discovery evidence, not authority. Summarize the Owner's apparent pitch in
+plain language, challenge material assumptions and alternatives, and continue the conversation
+one question at a time for as long as it is useful. Produce a project sketch, recommended
+Owner/Architect/General/Operator topology, provisional backlog, uncertainties, risks, and stop
+conditions. Nothing advances until the human Owner explicitly promotes that sketch.
+
+Only after explicit promotion, use the local `writwall-adopt` bundle to prepare the proposed
+adoption and recorder actions. The Owner separately ratifies material intent and authorizes
+mechanics. Before wall registration or any Level 1 call, copy
+`.writwall-bootstrap/writwall-adopt/assets/bootstrap-charter-addendum.md` verbatim into the
+engine-visible pre-adoption charter. Ordinary no-pointer work remains forbidden; the addendum
+permits only exact expected-denial probes named by a durably Owner-ratified lifecycle. It confers no mutation authority. Denial is the only valid outcome, and any success stops adoption. Remove
+the addendum before the adoption commit. Do not begin product work or WO-001 before adoption.
+After adoption closeout, present
+the following exact fresh-role handoff and stop; the Architect does not continue as General:
+
+{GENERAL_PROMPT}"""
+
 DNS_MAIL_SCENARIO = (
     "DNS provider selection",
     "DNS inventory and cutover",
@@ -446,6 +467,41 @@ def classify_project(project: Path) -> ObservedState:
             f"pointer: {names}"
         )
 
+    # Distribution evidence describes the source, not authority over this copy.
+    # Resolve active work first so these markers never suppress its checks.
+    distribution_names = ("PROJECTION-MANIFEST.sha256", "PROJECTION-PROVENANCE.md")
+    public_distribution = False
+    notice = ""
+    if _entry_exists(project / "CLAUDE.md"):
+        charter = _safe_project_path(project, project / "CLAUDE.md", "project charter")
+        if not charter.is_file():
+            raise CoordinatorError("inconsistent state: project charter is not a file")
+        try:
+            notice = charter.read_text(encoding="utf-8-sig")
+        except (OSError, UnicodeError) as exc:
+            raise CoordinatorError("inconsistent state: project charter is unreadable") from exc
+    if (notice.startswith("# Public projection instructions\n")
+            or any(_entry_exists(project / name) for name in distribution_names)):
+        reject_bootstrap_conflict("public distribution")
+        for name in (*distribution_names, "CLAUDE.md"):
+            path = _safe_project_path(project, project / name, "public distribution marker")
+            if not path.is_file():
+                raise CoordinatorError(f"inconsistent public distribution: missing {name}")
+        try:
+            notice = (project / "CLAUDE.md").read_text(encoding="utf-8-sig")
+            provenance = (project / "PROJECTION-PROVENANCE.md").read_text(encoding="utf-8-sig")
+            manifest = (project / "PROJECTION-MANIFEST.sha256").read_text(encoding="utf-8-sig")
+        except (OSError, UnicodeError) as exc:
+            raise CoordinatorError("inconsistent public distribution: unreadable marker") from exc
+        if (not notice.startswith("# Public projection instructions\n")
+                or "does not govern its own maintenance." not in notice
+                or not provenance.startswith("# Projection provenance\n")
+                or "This candidate is derived from a private governed source repository." not in provenance
+                or not re.search(r"(?m)^[0-9a-f]{64}  CLAUDE\.md$", manifest)
+                or not re.search(r"(?m)^[0-9a-f]{64}  PROJECTION-PROVENANCE\.md$", manifest)):
+            raise CoordinatorError("inconsistent public distribution: conflicting notice or marker")
+        public_distribution = True
+
     governance = project / "governance"
     if _entry_exists(governance):
         resolved_governance = _safe_project_path(
@@ -483,6 +539,13 @@ def classify_project(project: Path) -> ObservedState:
                 )
             if path in adoption_paths:
                 resolved_adoption_paths.append(resolved)
+
+    if public_distribution:
+        return ObservedState("public_distribution", (
+            "public distribution notice and projection markers observed",
+            "retained source governance is evidence, not this checkout's adoption",
+            "classification is not a projection-integrity verification",
+        ))
 
     # A filename alone is never adoption authority: read each candidate's own
     # Appendix D title, D.1-D.9 sections, baseline, revision, and Signature.
@@ -818,10 +881,12 @@ def _observe_git_cleanliness(project: Path) -> str | None:
     git_executable = shutil.which("git")
     if not git_executable:
         return None
+    environment = os.environ.copy()
+    environment["GIT_OPTIONAL_LOCKS"] = "0"
     try:
         result = subprocess.run(
             [git_executable, "-C", str(project), "status", "--porcelain=v1"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True, text=True, timeout=10, env=environment,
         )
     except (OSError, subprocess.SubprocessError):
         return None
@@ -872,15 +937,24 @@ class LocalInventory:
         return tuple(lines)
 
 
-def gather_local_inventory(project: Path) -> LocalInventory:
-    """Gather the bounded local inventory for a clean/new project root."""
+def gather_local_inventory(
+    project: Path, *, observe_cleanliness: bool = True
+) -> LocalInventory:
+    """Gather bounded local inventory for a clean/new project root.
+
+    ``inspect`` disables cleanliness observation so its read-only contract
+    never executes repository-configured Git helpers such as ``core.fsmonitor``.
+    """
     git_dir = project / ".git"
     has_git = _entry_exists(git_dir) and not _is_linklike(git_dir)
     ordinary_git_dir = has_git and git_dir.is_dir()
     return LocalInventory(
         has_git=has_git,
         branch=_read_git_head_branch(project) if ordinary_git_dir else None,
-        cleanliness=_observe_git_cleanliness(project) if ordinary_git_dir else None,
+        cleanliness=(
+            _observe_git_cleanliness(project)
+            if ordinary_git_dir and observe_cleanliness else None
+        ),
         recent_commit_subjects=(
             _read_recent_commit_subjects(project) if ordinary_git_dir else ()
         ),
@@ -898,27 +972,20 @@ def conversation_first_opening(inventory: LocalInventory) -> tuple[str, str]:
 
 
 def next_prompt(state: ObservedState) -> tuple[str, str]:
+    if state.name == "public_distribution":
+        return (
+            "Select target project",
+            "This checkout is the Writwall public distribution. Choose your target project "
+            "and run writwall inspect --project-root <target-project> --role architect "
+            "for read-only discovery, or writwall start --project-root <target-project> "
+            "for a new bootstrap. Retained governance records are source evidence, "
+            "not adoption authority for this checkout. To discuss contributing here, "
+            "use inspect with --role architect; follow CONTRIBUTING.md.",
+        )
     if state.name == "clean_new":
         return (
-            "Adoption coordinator before wall registration",
-            f"""Act as my Writwall adoption coordinator, not as an Implementer. Read
-`.writwall-bootstrap/writwall-adopt/SKILL.md` and use bootstrap mode. Treat
-`.writwall-bootstrap/intake.json` as unratified intake, not authority. I decide
-and ratify; perform every clerical step an authorized recorder may perform.
-Ask one question at a time in plain language, recommendation first. Do not
-install or register the wall until the complete bundle and recovery instructions
-are locally readable. Before registration or any Level 1 call, copy
-`.writwall-bootstrap/writwall-adopt/assets/bootstrap-charter-addendum.md`
-verbatim into the engine-visible pre-adoption charter. Ordinary no-pointer work
-remains forbidden; the addendum permits only exact expected-denial probes named
-by a durably Owner-ratified lifecycle and confers no mutation authority. Denial
-is the only valid outcome, and any success stops adoption. Remove it before the
-adoption commit. Do not begin product work or WO-001 before adoption.
-
-After adoption closeout, present the following exact fresh-role handoff and
-stop. The onboarding coordinator stops before product work:
-
-{PROJECT_ARCHITECT_PROMPT}""",
+            "Fresh Architect (prepared intake)",
+            ARCHITECT_PREPARED_INTAKE_PROMPT,
         )
     if state.name == "partial_bootstrap":
         return (
@@ -958,6 +1025,100 @@ def emit_lifecycle_handoff(state: ObservedState) -> None:
     print(f"Next role: {role}")
     print("\nCopy this prompt into a fresh session:\n")
     print(prompt)
+
+
+def _architect_inspection_prompt(
+    state: ObservedState, inventory: LocalInventory | None = None
+) -> str:
+    if state.name == "public_distribution":
+        return """Act as a fresh Architect reviewing the Writwall public distribution.
+Begin read-only, follow CONTRIBUTING.md, and ask what the Owner wants to explore.
+The retained source governance records do not adopt or govern this checkout.
+Do not initiate a General handoff or infer ratification from those records.
+For a separate project, ask the Owner to select that target project instead."""
+    if state.name == "clean_new" and inventory is not None and not inventory.is_existing:
+        return """Act as the Architect for a new, empty project. Begin read-only; do not
+implement, install, adopt, activate a work order, or change lifecycle state.
+Open with exactly: "Tell me what you are thinking." Let the Owner's words guide
+the conversation without imposing a fixed questionnaire. Nothing said becomes
+ratified intent until the human Owner ratifies it. This explicit role selection
+grants no mutation or lifecycle authority."""
+    return f"""Act as a fresh Architect for this existing project. Begin read-only; do not
+implement, install, adopt, activate a work order, or change lifecycle state.
+The observed lifecycle is {state.name}. Inspect the canonical project in place,
+listen to the Owner's current intent, and distinguish preserved authority from
+legacy or incomplete material. Explain what the project appears to be doing,
+then ask what the Owner wants to explore. This explicit role selection grants
+no mutation or lifecycle authority."""
+
+
+def inspect_main(argv: list[str] | None = None) -> int:
+    """Print a role handoff without creating repository or profile state."""
+    parser = argparse.ArgumentParser(
+        description="Inspect one project and print a read-only Writwall handoff."
+    )
+    parser.add_argument("--project-root", required=True)
+    parser.add_argument(
+        "--role", choices=("auto", "architect", "general", "recovery"),
+        default="auto",
+    )
+    args = parser.parse_args(argv)
+    try:
+        project = resolve_project_root(args.project_root)
+        state = classify_project(project)
+        inventory = (
+            gather_local_inventory(project, observe_cleanliness=False)
+            if state.name == "clean_new" and args.role in {"auto", "architect"}
+            else None
+        )
+        inspection_evidence = (
+            (*state.evidence, *inventory.evidence_lines())
+            if inventory is not None else state.evidence
+        )
+        allowed = {
+            "architect": {
+                "clean_new", "partial_bootstrap", "adopted_lockout",
+                "retired_lockout", "public_distribution",
+            },
+            "general": {"adopted_lockout", "retired_lockout"},
+            "recovery": {"partial_bootstrap"},
+        }
+        if args.role == "auto":
+            if state.name == "clean_new":
+                selected_role = "Fresh Architect (conversation-first)"
+                prompt = _architect_inspection_prompt(state, inventory)
+            else:
+                selected_role, prompt = next_prompt(state)
+        elif state.name not in allowed[args.role]:
+            allowed_states = ", ".join(sorted(allowed[args.role]))
+            active_detail = (
+                "; the bounded Operator remains the only routed execution role"
+                if state.name == "active_work_order" else ""
+            )
+            raise CoordinatorError(
+                f"role {args.role!r} is not allowed for lifecycle "
+                f"{state.name!r}; allowed lifecycle states: {allowed_states}"
+                f"{active_detail}"
+            )
+        elif args.role == "architect":
+            selected_role = "Fresh Architect"
+            prompt = _architect_inspection_prompt(state, inventory)
+        elif args.role == "general":
+            selected_role = "Fresh General"
+            prompt = GENERAL_PROMPT
+        else:
+            selected_role, prompt = next_prompt(state)
+    except CoordinatorError as exc:
+        print(f"STOP: {exc}", file=sys.stderr)
+        return 2
+    print(f"Canonical project root: {project.as_posix()}")
+    print(f"Observed lifecycle state: {state.name}")
+    for item in inspection_evidence:
+        print(f"  - {item}")
+    print(f"Selected role: {selected_role}")
+    print("\nCopy this prompt into a fresh session:\n")
+    print(prompt)
+    return 0
 
 
 def render_time(owner_time: str) -> str:

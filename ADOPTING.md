@@ -2,7 +2,7 @@
 
 Writwall is a document-controlled governance methodology with a self-hosting reference implementation and project-scaffolding toolkit. This is the complete on-ramp. If you do not yet know which agent to open, where it should run, or what to say first, begin with [`START-HERE.md`](START-HERE.md); it requires no prior Doctrine knowledge.
 
-**Before anything else: do not unpack the distribution archive into your project.** `writwall-<revision>.zip` is a source distribution, not an overlay. Adoption instantiates a small set of project-side artifacts, listed in section 0. Writwall's own charter, governance directory, decisions, plan, state, and work history are its working records under Doctrine 5.1.4 and 5.1.5. They are readable as an example and are never copied into your project by any route below.
+**Before anything else: do not unpack the distribution archive into your project.** `writwall-<revision>.zip` is a source distribution, not an overlay. Adoption instantiates a small set of project-side artifacts, listed in section 0. Writwall's own charter, governance directory, decisions, plan, state, and work history are its working records under Doctrine 5.1.4 and 5.1.5. They are readable as an example and are never copied into your project by any method below.
 
 If the archive may already have been unpacked into the target, stop before
 deleting or continuing. Follow `START-HERE.md`'s accidental-overlay recovery
@@ -25,29 +25,43 @@ Owner ratifies an exact disposition.
     ├── history/    archive/      templates/
 ```
 
-That is the whole footprint. Every route below produces exactly this, filled in to differing degrees. `DOCTRINE.md` itself is not copied into your project: after adoption your agents receive your charter and your routed records, never the methodology (Doctrine 1.2.4).
+That is the whole footprint. The execution methods below contribute to this
+single lifecycle at different stages. `DOCTRINE.md` itself is not copied into
+your project: after adoption your agents receive your charter and your routed
+records, never the methodology (Doctrine 1.2.4).
 
 `checks/check_work_order_dispatch.py` is a deterministic, read-only checker: it validates the lockout state (`--lockout`), a candidate work order before you create the activation pointer (`--work-order <path>`), or the currently active pointer and the work order it names (`--active`). It catches a missing, malformed, or mistargeted pointer, CRLF/non-UTF-8 work-order bytes, and an unsafe or malformed grant, before you launch a mutating session. It is a convenience check, not enforcement: it never repairs anything, and passing it makes no claim about the capability wall, which is a separate, provider-specific mechanism.
 
-Adoption is an Owner event with a defined boundary (Doctrine Part 6). Every route below ends the same way: a baseline commit is chosen, a governance directory exists, the charter is injected, the wall has been observed denying writes through every mutation channel, an adoption record (DR-001) is ratified, and an adoption commit contains it. Until DR-001 exists, nothing is governed and nothing counts.
+Adoption is an Owner event with a defined boundary (Doctrine Part 6). The
+single lifecycle ends with a chosen baseline commit, a governance directory,
+an injected charter, honest birth-test evidence for every claimed enforcement
+surface, a ratified adoption record (DR-001), and an adoption commit containing
+it. Until DR-001 exists, nothing is governed and nothing counts.
 
 ---
 
-## 1. Choose your route
+## 1. Follow one canonical lifecycle
 
-Choose the human operating model in `START-HERE.md` before choosing the
-mechanical route below. In particular, make the self-contained adoption bundle
-and these instructions local **before the wall is registered**. A correctly
-locked session may deny the network request that would otherwise retrieve them.
+There are not three competing adoption routes. Writwall has one canonical
+lifecycle: the human Owner begins with a fresh Architect, explicitly promotes
+an acceptable project sketch, materializes and ratifies adoption, then hands
+the adopted repository to a fresh General. The General routes bounded
+Operators and fresh Reviewers; new design or design-conformance questions go
+back to a fresh Architect.
 
-For a first adoption, the default is the day-zero coordinator:
+The installed coordinator is the ordinary entry point. Prompt-only use, the
+bundled skill, structured intake, and `init.sh` are execution methods or
+fallbacks inside the same lifecycle. They do not change authority or role
+separation. Make the self-contained adoption bundle and these instructions
+local **before the wall is registered**. A correctly locked session may deny
+the network request that would otherwise retrieve them.
 
-Release `v0.10.0` packages the conversation-first Architect handoff,
-canonical-root enforcement, and corrected lifecycle classification described
-below.
+Release `v0.11.0` packages the conversation-first Architect handoff,
+canonical-root enforcement, corrected lifecycle classification, and the
+repository-nonmutating `writwall inspect` entry described below.
 
 ```text
-python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"
+python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.11.0.zip"
 
 # Installed command
 writwall start --project-root /path/to/your-project
@@ -58,6 +72,21 @@ py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 # Source-tree fallback on macOS or Linux
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
+
+For a zero-write inventory or an explicit safe role handoff, use:
+
+```text
+writwall inspect --project-root /path/to/your-project --role auto
+```
+
+`--role architect` lets a fresh Architect re-enter a clean/new, incomplete,
+adopted, or retired project without altering lifecycle state. `general` is
+limited to adopted/retired lockout, `recovery` to partial bootstrap, and an
+active work order remains Operator-only under `auto`. The command prints the
+observed lifecycle, bounded evidence, selected role, and copyable prompt. It
+creates no project, bootstrap, temporary, profile, privacy-screen, cache, or
+bytecode state. The command still requires an installed Writwall package or a
+local source tree; when neither exists, use section 2's prompt-only fallback.
 
 It classifies the target from repository bytes, copies the complete skill bundle
 into a temporary `.writwall-bootstrap/` directory only for a clean/new target,
@@ -81,36 +110,59 @@ Operator packet behavior are documented in
 The idea-first qualification and identity gate are documented in
 [`docs/architect-interview.md`](docs/architect-interview.md).
 
-| Route | Use when | Tooling | What it produces |
-|---|---|---|---|
-| A. Chat prompt | You want to think it through with a model before touching the repo, or your project has an existing document corpus that needs mapping | Any capable chat model | Draft DR-001, draft adoption mapping, draft charter kill list, a checklist of manual steps |
-| B. Coding-agent skill | You are in Claude Code (or a coding agent that supports skills) inside the target repository | `skills/writwall-adopt/`, a self-contained bundle | Bootstrap: inventory, scaffolded `governance/`, installed adapter, installed pre-dispatch validator, birth-test evidence, proposals for the Owner, no commits. Then, only if you explicitly direct it, an Owner-directed recorder closeout that records the decisions you have ratified and makes the one local adoption commit. |
-| C. Scaffolder | You already know the layout and only want the directories, templates, and dispatch checker | `init.sh` | Empty `governance/` structure, template copies, and a create-only pre-dispatch validator. Nothing project-specific. |
+| Execution method | Use when | What it does |
+|---|---|---|
+| `writwall start` | A new idea or clean project may receive create-only bootstrap bytes | Emits the fresh Architect handoff and makes the complete temporary adoption bundle local |
+| `writwall inspect --role architect` | An existing or workplace repository needs a zero-write first conversation, or an Architect must re-enter later | Prints bounded lifecycle evidence and a fresh Architect prompt without creating any state |
+| Prompt-only fallback | The package and source tree are unavailable, or policy permits a model conversation but no local tool | Starts the same Architect function; repository mechanics wait until the bundle is local |
+| Bundled `writwall-adopt` skill | The Owner has promoted the sketch and wants agent-assisted adoption mechanics | Inventories, proposes, and performs only separately ratified recorder actions |
+| `--structured-intake` or `init.sh` | Deterministic intake or expert low-level scaffolding is specifically needed | Preserves compatibility and feeds the fresh Architect; neither creates a second lifecycle nor changes authority |
 
-Routes combine. A common path for an existing project is A (mapping conversation) followed by B (mechanical bootstrap) followed by the Owner steps in section 5.
+The coordinator handoff and bootstrap are temporary and must be removed before
+the adoption commit.
 
-The coordinator selects among these routes; it does not replace them. Its
-handoff is temporary and must be removed before the adoption commit.
+For an existing workplace repository, use the zero-write entry first:
+
+```text
+writwall inspect --project-root /path/to/work-repository --role architect
+```
+
+Open the fresh Architect in an employer-approved account and interface, paste
+the emitted handoff, and keep the first conversation read-only. Writwall does
+not override employer policy or make an agent approved to receive source code,
+customer data, or secrets. Infrastructure, DNS, mail, deployment, and other
+account-bearing actions should be routed through separately bounded Operator
+packets rather than giving the repository agent standing external authority.
+The shipped mechanical wall currently covers only the documented Claude Code
+adapter after project-local installation and a successful session-local birth
+test; other agents remain instruction-bounded unless an equivalent adapter is
+installed and tested.
 
 | Human command | Observed state | Fresh role receiving output | Prior session stops | Target bytes |
 |---|---|---|---|---|
 | `writwall start --project-root <project>` | Clean/new (ordinary invocation) | Architect (conversation-first) | Launcher returns; the Architect stops before adoption mechanics until the Owner promotes | Create-only bootstrap may be added |
-| `... --structured-intake` | Clean/new | Adoption coordinator | Launcher returns; coordinator stops at adoption closeout | Create-only bootstrap may be added |
+| `... --structured-intake` | Clean/new | Fresh Architect (prepared intake) | Launcher returns; Architect stops before adoption mechanics until explicit promotion | Create-only bootstrap may be added |
 | Same command | Partial/recovery | Recovery coordinator | Incomplete or locked session | Unchanged |
 | Same command | Adopted/retired lockout | Fresh General | Onboarding or prior work session | Unchanged |
 | Same command | Active work order | Bounded Operator/Implementer | Prior coordinator or Implementer context | Unchanged |
 | Same command | Malformed/contradictory | No role; fail-closed diagnostic | Invoking session | Unchanged |
+| `writwall inspect ... --role auto` | Any valid lifecycle | Same lifecycle-derived role | Invoking session | Unchanged |
+| `writwall inspect ... --role architect` | Clean/new, partial, adopted, or retired | Fresh Architect | Invoking session | Unchanged |
 
 ---
 
-## 2. Route A: the adoption prompt
+## 2. Prompt-only Architect fallback
 
-Open your chat companion. Attach or paste `DOCTRINE.md`. Then paste this:
+Open an employer-approved or otherwise appropriate capable agent outside any
+already-locked Implementer session. Attach or paste `DOCTRINE.md`, then paste
+this. This is still the fresh Architect stage; it is not an alternate adoption
+process.
 
 ```
-You are helping me adopt the Doctrine (attached) into a software project as its
-Owner. Act as a bootstrap interviewer, not as an implementer. You draft; I ratify.
-Ask one question at a time. Do not summarize the doctrine back to me.
+Act as the Writwall Architect for this project. Begin read-only. Listen to my
+pitch, use repository evidence before asking me to restate visible facts,
+challenge assumptions, and return a concise project sketch before any adoption
+mechanics. You draft; I ratify. Do not summarize the doctrine back to me.
 
 Ground rules for you:
 - Everything you produce is a PROPOSAL until I say "ratified." Label drafts as such.
@@ -120,7 +172,7 @@ Ground rules for you:
 - If I ask you to skip a step the doctrine requires (baseline commit, birth test,
   adoption mapping, DR-001), refuse and explain which clause requires it.
 
-Walk me through, in order:
+If I explicitly promote the sketch, walk me through, in order:
 1. Baseline commit selection (Doctrine 2.25, 6.1.2). Ask what my last wholly
    pre-doctrine commit is.
 2. Adoption mapping (6.3, Appendix E). Ask me to list every intent-bearing or
@@ -147,11 +199,13 @@ repository operations each one implies listed beside it. Do not give me a
 checklist of edits to type. Then stop.
 ```
 
-That conversation produces drafts and a decision packet. Move them into your repository yourself, or hand the packet to Route B, which can record ratified decisions for you.
+That conversation produces drafts and a decision packet. Move them into your
+repository yourself, or give the exact ratified packet to the bundled skill's
+recorder mode in section 3.
 
 ---
 
-## 3. Route B: the coding-agent skill
+## 3. Skill-assisted adoption materialization
 
 Copy `skills/writwall-adopt/` from this repository into your target project's skills location (Claude Code: `.claude/skills/writwall-adopt/`). Copy the whole directory: it is a self-contained bootstrap bundle carrying its own copy of the doctrine, the migration guides, the adapter and its README, the pre-dispatch validator, and templates A through E under `references/` and `assets/`. It reads nothing from this repository, so the target project never depends on Writwall (Doctrine 5.1.2).
 
@@ -210,7 +264,7 @@ If your project already has partial governance artifacts from an earlier revisio
 
 ---
 
-## 4. Route C: the scaffolder
+## 4. Expert low-level scaffolder
 
 ```bash
 ./init.sh /path/to/your/project
@@ -253,11 +307,11 @@ Every run ends with three lists: created, skipped, and refused. Read them.
 
 ---
 
-## 5. The Owner's sequence (all routes end here)
+## 5. The Owner's adoption sequence
 
 This is your decision sequence. Every step below is yours to decide and yours to ratify, and no agent may decide, sign, or infer any of it. That is what Doctrine 6.4.1 fixes: the order, and the authority.
 
-It does not fix whose fingers move. Once you have made a decision and ratified it explicitly, an agent you have authorized may perform the repository mechanics that record it — materializing a file, archiving a superseded one, renaming a finished record, staging, and making the local adoption commit. Route B's recorder closeout is that path; doing it all yourself is equally correct and always available. What is never delegable is the deciding.
+It does not fix whose fingers move. Once you have made a decision and ratified it explicitly, an agent you have authorized may perform the repository mechanics that record it — materializing a file, archiving a superseded one, renaming a finished record, staging, and making the local adoption commit. Section 3's recorder closeout is that path; doing it all yourself is equally correct and always available. What is never delegable is the deciding.
 
 In the order of Doctrine 6.4.1:
 

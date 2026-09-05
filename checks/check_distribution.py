@@ -1207,7 +1207,7 @@ def check_onboarding_contract(failures: Failures) -> None:
 
 
 def check_name_clearance_ledgers(failures: Failures) -> None:
-    """Release candidates retain complete, current identity evidence."""
+    """Preserve four historical decisions; all other evidence must be current."""
     checker = REPO_ROOT / "checks" / "check_name_clearance.py"
     ledger_dir = REPO_ROOT / "examples" / "name-clearance-ledgers"
     if not checker.is_file() or not ledger_dir.is_dir():
@@ -1227,7 +1227,8 @@ def check_name_clearance_ledgers(failures: Failures) -> None:
         "writwall-candidate.json": ("Writwall", "accept"),
     }
     for ledger in sorted(ledger_dir.glob("*.json")):
-        for problem in module.check_ledger(ledger):
+        for problem in module.check_ledger(
+                ledger, historical=ledger.name in expected_dispositions):
             failures.add(
                 "name-clearance",
                 f"{ledger.relative_to(REPO_ROOT).as_posix()}: {problem}",

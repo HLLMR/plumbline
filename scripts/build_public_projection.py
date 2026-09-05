@@ -93,6 +93,27 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def complete_tree_ledger(root: Path) -> str:
+    """Hash all regular candidate files using PUBLICATION's full-line order.
+
+    Use a bare candidate tree, not a Git checkout or installed/build directory.
+    Includes the shipped manifest; no files are implicitly excluded.
+    """
+    root = root.resolve(strict=True)
+    if not root.is_dir():
+        raise ValueError("complete-tree ledger root must be a directory")
+    lines = []
+    for path in root.rglob("*"):
+        if path.is_symlink() or getattr(path, "is_junction", lambda: False)():
+            raise ValueError("complete-tree ledger rejects linked entries")
+        if path.is_file():
+            relative = path.relative_to(root).as_posix()
+            if "\n" in relative or "\r" in relative:
+                raise ValueError("complete-tree ledger rejects newline-bearing paths")
+            lines.append(f"{sha256_bytes(path.read_bytes())}  {relative}".encode("utf-8"))
+    return sha256_bytes(b"\n".join(sorted(lines)) + b"\n")
+
+
 def read_private_input(path: Path) -> bytes:
     try:
         raw = path.read_bytes()
@@ -296,11 +317,17 @@ def build(source_root: Path, output: Path,
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", required=True, type=Path)
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument("--output", type=Path)
+    action.add_argument("--complete-tree-ledger", type=Path,
+                        help="print the canonical ledger of an existing bare candidate; no writes")
     parser.add_argument("--private-pattern-file", type=Path)
     parser.add_argument("--source-root", type=Path, default=REPO_ROOT)
     args = parser.parse_args()
-    build(args.source_root, args.output, args.private_pattern_file)
+    if args.complete_tree_ledger is not None:
+        print(complete_tree_ledger(args.complete_tree_ledger))
+    else:
+        build(args.source_root, args.output, args.private_pattern_file)
 
 
 if __name__ == "__main__":

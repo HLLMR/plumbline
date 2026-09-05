@@ -28,6 +28,31 @@ def load_projection_checker():
 
 
 class PublicProjectionProcessTests(unittest.TestCase):
+    def test_complete_ledger_matches_independent_full_line_vector(self):
+        from scripts.build_public_projection import complete_tree_ledger
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "a").write_bytes(b"z")
+            (root / "b").write_bytes(b"a")
+            (root / "PROJECTION-MANIFEST.sha256").write_bytes(b"manifest\n")
+            lines = [
+                hashlib.sha256(b"z").hexdigest() + "  a",
+                hashlib.sha256(b"a").hexdigest() + "  b",
+                hashlib.sha256(b"manifest\n").hexdigest() + "  PROJECTION-MANIFEST.sha256",
+            ]
+            expected = hashlib.sha256(("\n".join(sorted(lines)) + "\n").encode("utf-8")).hexdigest()
+            self.assertEqual(complete_tree_ledger(root), expected)
+            command = subprocess.run(
+                [sys.executable, "-B", str(BUILDER), "--complete-tree-ledger", str(root)],
+                cwd=root, capture_output=True, text=True, timeout=30)
+            self.assertEqual(command.returncode, 0, command.stdout + command.stderr)
+            self.assertEqual(command.stdout.strip(), expected)
+            (root / "b").rename(root / "renamed")
+            self.assertNotEqual(complete_tree_ledger(root), expected)
+            renamed = complete_tree_ledger(root)
+            (root / "PROJECTION-MANIFEST.sha256").write_bytes(b"changed\n")
+            self.assertNotEqual(complete_tree_ledger(root), renamed)
+
     def setUp(self) -> None:
         self.tmp = Path(tempfile.mkdtemp()).resolve()
         self.addCleanup(__import__("shutil").rmtree, self.tmp, True)

@@ -1,6 +1,8 @@
 # Architect interview
 
-`writwall start` is the idea-first front door. By default — with only
+The Architect is the conversational first stage of Writwall's one canonical lifecycle;
+it is not a second adoption route. For a new or clean project,
+`writwall start --project-root <project>` is the idea-first front door. By default — with only
 `--project-root` — it is conversation-first: it asks nothing on the command
 line and never blocks on stdin. For an existing project it hands a fresh
 Architect a bounded, local, non-secret inventory (Git branch, cleanliness, a
@@ -12,6 +14,18 @@ genuinely empty target it opens with exactly: "Tell me what you are
 thinking," and imposes no fixed question list. A supplied project or command
 name is always a `working_candidate`; generated files never make it
 canonical, available, cleared, or accepted.
+
+For an existing project where the human wants conversation before any
+bootstrap write, use `writwall inspect --project-root <project> --role
+architect`. It prints a fresh Architect handoff from bounded lifecycle
+evidence and changes no project or local state. It also provides the explicit
+Architect re-entry path after adoption. This role selection is conversational,
+not authority: it does not adopt, activate, implement, or alter lifecycle.
+
+If the Owner promotes the resulting project sketch, adoption materialization
+ends by handing the ratified repository to a fresh General. The Architect does
+not continue as that General, and either role routes bounded work to Operators
+rather than implementing by conversational momentum.
 
 Add `--structured-intake` (or `--non-interactive` with the matching flags)
 to run the former full structured questionnaire instead. It may begin with
