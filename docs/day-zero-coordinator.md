@@ -1,7 +1,9 @@
 # Day-zero coordinator
 
 The day-zero coordinator is Writwall's single human entry point across the
-project lifecycle. It is a standard-library Python command that runs from a clean Writwall
+project lifecycle. It routes one canonical lifecycle: Owner → fresh Architect
+→ explicit promotion and adoption → fresh General → bounded Operators and a
+fresh Reviewer. It is a standard-library Python command that runs from a clean Writwall
 source distribution. It prepares a temporary handoff inside a clean/new target
 or prints a zero-write fresh-role handoff for every later valid state.
 
@@ -26,6 +28,31 @@ py -3 scripts/start_writwall.py --project-root C:\path\to\your-project
 # Source-tree fallback on macOS or Linux
 python3 scripts/start_writwall.py --project-root /path/to/your-project
 ```
+
+For observation and role selection without bootstrap creation:
+
+```text
+# Installed command
+writwall inspect --project-root /path/to/your-project --role auto
+
+# Source-tree fallback on Windows
+py -3 -B -m writwall_cli inspect --project-root C:\path\to\your-project --role architect
+
+# Source-tree fallback on macOS or Linux
+python3 -B -m writwall_cli inspect --project-root /path/to/your-project --role architect
+```
+
+`inspect` reads the same bounded lifecycle evidence and prints a copyable
+handoff, but creates no project, bootstrap, temporary, profile,
+privacy-screen, cache, or bytecode state. `auto` preserves the lifecycle route.
+Explicit Architect selection is allowed for clean/new, partial, adopted, and
+retired states; General only for adopted/retired lockout; recovery only for a
+partial bootstrap. Explicit overrides are rejected during an active work
+order, whose only safe route remains the bounded Operator under `auto`.
+
+Both commands require an installed package or an unpacked Writwall source
+tree. A strict read-only session with neither cannot invoke them; use the
+prompt-only route in `START-HERE.md` from an external capable session.
 
 By default — with only `--project-root` — the command is conversation-first:
 it asks nothing on the command line and never blocks on stdin. It observes
@@ -79,11 +106,13 @@ The coordinator classifies before intake or privacy initialization:
 | Human command | Observed state | Fresh role receiving output | Prior session stops | Target bytes |
 |---|---|---|---|---|
 | `writwall start --project-root <project>` | No Writwall markers | Architect (conversation-first) | Launcher returns; the Architect stops before adoption mechanics until the Owner promotes | Create-only bootstrap may be added |
-| `... --structured-intake` | No Writwall markers | Adoption coordinator | Launcher returns; coordinator later stops at closeout | Create-only bootstrap may be added |
+| `... --structured-intake` | No Writwall markers | Fresh Architect (prepared intake) | Launcher returns; Architect stops before adoption mechanics until explicit promotion | Create-only bootstrap may be added |
 | Same command | Partial `.writwall-bootstrap/` or Writwall-shaped material | Recovery coordinator | Incomplete adoption or locked session | Unchanged |
 | Same command | Adopted or retired lockout | Fresh General (the continuity role previously labeled Project-Architect) | Onboarding coordinator or prior work session | Unchanged |
 | Same command | Exact pointer to the only `status: ACTIVE` order | Bounded Operator/Implementer | Prior coordinator or Implementer context | Unchanged |
 | Same command | Malformed, missing, retired, or contradictory active state | No role; precise diagnostic | Invoking session | Unchanged |
+| `writwall inspect ... --role auto` | Any valid state | Same lifecycle-derived role | Invoking session | Unchanged |
+| `writwall inspect ... --role architect` | Clean/new, partial, adopted, or retired | Fresh Architect | Invoking session | Unchanged |
 
 Repository bytes are authoritative for this observation. A prior chat message
 or remembered work-order name is not lifecycle state.

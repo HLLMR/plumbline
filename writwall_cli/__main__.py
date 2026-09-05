@@ -17,6 +17,17 @@ def build_parser() -> argparse.ArgumentParser:
         description="Start with an idea and prepare a governed project handoff.",
         help="Start with an idea",
     )
+    inspect = commands.add_parser(
+        "inspect",
+        description="Inspect a project and print a read-only role handoff.",
+        help="Inspect without changing project state",
+    )
+    inspect.add_argument("--project-root", required=True)
+    inspect.add_argument(
+        "--role",
+        choices=("auto", "architect", "general", "recovery"),
+        default="auto",
+    )
     privacy = commands.add_parser(
         "privacy",
         description="Manage the local project privacy screen.",
@@ -43,6 +54,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if arguments[0] == "privacy":
         from scripts.privacy_screen import main as privacy_main
         return privacy_main(arguments[1:])
+    if arguments[0] == "inspect":
+        from writwall_cli.coordinator import inspect
+        return inspect(arguments[1:])
     if arguments[0] != "start":
         build_parser().error(f"unknown command: {arguments[0]}")
     from writwall_cli.coordinator import start

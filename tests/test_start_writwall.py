@@ -5,12 +5,14 @@
 from __future__ import annotations
 
 import json
+import io
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
@@ -223,6 +225,20 @@ class StartWritwallTests(unittest.TestCase):
             [
                 sys.executable, "-B", "-m", "writwall_cli", "start",
                 "--project-root", str(project or self.project),
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+
+    def run_inspect(self, role: str = "auto", project: Path | None = None):
+        return subprocess.run(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "inspect",
+                "--project-root", str(project or self.project),
+                "--role", role,
             ],
             cwd=REPO_ROOT,
             env=self.environment(),
@@ -513,9 +529,19 @@ class StartWritwallTests(unittest.TestCase):
         self.assertTrue((self.output / "writwall-adopt" / "SKILL.md").is_file())
         handoff = self.handoff()
         flat = " ".join(handoff.split())
-        self.assertIn("Act as my Writwall adoption coordinator", handoff)
+        self.assertIn("Act as a fresh Writwall Architect", handoff)
+        self.assertIn("explicitly promotes", handoff)
         self.assertIn("does not install or adopt Writwall", flat)
         self.assertIn("Do not enter passwords, API tokens", handoff)
+
+    def test_clean_structured_intake_still_routes_through_fresh_architect(self):
+        result = self.run_start("--structured-intake")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        handoff = self.handoff()
+        self.assertIn("Fresh Architect", handoff)
+        self.assertIn("unratified discovery evidence", handoff)
+        self.assertIn("explicitly promote", handoff)
+        self.assertNotIn("Next role: Adoption coordinator", handoff)
 
     def test_existing_bootstrap_routes_to_recovery_without_overwrite(self):
         self.output.mkdir()
@@ -807,6 +833,93 @@ class StartWritwallTests(unittest.TestCase):
                 self.assertIn("inconsistent state", result.stderr)
                 self.assertIn(".writwall-bootstrap", result.stderr)
 
+    def seed_public_distribution(self):
+        from scripts.build_public_projection import PUBLIC_CLAUDE_BYTES
+        import hashlib
+        governance = self.project / "governance"
+        (governance / "decisions").mkdir(parents=True)
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        (governance / "decisions" / "DR-001.md").write_text(
+            ratified_adoption_record(), encoding="utf-8")
+        (self.project / "CLAUDE.md").write_bytes(PUBLIC_CLAUDE_BYTES)
+        (self.project / "PROJECTION-PROVENANCE.md").write_text(
+            "# Projection provenance\n\nThis candidate is derived from a private governed source repository.\n",
+            encoding="utf-8")
+        paths = ("CLAUDE.md", "PROJECTION-PROVENANCE.md")
+        (self.project / "PROJECTION-MANIFEST.sha256").write_text(
+            "".join(f"{hashlib.sha256((self.project / p).read_bytes()).hexdigest()}  {p}\n"
+                    for p in paths), encoding="utf-8")
+
+    def test_public_distribution_inspect_and_start_do_not_inherit_adoption(self):
+        self.seed_public_distribution()
+        before = self.tree_snapshot(self.project)
+        for result in (self.run_inspect(), self.run_lifecycle_start()):
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("public_distribution", result.stdout)
+            self.assertIn("target project", result.stdout)
+            self.assertNotIn("Fresh General", result.stdout)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+
+    def test_public_distribution_rejects_explicit_execution_roles(self):
+        self.seed_public_distribution()
+        for role in ("general", "recovery"):
+            result = self.run_inspect(role)
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        result = self.run_inspect("architect")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("public distribution", result.stdout)
+        self.assertIn("read-only", result.stdout)
+
+    def test_public_notice_with_missing_manifest_stops(self):
+        self.seed_public_distribution()
+        (self.project / "PROJECTION-MANIFEST.sha256").unlink()
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("distribution", result.stderr)
+
+    def test_public_distribution_does_not_hide_active_or_bootstrap_state(self):
+        self.seed_public_distribution()
+        (self.project / ".writwall-bootstrap").mkdir()
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        (self.project / ".writwall-bootstrap").rmdir()
+        orders = self.project / "governance" / "work-orders"
+        orders.mkdir()
+        (orders / "WO-001.md").write_text("---\nstatus: ACTIVE\n---\n", encoding="utf-8")
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        pointer = self.project / ".claude" / "active-wo.txt"
+        pointer.parent.mkdir()
+        pointer.write_text("governance/work-orders/WO-001.md\n", encoding="utf-8")
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("active_work_order", result.stdout)
+
+    def test_public_marker_cannot_override_a_changed_local_charter(self):
+        self.seed_public_distribution()
+        (self.project / "CLAUDE.md").write_text("# Local charter\n", encoding="utf-8")
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("conflicting", result.stderr)
+
+    def test_public_notice_without_both_markers_never_infers_adoption(self):
+        self.seed_public_distribution()
+        for name in ("PROJECTION-MANIFEST.sha256", "PROJECTION-PROVENANCE.md"):
+            (self.project / name).unlink()
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("distribution", result.stderr)
+
+    def test_public_distribution_preserves_governance_path_checks(self):
+        self.seed_public_distribution()
+        plan = self.project / "governance" / "PLAN.md"
+        plan.unlink()
+        plan.mkdir()
+        result = self.run_inspect()
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("governance control", result.stderr)
+
     def test_adopted_lockout_routes_to_fresh_general(self):
         governance = self.project / "governance"
         governance.mkdir()
@@ -831,6 +944,172 @@ class StartWritwallTests(unittest.TestCase):
         self.assertIn("explicitly include creation and dispatch", flat)
         self.assertIn("Do not ask for the same decision again", flat)
         self.assertIn("perform every mechanically available authorized step", flat)
+
+    def test_inspect_architect_reenters_adopted_lockout_without_writes(self):
+        governance = self.project / "governance"
+        governance.mkdir()
+        for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+            (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+        decision = governance / "decisions" / "DR-001.md"
+        decision.parent.mkdir()
+        decision.write_text(ratified_adoption_record(), encoding="utf-8")
+        (self.project / "README.md").write_text("# Existing project\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+
+        result = self.run_inspect("architect")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: adopted_lockout", result.stdout)
+        self.assertIn("Selected role: Fresh Architect", result.stdout)
+        self.assertIn("Begin read-only", result.stdout)
+        self.assertIn(
+            "grants no mutation or lifecycle authority",
+            " ".join(result.stdout.split()),
+        )
+
+    def test_inspect_partial_bootstrap_routes_recovery_without_writes(self):
+        settings = self.project / ".claude" / "settings.json"
+        settings.parent.mkdir(parents=True)
+        settings.write_text("{}\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+
+        result = self.run_inspect("recovery")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.state.exists())
+        self.assertIn("Observed lifecycle state: partial_bootstrap", result.stdout)
+        self.assertIn("Selected role: Fresh external recovery coordinator", result.stdout)
+
+        architect = self.run_inspect("architect")
+        self.assertEqual(architect.returncode, 0, architect.stdout + architect.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertIn("Selected role: Fresh Architect", architect.stdout)
+        self.assertIn("observed lifecycle is partial_bootstrap", architect.stdout)
+
+    def test_inspect_general_routes_adopted_and_retired_lockout(self):
+        for lifecycle in ("adopted_lockout", "retired_lockout"):
+            with self.subTest(lifecycle=lifecycle):
+                project = self.temp / lifecycle
+                governance = project / "governance"
+                governance.mkdir(parents=True)
+                for name in ("PLAN.md", "STATE.md", "ROUTING.md"):
+                    (governance / name).write_text(f"# {name}\n", encoding="utf-8")
+                decision = governance / "decisions" / "DR-001.md"
+                decision.parent.mkdir()
+                decision.write_text(ratified_adoption_record(), encoding="utf-8")
+                if lifecycle == "retired_lockout":
+                    closed = governance / "history" / "WO-001.md"
+                    closed.parent.mkdir()
+                    closed.write_text(
+                        "---\nid: WO-001\nstatus: CLOSED\n---\n", encoding="utf-8"
+                    )
+                before = self.tree_snapshot(project)
+
+                result = self.run_inspect("general", project)
+
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(self.tree_snapshot(project), before)
+                self.assertIn(f"Observed lifecycle state: {lifecycle}", result.stdout)
+                self.assertIn("Selected role: Fresh General", result.stdout)
+
+    def test_inspect_rejects_unsafe_explicit_role_lifecycle_combinations(self):
+        cases = (("general", "clean_new"), ("recovery", "clean_new"))
+        for role, lifecycle in cases:
+            with self.subTest(role=role, lifecycle=lifecycle):
+                before = self.tree_snapshot(self.project)
+                result = self.run_inspect(role)
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(self.tree_snapshot(self.project), before)
+                self.assertIn(f"role {role!r}", result.stderr)
+                self.assertIn(lifecycle, result.stderr)
+                self.assertIn("allowed", result.stderr)
+
+    def test_inspect_auto_preserves_active_operator_routing_without_writes(self):
+        order = self.project / "governance" / "work-orders" / "WO-001.md"
+        order.parent.mkdir(parents=True)
+        order.write_text(
+            "---\nid: WO-001\nstatus: ACTIVE\n---\n# Work\n", encoding="utf-8"
+        )
+        pointer = self.project / ".claude" / "active-wo.txt"
+        pointer.parent.mkdir(parents=True)
+        pointer.write_text("governance/work-orders/WO-001.md\n", encoding="utf-8")
+        before = self.tree_snapshot(self.project)
+
+        result = self.run_inspect("auto")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertIn("Observed lifecycle state: active_work_order", result.stdout)
+        self.assertIn("Selected role: Fresh walled repository Operator/Implementer", result.stdout)
+        self.assertIn("active work order only", result.stdout)
+
+        rejected = self.run_inspect("architect")
+        self.assertEqual(rejected.returncode, 2)
+        self.assertIn("bounded Operator", rejected.stderr)
+
+    def test_inspect_default_auto_is_read_only_and_creates_no_state_or_cache(self):
+        (self.project / "README.md").write_text(
+            "# Existing unadopted project\n", encoding="utf-8"
+        )
+        before = self.tree_snapshot(self.project)
+        result = subprocess.run(
+            [
+                sys.executable, "-B", "-m", "writwall_cli", "inspect",
+                "--project-root", str(self.project),
+            ],
+            cwd=REPO_ROOT,
+            env=self.environment(),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.tree_snapshot(self.project), before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.state.exists())
+        self.assertEqual(list(self.temp.rglob("__pycache__")), [])
+        self.assertEqual(list(self.temp.rglob("*.pyc")), [])
+        self.assertIn("Observed lifecycle state: clean_new", result.stdout)
+        self.assertIn("Selected role: Fresh Architect (conversation-first)", result.stdout)
+        self.assertIn("Top-level project entries: README.md", result.stdout)
+        self.assertNotIn("discovery.json", result.stdout)
+        self.assertNotIn("ARCHITECT.md", result.stdout)
+
+    def test_local_inventory_git_status_disables_optional_index_writes(self):
+        with mock.patch.object(starter_module.shutil, "which", return_value="git"), \
+                mock.patch.object(
+                    starter_module.subprocess,
+                    "run",
+                    return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
+                ) as run:
+            self.assertEqual(starter_module._observe_git_cleanliness(self.project), "clean")
+
+        environment = run.call_args.kwargs["env"]
+        self.assertEqual(environment["GIT_OPTIONAL_LOCKS"], "0")
+
+    def test_inspect_never_invokes_repository_configured_git_processes(self):
+        git_dir = self.project / ".git"
+        git_dir.mkdir()
+        (git_dir / "HEAD").write_text(
+            "ref: refs/heads/main\n", encoding="utf-8"
+        )
+        output = io.StringIO()
+        with mock.patch.object(
+            starter_module.subprocess,
+            "run",
+            side_effect=AssertionError("inspect must not execute git"),
+        ), redirect_stdout(output):
+            result = starter_module.inspect_main(
+                ["--project-root", str(self.project), "--role", "architect"]
+            )
+
+        self.assertEqual(result, 0)
+        self.assertIn("Git repository observed", output.getvalue())
+        self.assertNotIn("Git working tree:", output.getvalue())
 
     def test_draft_adoption_record_with_closed_history_never_reports_adopted_or_retired(self):
         governance = self.project / "governance"

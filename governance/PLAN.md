@@ -776,3 +776,71 @@ corrected fresh re-review returned **ACCEPT — HIGH confidence** after removal,
 full rerun, and two-platform candidate evidence. Public issue #29 records the
 release gap. The authorized post-closeout PR/CI/tag/release lifecycle remains
 in progress; External Pilot B resumes only from the verified immutable release.
+
+## 29. External Pilot B read-only entry and release-integrity corrections — 2026-09-03
+
+The first v0.10.0 passes over `hllmr-site` and `hllmr-infra` independently
+exposed the same coordinator boundary: lifecycle-derived routing provides no
+explicit, repository-nonmutating fresh-Architect entry for an incomplete or
+already-adopted project. Both pilots also observed that GitHub reports v0.10.0
+as non-immutable. Public issues #31 and #32 preserve the sanitized findings.
+The separate PyYAML dependency belongs to `hllmr-site`, not Writwall, and is
+routed in that repository's issue #1.
+
+**WO-WW-024 — COMPLETE, accepted 2026-09-03: read-only role entry and release integrity.** Added a
+backward-compatible `writwall inspect` interface with explicit lifecycle-safe
+Architect, General, recovery, and auto routing; prove it creates no repository,
+temporary, profile, privacy, cache, or bytecode state; and add offline
+published-release metadata verification requiring a matching immutable
+release. Document v0.10.0's actual non-immutable status and the Owner-enabled
+prospective GitHub control without rewriting history. Fresh review rejected
+three first-pass overclaims; corrected final bytes execute no subprocess from
+`inspect`, bound release metadata reads to a non-link regular file, and state
+that v0.10.0 predates the new command. Corrected review returned ACCEPT/HIGH;
+104 focused and 796 full tests passed. No version bump, public projection,
+release, or external-project mutation occurred.
+
+## 30. Read-only role-entry release — 2026-09-04
+
+**WO-WW-025 — COMPLETE, accepted 2026-09-04: publish v0.11.0 with one
+canonical onboarding lifecycle.** The Owner accepted the initial
+release qualification, then identified before retirement that README,
+START-HERE, and ADOPTING still mixed the accepted conversation-first lifecycle
+with a superseded three-route model. Amendment 2 preserves the qualified
+`writwall inspect` and immutable-release work while synchronizing the public
+entry surfaces around Owner → fresh Architect → explicit promotion and
+adoption → fresh General → bounded Operators and fresh review. It must give
+workplace and existing-project users exact commands, prompts, provider truth,
+and external-Operator boundaries. Amendment 3 corrects the discovered
+executable structured/non-interactive route so every clean/new mode reaches
+the fresh Architect and promotion gate before adoption mechanics. Prove the
+contract across both native platforms and two public candidates, and receive
+fresh review and renewed Owner acceptance before closeout or publication. Both
+amendments passed those gates and the Owner accepted the corrected result.
+Truthful v0.10.0 history remains. The authorized v0.11.0 public lifecycle
+follows closeout.
+
+## 31. Public-distribution inspection and ledger correction — 2026-09-04
+
+**WO-WW-026 — COMPLETE, accepted 2026-09-04.** The final publication review found
+that projected source-adoption records incorrectly selected a General for the
+public distribution itself, and a test helper used a different digest order
+from the publication specification. Correct these bounded defects, preserve
+existing lifecycle safety checks, add Windows/Ubuntu regressions, and qualify
+two public candidates with fresh review. Then resume the authorized v0.11.0
+publication and pilot handoffs. Public issue #33 records the defect.
+
+Owner Amendment 1 extends this order to distinguish four preserved historical
+naming decisions from current naming evidence. Preserve every evidence byte
+and timestamp, validate historical decisions within their recorded windows,
+and retain current-time freshness for all new naming decisions. Repeat release
+verification and fresh review before the pending publication lifecycle.
+
+The Owner accepted the corrected implementation and Amendment 1 with the
+disclosed diagnostics. Windows ran 810 tests with two skips; native Ubuntu's
+public candidate ran 810 with four skips, both OK. Two 136-file candidates
+passed distribution and installed gates on both platforms and matched exactly.
+Independent implementation and record reviews returned ACCEPT. Owner active
+minutes: NOT REPORTED. Resume the authorized post-closeout projections, fresh
+publication review, protected-CI PR/merge, immutable v0.11.0 release, and pilot
+handoffs; external project mutation is not part of this closeout.

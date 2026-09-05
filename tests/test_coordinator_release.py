@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import json
 import shutil
 import subprocess
 import sys
@@ -38,11 +39,8 @@ def load_checker():
 
 
 def tree_digest(root: Path) -> str:
-    lines: list[str] = []
-    for path in sorted(item for item in root.rglob("*") if item.is_file()):
-        relative = path.relative_to(root).as_posix()
-        lines.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {relative}")
-    return hashlib.sha256(("\n".join(lines) + "\n").encode()).hexdigest()
+    from scripts.build_public_projection import complete_tree_ledger
+    return complete_tree_ledger(root)
 
 
 class CoordinatorReleaseTests(unittest.TestCase):
@@ -53,7 +51,7 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def run_checker(self, candidate: Path, *extra: str):
         arguments = [str(candidate), *extra]
         if "--expected-tag" not in extra:
-            arguments.extend(("--expected-tag", "v0.10.0"))
+            arguments.extend(("--expected-tag", "v0.11.0"))
         return subprocess.run(
             [sys.executable, "-B", str(CHECKER), *arguments],
             cwd=REPO_ROOT,
@@ -95,6 +93,57 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("--expected-tag", result.stdout + result.stderr)
         self.assertIn("required", result.stdout + result.stderr)
+
+    def test_published_release_metadata_accepts_matching_immutable_release(self):
+        checker = load_checker()
+        metadata = self.temp / "release.json"
+        metadata.write_text(
+            json.dumps({"tag_name": "v0.10.0", "immutable": True}),
+            encoding="utf-8",
+        )
+        checker.verify_published_release_json(metadata, "v0.10.0")
+
+    def test_published_release_metadata_rejects_nonimmutable_mismatch_and_malformed(self):
+        checker = load_checker()
+        cases = (
+            ({"tag_name": "v0.10.0", "immutable": False}, "not immutable"),
+            ({"tag_name": "v0.9.3", "immutable": True}, "does not match"),
+            ({"tag_name": "v0.10.0", "immutable": "true"}, "literal true"),
+            ({"immutable": True}, "tag_name"),
+        )
+        for index, (payload, diagnostic) in enumerate(cases):
+            with self.subTest(payload=payload):
+                metadata = self.temp / f"release-{index}.json"
+                metadata.write_text(json.dumps(payload), encoding="utf-8")
+                with self.assertRaisesRegex(checker.ReleaseCheckError, diagnostic):
+                    checker.verify_published_release_json(metadata, "v0.10.0")
+
+        malformed = self.temp / "malformed.json"
+        malformed.write_text('{"tag_name":', encoding="utf-8")
+        with self.assertRaisesRegex(checker.ReleaseCheckError, "malformed JSON"):
+            checker.verify_published_release_json(malformed, "v0.10.0")
+
+    def test_published_release_metadata_rejects_duplicate_security_fields(self):
+        checker = load_checker()
+        metadata = self.temp / "duplicate.json"
+        metadata.write_text(
+            '{"tag_name":"v0.10.0","immutable":true,"immutable":false}',
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(checker.ReleaseCheckError, "duplicate field"):
+            checker.verify_published_release_json(metadata, "v0.10.0")
+
+    def test_published_release_metadata_rejects_oversized_input(self):
+        checker = load_checker()
+        metadata = self.temp / "oversized.json"
+        metadata.write_bytes(b" " * (checker.MAX_RELEASE_METADATA_BYTES + 1))
+        with self.assertRaisesRegex(checker.ReleaseCheckError, "size limit"):
+            checker.verify_published_release_json(metadata, "v0.10.0")
+
+    def test_published_release_metadata_rejects_nonregular_input(self):
+        checker = load_checker()
+        with self.assertRaisesRegex(checker.ReleaseCheckError, "regular file"):
+            checker.verify_published_release_json(self.temp, "v0.10.0")
 
     def test_complete_external_candidate_installs_and_emits_full_handoff(self):
         candidate = self.make_candidate()
@@ -188,6 +237,23 @@ class CoordinatorReleaseTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("installed help omitted", result.stdout + result.stderr)
 
+    def test_installed_missing_inspect_route_fails_with_diagnostic(self):
+        candidate = self.make_candidate()
+        entry = candidate / "writwall_cli" / "__main__.py"
+        original = entry.read_text(encoding="utf-8")
+        self.assertIn('if arguments[0] == "inspect":', original)
+        entry.write_text(
+            original.replace(
+                'if arguments[0] == "inspect":',
+                'if arguments[0] == "inspection":',
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        result = self.run_checker(candidate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("installed inspect route", result.stdout + result.stderr)
+
     def test_missing_promised_handoff_fails_with_diagnostic(self):
         candidate = self.make_candidate()
         start = candidate / "scripts" / "start_writwall.py"
@@ -272,15 +338,15 @@ class CoordinatorReleaseTests(unittest.TestCase):
         pyproject = candidate / "pyproject.toml"
         pyproject.write_text(
             pyproject.read_text(encoding="utf-8").replace(
-                'version = "0.10.0"', 'version = "0.9.0"'
+                'version = "0.11.0"', 'version = "0.9.0"'
             ),
             encoding="utf-8",
             newline="\n",
         )
-        result = self.run_checker(candidate, "--expected-tag", "v0.10.0")
+        result = self.run_checker(candidate, "--expected-tag", "v0.11.0")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(
-            "candidate version '0.9.0' does not match intended tag 'v0.10.0'",
+            "candidate version '0.9.0' does not match intended tag 'v0.11.0'",
             result.stdout + result.stderr,
         )
 
@@ -326,25 +392,27 @@ class CoordinatorReleaseTests(unittest.TestCase):
     def test_release_identity_and_public_payload_are_coherent(self):
         with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
             project = tomllib.load(handle)["project"]
-        self.assertEqual(project["version"], "0.10.0")
+        self.assertEqual(project["version"], "0.11.0")
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         adopting = (REPO_ROOT / "ADOPTING.md").read_text(encoding="utf-8")
         contributing = (REPO_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
         publication = (REPO_ROOT / "PUBLICATION.md").read_text(encoding="utf-8")
         start = (REPO_ROOT / "START-HERE.md").read_text(encoding="utf-8")
-        tagged_archive = "archive/refs/tags/v0.10.0.zip"
+        tagged_archive = "archive/refs/tags/v0.11.0.zip"
         self.assertIn(tagged_archive, readme)
         self.assertIn(tagged_archive, adopting)
         self.assertIn(tagged_archive, start)
-        self.assertIn("--expected-tag v0.10.0", publication)
-        self.assertIn("--expected-tag v0.10.0", contributing)
+        self.assertIn("--expected-tag v0.11.0", publication)
+        self.assertIn("--expected-tag v0.11.0", contributing)
         for document in (readme, adopting, start):
             self.assertNotIn("not yet published", document)
             self.assertIn(
                 'python -m pip install '
-                '"https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"',
+                '"https://github.com/HLLMR/writwall/archive/refs/tags/v0.11.0.zip"',
                 document,
             )
+            self.assertIn("writwall inspect", document)
+            self.assertNotIn("does **not** contain `writwall inspect`", document)
         self.assertIn("Release `v0.9.0` first introduced", start)
         self.assertIn("Release `v0.9.1` corrected", start)
         self.assertIn("Release `v0.9.2` corrects", start)
@@ -352,6 +420,49 @@ class CoordinatorReleaseTests(unittest.TestCase):
         public_files = PUBLIC_FILES.read_text(encoding="utf-8").splitlines()
         self.assertIn("checks/check_coordinator_release.py", public_files)
         self.assertIn("tests/test_coordinator_release.py", public_files)
+
+    def test_public_entry_docs_share_one_canonical_onboarding_lifecycle(self):
+        documents = {
+            name: (REPO_ROOT / name).read_text(encoding="utf-8")
+            for name in (
+                "README.md",
+                "START-HERE.md",
+                "ADOPTING.md",
+                "docs/day-zero-coordinator.md",
+                "docs/architect-interview.md",
+            )
+        }
+        for name, document in documents.items():
+            with self.subTest(document=name):
+                self.assertIn("one canonical lifecycle", document)
+                self.assertIn("writwall start --project-root", document)
+                self.assertIn("writwall inspect --project-root", document)
+                self.assertIn("fresh Architect", document)
+                self.assertIn("fresh General", document)
+                self.assertNotIn("## 2. Route A", document)
+                self.assertNotIn("## 3. Route B", document)
+                self.assertNotIn("## 4. Route C", document)
+
+        workplace = documents["README.md"] + documents["START-HERE.md"]
+        self.assertIn("Using Writwall at work", workplace)
+        self.assertIn("employer-approved", workplace)
+        self.assertIn("does not launch", workplace)
+        self.assertIn("Act as the Writwall Architect", workplace)
+        self.assertIn("Act as a fresh Writwall General", workplace)
+
+        for name in (
+            "START-HERE.md",
+            "ADOPTING.md",
+            "docs/day-zero-coordinator.md",
+        ):
+            rows = [
+                line for line in documents[name].splitlines()
+                if line.lstrip().startswith("|") and "--structured-intake" in line
+            ]
+            self.assertTrue(rows, name)
+            for row in rows:
+                self.assertIn("Architect", row, name)
+                self.assertNotIn("Adoption coordinator", row, name)
 
     # -- WO-WW-021: the installed-wheel release gate confirms the new
     # Owner/Architect/General/Operator topology reaches the installed

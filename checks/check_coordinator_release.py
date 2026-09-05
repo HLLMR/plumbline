@@ -10,11 +10,17 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
 import tomllib
 from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 
 REQUIRED_CANDIDATE_PATHS = (
@@ -43,6 +49,7 @@ REQUIRED_HANDOFF_PATHS = (
     "writwall-adopt/assets/checks/check_name_clearance.py",
     "writwall-adopt/references/name-clearance.md",
 )
+MAX_RELEASE_METADATA_BYTES = 1024 * 1024
 
 
 class ReleaseCheckError(RuntimeError):
@@ -144,12 +151,8 @@ Example Owner — Owner — 2026-01-01
 
 
 def tree_digest(root: Path) -> str:
-    lines: list[str] = []
-    for path in sorted(item for item in root.rglob("*") if item.is_file()):
-        relative = path.relative_to(root).as_posix()
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        lines.append(f"{digest}  {relative}")
-    return hashlib.sha256(("\n".join(lines) + "\n").encode("utf-8")).hexdigest()
+    from scripts.build_public_projection import complete_tree_ledger
+    return complete_tree_ledger(root)
 
 
 def run(command: list[str], *, cwd: Path, environment: dict[str, str],
@@ -198,6 +201,74 @@ def verify_expected_tag(candidate_version: str, expected_tag: str) -> None:
         raise ReleaseCheckError(
             f"candidate version {candidate_version!r} does not match intended "
             f"tag {expected_tag!r}"
+        )
+
+
+def verify_published_release_json(metadata_path: Path, expected_tag: str) -> None:
+    """Verify saved GitHub release metadata without network access."""
+    def unique_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ReleaseCheckError(
+                    f"published-release metadata contains duplicate field {key!r}"
+                )
+            result[key] = value
+        return result
+
+    try:
+        path_info = metadata_path.lstat()
+        isjunction = getattr(os.path, "isjunction", None)
+        if (
+            metadata_path.is_symlink()
+            or (isjunction is not None and isjunction(metadata_path))
+            or not stat.S_ISREG(path_info.st_mode)
+        ):
+            raise ReleaseCheckError(
+                "published-release metadata must be a non-link regular file"
+            )
+        flags = (
+            os.O_RDONLY
+            | getattr(os, "O_BINARY", 0)
+            | getattr(os, "O_NOFOLLOW", 0)
+            | getattr(os, "O_NONBLOCK", 0)
+        )
+        descriptor = os.open(metadata_path, flags)
+        with os.fdopen(descriptor, "rb") as handle:
+            opened_info = os.fstat(handle.fileno())
+            if not stat.S_ISREG(opened_info.st_mode):
+                raise ReleaseCheckError(
+                    "published-release metadata must be a non-link regular file"
+                )
+            raw_bytes = handle.read(MAX_RELEASE_METADATA_BYTES + 1)
+        if len(raw_bytes) > MAX_RELEASE_METADATA_BYTES:
+            raise ReleaseCheckError(
+                "published-release metadata exceeds the 1 MiB size limit"
+            )
+        raw = raw_bytes.decode("utf-8")
+        payload = json.loads(raw, object_pairs_hook=unique_object)
+    except ReleaseCheckError:
+        raise
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ReleaseCheckError(
+            f"published-release metadata is malformed JSON: {exc}"
+        ) from exc
+    if not isinstance(payload, dict):
+        raise ReleaseCheckError("published-release metadata must be a JSON object")
+    tag_name = payload.get("tag_name")
+    if tag_name is None:
+        raise ReleaseCheckError("published-release metadata lacks tag_name")
+    if tag_name != expected_tag:
+        raise ReleaseCheckError(
+            f"published-release tag_name {tag_name!r} does not match "
+            f"expected tag {expected_tag!r}"
+        )
+    if payload.get("immutable") is not True:
+        value = payload.get("immutable")
+        if value is False:
+            raise ReleaseCheckError("published release is not immutable")
+        raise ReleaseCheckError(
+            "published-release immutable field must be the JSON literal true"
         )
 
 
@@ -302,6 +373,27 @@ def check_candidate(candidate: Path, expected_tag: str) -> None:
         )
         if "Start with an idea" not in help_result.stdout:
             raise ReleaseCheckError("installed help omitted the coordinator promise")
+        root_help = run(
+            [str(command), "--help"],
+            cwd=workspace,
+            environment=environment,
+            label="installed root help",
+        )
+        if "inspect" not in root_help.stdout:
+            raise ReleaseCheckError("installed help omitted the inspect command")
+
+        if (candidate / "PROJECTION-PROVENANCE.md").is_file():
+            for verb in ("inspect", "start"):
+                distribution = run(
+                    [str(command), verb, "--project-root", str(candidate)],
+                    cwd=workspace, environment=environment,
+                    label=f"installed distribution {verb}", closed_stdin=True,
+                )
+                if ("Observed lifecycle state: public_distribution" not in distribution.stdout
+                        or "target project" not in distribution.stdout
+                        or "Fresh General" in distribution.stdout):
+                    raise ReleaseCheckError("installed distribution routing inferred adoption")
+            verify_candidate_unchanged(candidate, before)
 
         conversation_project = workspace / "conversation-first-project"
         conversation_project.mkdir()
@@ -440,6 +532,34 @@ def check_candidate(candidate: Path, expected_tag: str) -> None:
         if tree_digest(adopted) != adopted_before:
             raise ReleaseCheckError(
                 "installed adopted-lockout route changed target bytes"
+            )
+        inspect_result = run(
+            [
+                str(command), "inspect", "--project-root", str(adopted),
+                "--role", "architect",
+            ],
+            cwd=workspace,
+            environment=environment,
+            label="installed inspect route",
+        )
+        inspect_output = " ".join(inspect_result.stdout.split())
+        required_inspect_text = (
+            "Observed lifecycle state: adopted_lockout",
+            "Selected role: Fresh Architect",
+            "Begin read-only",
+            "grants no mutation or lifecycle authority",
+        )
+        missing_inspect_text = [
+            text for text in required_inspect_text if text not in inspect_output
+        ]
+        if missing_inspect_text:
+            raise ReleaseCheckError(
+                "installed inspect route omitted: "
+                + ", ".join(missing_inspect_text)
+            )
+        if tree_digest(adopted) != adopted_before:
+            raise ReleaseCheckError(
+                "installed inspect route changed target bytes"
             )
 
         retired = workspace / "retired-project"
@@ -590,6 +710,7 @@ def check_candidate(candidate: Path, expected_tag: str) -> None:
     print("  complete handoff  : all required packets present; no bytecode residue")
     print("  canonical root    : installed coordinator recorded the resolved project root")
     print("  adopted lockout   : fresh General route; zero target-byte change")
+    print("  read-only inspect : installed Architect re-entry; zero target-byte change")
     print("  retired lockout   : ratified adoption plus closed history; zero target-byte change")
     print("  draft regression  : draft adoption record never reports adopted/retired lockout")
     print("  unrelated regression: signed unrelated document at the exact adoption-record")
@@ -611,12 +732,24 @@ def parser() -> argparse.ArgumentParser:
         required=True,
         help="canonical release tag that must match candidate package metadata",
     )
+    value.add_argument(
+        "--published-release-json",
+        type=Path,
+        help=(
+            "optional saved GitHub release JSON; verifies matching tag_name and "
+            "literal immutable:true without network access"
+        ),
+    )
     return value
 
 
 def main(argv: list[str] | None = None) -> int:
     arguments = parser().parse_args(argv)
     try:
+        if arguments.published_release_json is not None:
+            verify_published_release_json(
+                arguments.published_release_json, arguments.expected_tag
+            )
         check_candidate(arguments.candidate, arguments.expected_tag)
     except (OSError, ReleaseCheckError, subprocess.SubprocessError) as exc:
         print(f"FAIL: coordinator release candidate: {exc}")

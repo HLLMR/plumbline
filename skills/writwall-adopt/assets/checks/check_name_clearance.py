@@ -157,9 +157,15 @@ def canonical_digest(value: object) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def check_ledger(path: Path) -> list[str]:
+def check_ledger(path: Path, *, historical: bool = False) -> list[str]:
+    """Validate live evidence by default; history uses its recorded decision time.
+
+    Historical validation proves only the recorded evidence and disposition,
+    never current clearance. The public CLI intentionally retains live mode.
+    """
     failures: list[str] = []
-    future_limit = datetime.now(timezone.utc) + timedelta(minutes=5)
+    observed_at = datetime.now(timezone.utc)
+    future_limit = observed_at + timedelta(minutes=5)
     try:
         ledger = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
@@ -167,6 +173,15 @@ def check_ledger(path: Path) -> list[str]:
 
     if not isinstance(ledger, dict):
         return ["[ledger] top level must be an object"]
+    evaluation_time = observed_at
+    if historical:
+        disposition = ledger.get("disposition")
+        try:
+            if not isinstance(disposition, dict):
+                raise ValueError("missing disposition")
+            evaluation_time = parse_utc_timestamp(disposition.get("decided_at"))
+        except (TypeError, ValueError):
+            return ["[historical] a valid recorded disposition time is required"]
     if type(ledger.get("schema")) is not int or ledger.get("schema") != 1:
         failures.append("[ledger] schema must be 1")
     candidate = ledger.get("candidate")
@@ -242,7 +257,7 @@ def check_ledger(path: Path) -> list[str]:
     expires_at: datetime | None = None
     try:
         expires_at = parse_utc_timestamp(expires_raw)
-        if expires_at <= datetime.now(timezone.utc):
+        if expires_at <= evaluation_time:
             failures.append(f"[freshness] evidence expired at {expires_raw}")
     except (TypeError, ValueError):
         failures.append("[freshness] expires_at must be an ISO-8601 UTC timestamp")
@@ -282,6 +297,8 @@ def check_ledger(path: Path) -> list[str]:
                 failures.append(
                     "[disposition] decided_at cannot be in the future"
                 )
+            if expires_at is not None and decided_at >= expires_at:
+                failures.append("[disposition] decided_at must precede evidence expiry")
         except (TypeError, ValueError):
             failures.append(
                 "[disposition] decided_at must be an ISO-8601 UTC timestamp"

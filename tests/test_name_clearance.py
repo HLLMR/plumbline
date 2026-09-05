@@ -33,6 +33,40 @@ REQUIRED_SOURCES = (
 
 
 class NameClearanceProcessTests(unittest.TestCase):
+    def test_historical_validation_preserves_evidence_after_expiry(self):
+        from checks import check_name_clearance as checker
+        ledger = self.valid_ledger()
+        future = datetime.now(timezone.utc) + timedelta(days=30)
+        class FutureClock(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return future
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.json"
+            path.write_text(json.dumps(ledger), encoding="utf-8")
+            before = path.read_bytes()
+            with patch.object(checker, "datetime", FutureClock):
+                self.assertTrue(any("expired" in e for e in checker.check_ledger(path)))
+                self.assertEqual(checker.check_ledger(path, historical=True), [])
+            self.assertEqual(path.read_bytes(), before)
+
+    def test_historical_validation_rejects_late_decision_and_bad_evidence(self):
+        from checks import check_name_clearance as checker
+        for defect in ("late", "missing", "tampered", "missing_date"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as tmp:
+                ledger = self.valid_ledger()
+                if defect == "late":
+                    ledger["disposition"]["decided_at"] = ledger["expires_at"]
+                elif defect == "missing":
+                    ledger["sources"].pop()
+                elif defect == "missing_date":
+                    ledger["disposition"].pop("decided_at")
+                else:
+                    ledger["sources"][0]["response_sha256"] = "0" * 64
+                path = Path(tmp) / "ledger.json"
+                path.write_text(json.dumps(ledger), encoding="utf-8")
+                self.assertTrue(checker.check_ledger(path, historical=True))
+
     def valid_ledger(self) -> dict:
         now = datetime.now(timezone.utc).replace(microsecond=0)
         sources = []

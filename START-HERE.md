@@ -10,6 +10,86 @@ self-contained `writwall-adopt` bundle local before the wall is registered. The
 wall may intentionally deny network access once the project enters lockout; an
 agent cannot fetch instructions it does not already have.
 
+## The one canonical lifecycle
+
+Every project follows one canonical lifecycle:
+
+1. **Owner → fresh Architect.** The human brings an idea or an existing
+   repository. The Architect begins read-only, listens, inspects bounded local
+   evidence, challenges the pitch, and returns a project sketch. The
+   conversation has no fixed length and may end without adoption.
+2. **Owner promotion → adoption materialization.** Only after the Owner accepts
+   the sketch do the local adoption bundle and recorder mechanics create the
+   ratified charter, Plan, Routing, State, adoption record, and tested provider
+   boundary.
+3. **Fresh General → bounded Operators.** Adoption ends the onboarding context.
+   A new General maintains continuity and prepares work orders or external
+   Operator packets. Operators execute only active bounded work.
+4. **Fresh Reviewer → Owner disposition.** A separate Reviewer checks the
+   result and record. The Owner accepts, rejects, or ratifies a deviation.
+
+Prompt-only use, the bundled skill, `--structured-intake`, and `init.sh` are
+fallback or specialist execution methods inside this lifecycle. They are not
+different governance routes.
+
+## Which command do I run?
+
+Point `--project-root` at your project, not the downloaded Writwall distribution.
+When you inspect the distribution itself, the coordinator reports
+`public_distribution` and asks you to select a target project. Retained
+self-hosting records describe the source and do not adopt your checkout.
+To discuss contributing to Writwall itself, use `inspect --role architect`
+with that checkout as the project root and follow `CONTRIBUTING.md`.
+
+```text
+# New idea or clean project; may create .writwall-bootstrap/
+writwall start --project-root /path/to/your-project
+
+# Existing or workplace project; no project or local-state writes
+writwall inspect --project-root /path/to/your-project --role architect
+
+# Already adopted project; derive the next safe role from repository bytes
+writwall inspect --project-root /path/to/your-project --role auto
+```
+
+The command does not launch an agent. It tells you which fresh role to open and
+prints the exact prompt to paste. Use `inspect --role architect` when you want
+to discuss an existing repository before allowing Writwall to create anything.
+Use `start` for a genuinely new project or after you have decided that a
+create-only bootstrap is acceptable.
+
+### Using Writwall at work
+
+Use an employer-approved Python environment, AI account, agent interface,
+repository location, and data policy. For an existing work repository, run the
+no-write `inspect --role architect` command above, then open a fresh approved
+agent session with access to the repository and paste the emitted handoff.
+
+If you must begin manually, paste:
+
+```text
+Act as the Writwall Architect for this repository. Start read-only. Use the
+handoff below, summarize what the repository already shows, listen to my
+project pitch, challenge assumptions, and do not materialize adoption or
+dispatch work until I explicitly approve the project sketch.
+```
+
+After adoption, use the emitted handoff or this short form in a new session:
+
+```text
+Act as a fresh Writwall General for this adopted repository. Begin read-only,
+verify the governed lifecycle from repository bytes, recommend the next
+bounded decision or work order, and do not activate or implement it until I
+approve it.
+```
+
+Writwall does not override company policy. Do not put secrets, customer data,
+private keys, production record values, or credentials into prompts or Writwall
+records. Keep infrastructure and account-bearing actions in separately bounded
+Operator packets. Only the supplied Claude Code adapter currently provides a
+shipped mechanical wall; other agents are instruction-bounded unless an
+equivalent adapter is installed and birth-tested.
+
 ## Who does what
 
 | Function | Who or what performs it | May share an agent? |
@@ -59,12 +139,13 @@ names, repository slugs, domains, logos, or launch copy. The coordinator may
 collect evidence, but the Owner chooses the identity; unavailable sources are
 not clear results.
 
-1. Release `v0.10.0` packages the conversation-first Architect handoff,
-   canonical-root enforcement, and corrected lifecycle classification.
+1. Release `v0.11.0` packages the conversation-first Architect handoff,
+   canonical-root enforcement, corrected lifecycle classification, and the
+   repository-nonmutating `writwall inspect` entry.
    Install it without unpacking it over your project:
 
    ```text
-   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.10.0.zip"
+   python -m pip install "https://github.com/HLLMR/writwall/archive/refs/tags/v0.11.0.zip"
    ```
 
    Release `v0.9.0` first introduced the coordinator. Release `v0.9.1` corrected
@@ -73,6 +154,8 @@ not clear results.
    routing and the terminal Architect handoff. Release `v0.10.0` adds
    conversation-first inception, corrected adoption-state classification,
    and canonical project-root enforcement.
+   Release `v0.11.0` adds the installed, read-only `writwall inspect` entry and
+   prospective immutable-release verification.
    If you are testing an unpublished release candidate, use its checked external
    candidate tree and the release gate in `PUBLICATION.md`.
 2. Run one command:
@@ -88,16 +171,45 @@ not clear results.
    python3 scripts/start_writwall.py --project-root /path/to/your-project
    ```
 
+   If you only want to understand or re-enter a project without creating a
+   bootstrap, use the read-only interface instead:
+
+   ```text
+   # Installed command
+   writwall inspect --project-root /path/to/your-project --role auto
+
+   # Source-tree fallback on Windows
+   py -3 -B -m writwall_cli inspect --project-root C:\path\to\your-project --role architect
+
+   # Source-tree fallback on macOS or Linux
+   python3 -B -m writwall_cli inspect --project-root /path/to/your-project --role architect
+   ```
+
+   `--role auto` derives the safe next role from repository lifecycle bytes.
+   An explicit `architect`, `general`, or `recovery` selection works only in
+   lifecycle states compatible with that role and grants no mutation or
+   lifecycle authority. `inspect` writes no bootstrap, project, temporary,
+   profile, privacy-screen, cache, or bytecode state. The source-tree fallback
+   requires running from an unpacked Writwall source tree; no executable can
+   run when neither Writwall nor its source is locally available. Use the
+   prompt-only fallback below in that case.
+
    The same command is the entry point throughout the project lifecycle:
 
    | Observed state | Fresh role receiving the output | Session that stops | May target bytes change? |
    |---|---|---|---|
    | Clean/new (ordinary invocation) | Architect (conversation-first) | The human's current launcher returns after creating the bootstrap; the Architect stops before adoption mechanics until you make an explicit promotion decision | Yes: create-only `.writwall-bootstrap/` |
-   | Clean/new (`--structured-intake`) | Adoption coordinator | The human's current launcher returns after creating the bootstrap; the adoption coordinator later stops at closeout | Yes: create-only `.writwall-bootstrap/` |
+   | Clean/new (`--structured-intake`) | Fresh Architect (prepared intake) | The human's current launcher returns after creating the bootstrap; the Architect stops before adoption mechanics until you explicitly promote the sketch | Yes: create-only `.writwall-bootstrap/` |
    | Partial bootstrap or recovery | Recovery coordinator | The incomplete adoption or locked session | No |
    | Adopted or retired lockout | Fresh General | The onboarding coordinator or prior work session | No |
    | Active work order | Bounded Operator/Implementer | Any prior coordinator or Implementer context | No |
    | Malformed or contradictory | No role; precise stop diagnostic | The invoking session | No |
+
+   `inspect` follows the same table without the clean/new bootstrap write.
+   Explicit Architect inspection is supported for clean/new, partial,
+   adopted, and retired states; explicit General only for adopted/retired
+   lockout; explicit recovery only for a partial bootstrap. An active work
+   order remains routed only to its bounded Operator under `--role auto`.
 
 3. For a clean/new target, the ordinary command above is conversation-first:
    it asks nothing on the command line and never blocks on a questionnaire.
@@ -144,13 +256,25 @@ adoption commit.
 Paste this first:
 
 ```text
+Act as the Writwall Architect for this repository. Start read-only. Use the
+local writwall-adopt bundle for reference, summarize what the repository
+already shows, listen to my pitch, challenge assumptions, and return a concise
+project sketch. Do not begin adoption mechanics until I explicitly promote the
+sketch. If I promote it, switch only to the bundle's bootstrap procedure; I
+decide and ratify, and an authorized recorder may perform the clerical steps.
+Do not install or register the wall until the complete bundle and recovery
+instructions are locally available. Do not begin product work until adoption
+is complete and a fresh General has taken over.
+```
+
+Only after you explicitly promote the Architect's sketch, the manual
+continuation may begin:
+
+```text
 Act as my Writwall adoption coordinator, not as an Implementer. Use the local
 writwall-adopt bundle and follow its bootstrap mode. I decide and ratify; you
-perform every clerical step an authorized recorder may perform. Ask me one question at a time
-in plain language, with your recommendation first.
-Do not install or register the wall until you have confirmed that the complete
-bundle and recovery instructions are locally available. Do not begin product
-work or ask about WO-001 until adoption is complete.
+may perform only the separately authorized recorder mechanics. Do not begin
+product work or continue as the General.
 ```
 
 ## If the archive was already unpacked into your project

@@ -13,8 +13,23 @@ point. Before creating a release tag, run this gate against the final external
 candidate on native Windows and native Ubuntu, naming the exact intended tag:
 
 ```text
-python checks/check_coordinator_release.py <candidate-directory> --expected-tag v0.10.0
+python checks/check_coordinator_release.py <candidate-directory> --expected-tag v0.11.0
 ```
+
+For a future GitHub release that is required to be immutable, save the
+platform's release JSON separately and supply it as bounded offline evidence:
+
+```text
+python checks/check_coordinator_release.py <candidate-directory> --expected-tag vX.Y.Z --published-release-json <release.json>
+```
+
+The checker performs no network request. When metadata is supplied, it rejects
+malformed or duplicate fields, a mismatched `tag_name`, and anything other
+than the JSON literal `immutable: true`. Repository release immutability was
+enabled prospectively after v0.10.0. That release is pinned to its published
+commit but GitHub reports it as `immutable: false`; do not describe it as
+platform-immutable. The setting applies to future releases, whose actual
+published metadata must still pass this gate.
 
 The command fails before building unless the canonical intended tag matches
 the candidate's package version. It is network-free. It copies the candidate into temporary build
@@ -22,8 +37,9 @@ space, builds a wheel using the already-provisioned backend declared in
 `pyproject.toml`, creates a fresh virtual environment without assuming the
 host can bootstrap `pip` inside it, installs through the already-provisioned
 host `pip`, checks
-the installed version and help interface, runs the coordinator against a
-disposable external project, verifies the complete create-only handoff, and
+the installed version and help interface, runs `start` and the zero-write
+`inspect` route against disposable external projects, verifies the complete
+create-only handoff, and
 then verifies that the input candidate tree did not change. A pass is release
 readiness evidence; it does not create a tag, GitHub release, or publication.
 
@@ -110,6 +126,17 @@ independently built candidates byte-for-byte. It is derived as follows:
 6. UTF-8 encode the resulting text without a byte-order mark.
 7. Take the SHA-256 of those encoded bytes; that digest is the complete-tree
    ledger.
+
+Compute it without changing the candidate:
+
+```sh
+python -B scripts/build_public_projection.py --complete-tree-ledger <candidate-directory>
+```
+
+Run this against each bare candidate before adding Git metadata or build
+outputs. Every regular file, including the manifest itself, participates;
+linked entries and newline-bearing paths are rejected. Full-line ordering
+differs from ordering by path. Do not substitute a path-sorted tree hash.
 
 The complete-tree ledger digests two independently built candidates for
 equality; it is not shipped inside the candidate and is distinct from

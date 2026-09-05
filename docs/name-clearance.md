@@ -1,14 +1,27 @@
 # Name clearance before identity work
 
 Run this gate before a project adopts a public name, package name, repository
-slug, domain, logo, or launch campaign. Run it again within seven days of the
-public-release decision. It is cheaper to reject a name here than to migrate an
+slug, domain, logo, or launch campaign. Run it again within seven days of a
+public-release decision that selects or changes the identity. It is cheaper to reject a name here than to migrate an
 entire release later.
 
 This process produces evidence of what was searched, when, and with what
 result. It **does not prove legal clearance**, exclusivity, or
 noninfringement. The Owner makes the product-risk decision; qualified counsel
 makes any legal determination the Owner requires.
+
+## Preserved examples versus new decisions
+
+The four named ledgers shipped under `examples/name-clearance-ledgers/` record
+completed accept/reject decisions. The distribution check validates their
+evidence at each recorded disposition time, including the requirement that the
+decision preceded expiry and followed the source reviews. It does not renew
+those searches or claim current clearance. Evidence bytes and dates stay intact.
+
+All other ledger files and the ordinary `check_name_clearance.py` command use
+current-time freshness. Historical validation is an explicit library context,
+not a CLI shortcut for approving a new name with expired evidence. A subsequent
+decision to select or change identity requires fresh collection and human review.
 
 ## Roles
 

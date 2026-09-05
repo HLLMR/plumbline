@@ -16,7 +16,7 @@
     {
       "path": "README.md",
       "context": "migration_provenance",
-      "sha256": "d76060c70c361a64b52e9df88e400789c24fbc4fecd2b731dfe8a709a34e5e5e"
+      "sha256": "bb9083c43def4a803c3f01e296ccbdb0402068ec39145e3ddd892ac3e922eea3"
     },
     {
       "path": "SELF-HOSTING.md",
@@ -31,7 +31,7 @@
     {
       "path": "checks/check_distribution.py",
       "context": "historical_evidence_path",
-      "sha256": "b872c46f8a8ea2fc317b4c4fd0af00c9145012b11256c923987d878d79c726c2"
+      "sha256": "20df8e937b6efeb7930894b7d4eba42761283b6d0166e78bcabaa2ab6dc75a7c"
     },
     {
       "path": "checks/check_identity.py",
@@ -94,19 +94,19 @@
     {
       "path": "governance/LOG.md",
       "context": "historical_pilot_summary",
-      "sha256": "0720409460b68d93ae72010abab3162d1cc09cd275ddae6fa309ef7fe7b6eef3",
+      "sha256": "ffa9029e76fbe660f9c4eced42b11960bfd96ef0451f7d18e874c349de264aba",
       "projection_transform": "private_evidence_redaction"
     },
     {
       "path": "governance/PLAN.md",
       "context": "ratified_historical_intent",
-      "sha256": "020bfe95a6b70da6a14dcc63087f1d90f1625fd6c08454ff8951044e04a2b0be"
+      "sha256": "ed0bdab770d734e83debbecc4d740f95018b39a290946d1941e2bbec09f57ee0"
     },
     {
       "path": "governance/STATE.md",
       "context": "mixed_current_state_and_history",
-      "sha256": "d598988b8fa33ab64da1c0f8883948de9f619f8bb1816f2428d1b860b0241299",
-      "projection_sha256": "acea5eaf4e6dbee69d8e425c2848fd7f324fd67ea3a57f29a953efab46e28ce6"
+      "sha256": "bff2aba6ff42a6943f0571aabe8f60d8e4b59d681c069cafcc3dd7d7fd296e45",
+      "projection_sha256": "646887c40607a97b418ec8f09be1c94c51f7eb053bca08908441007a397d31c7"
     },
     {
       "path": "governance/decisions/DR-001.md",
@@ -127,7 +127,7 @@
     {
       "path": "tests/test_distribution.py",
       "context": "historical_evidence_fixture",
-      "sha256": "6483f84819c08284b989252f4a40a42e8eca64fec5fda303cec62350c19328d0"
+      "sha256": "13478c88a9d9951f4a90ef15fa389fc0bf19894f917cbada62fc366cbe70a635"
     },
     {
       "path": "tests/test_identity_migration.py",
